@@ -1,0 +1,72 @@
+<h2>新任务</h2>
+<div nz-row>
+  <div nz-col [nzSpan]="9">
+    <div class="subtitle">
+      <span>选中设备</span>
+      <button nz-button nzType="primary" (click)="handleOpenModal('open_device')">选择设备</button>
+    </div>
+    <nz-table #virtualTable nzVirtualScroll [nzVirtualItemSize]="54" [nzData]="deviceCheckData"
+      [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="{ x: '300px', y: '520px' }"
+      [nzVirtualMaxBufferPx]="520" [nzVirtualMinBufferPx]="520">
+      <thead>
+        <tr>
+          <th nzWidth="40%">设备名称</th>
+          <th nzWidth='40%'>当前运行账号</th>
+          <th nzWidth="20%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template nz-virtual-scroll let-data>
+          <tr>
+            <td>{{data?.name}}</td>
+            <td>{{data?.runningAccount}}</td>
+            <td class="close"><button nz-button nzType="danger" (click)="handleDeviceDel(data.id)"><i nz-icon
+                  nzType="close" nzTheme="outline"></i></button></td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </nz-table>
+  </div>
+  <div nz-col [nzSpan]="14" [nzOffset]="1">
+    <div class="subtitle">
+      <span>选中账号</span>
+      <button nz-button nzType="primary" (click)="handleOpenModal('open_account')">选择账号</button>
+    </div>
+    <nz-table #virtualTable nzVirtualScroll [nzVirtualItemSize]="54" [nzData]="accountCheckData"
+      [nzFrontPagination]="false" [nzShowPagination]="false" [nzScroll]="{ x: '300px', y: '520px' }"
+      [nzVirtualMaxBufferPx]="520" [nzVirtualMinBufferPx]="520">
+      <thead>
+        <tr>
+          <th nzWidth="20%">账号名</th>
+          <th nzWidth="30%">微博登录</th>
+          <th nzWidth="30%">当前运行设备</th>
+          <th nzWidth='20%'></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template nz-virtual-scroll let-data>
+          <tr>
+            <td>{{data?.account}}</td>
+            <td>{{data?.weibo}}</td>
+            <td>{{data?.weiboPswd}}</td>
+            <td>{{data?.runningDeviceName}}</td>
+            <td class="close"><button nz-button nzType="danger" (click)="handleAccountDel(data.id)"><i nz-icon
+                  nzType="close" nzTheme="outline"></i></button></td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submit()">确定</button>
+</div>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [nzVisible]="visible && modalKey === 'open_device'" [nzOkText]='null'
+  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <app-device [data]="deviceData"></app-device>
+</nz-modal>
+<nz-modal nzWrapClassName="vertical-center-modal" [nzVisible]="visible && modalKey === 'open_account'" [nzOkText]='null'
+  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <app-account [data]="accountData"></app-account>
+</nz-modal>

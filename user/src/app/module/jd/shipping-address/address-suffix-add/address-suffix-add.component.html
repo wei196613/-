@@ -1,0 +1,19 @@
+<h2>新增后缀标签</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>标签名</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入标签名">
+      <input type="text" nz-input formControlName="name" placeholder="请输入标签名" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">内容</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入内容">
+      <input type="text" nz-input formControlName="content" placeholder="请输入内容">
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</form>

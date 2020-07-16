@@ -1,0 +1,78 @@
+<h2>添加新方案</h2>
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>任务名称</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入任务名称">
+      <input type="text" nz-input formControlName="name" placeholder="请输入任务名称">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>主播id</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入主播id">
+      <input type="text" nz-input formControlName="anchorId" placeholder="请输入主播id">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>选择剧本</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请选择剧本">
+      <nz-select formControlName="scriptId" nzPlaceHolder="请选择剧本">
+        <nz-option *ngFor="let i of playAll" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+    <span nz-col [nzSpan]="8" class="see-play">
+      <button nz-button [nzType]="'primary'" (click)="handleDetail()"
+        [disabled]="formGroup.get('scriptId').value === null">查看剧本</button>
+    </span>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">剧本简要信息</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <div *ngIf="outline" nz-row>
+        <div nz-col nzSpan="6">角色数：{{outline?.characterNumber}}</div>
+        <div nz-col nzSpan="6">发言条数：{{outline?.commentNumber}}</div>
+        <div nz-col nzSpan="12">总时长：{{outline?.totalTime | dyFormattingTime}}</div>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">需要设备数</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <nz-form-text>{{outline?.characterNumber}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>建议进入时间</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <nz-date-picker [nzDisabledDate]="disabledDate" formControlName="deviceEnterTime" nzShowTime
+        [nzDisabled]="enterTimeDis" nz-tooltip nzTooltipTitle="为模拟真实进场，会根据角色人数制定合适的提前进场时间，此时间不宜设置太短 。"
+        nzTooltipPlacement="top">
+      </nz-date-picker>
+      <!-- <i nz-icon nzType="info-circle" nzTheme="fill"></i> -->
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>开始剧本时间</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <nz-date-picker formControlName="scriptStartTime" [nzDisabledDate]="predictDate" nzShowTime
+        (ngModelChange)="predictChange($event)" [nzDisabled]="scriptStartDis">
+      </nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">预计完成时间</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <nz-date-picker formControlName="endTime" nzShowTime>
+      </nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</form>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <app-details [data]="playDetails" [selectItem]="playItem"></app-details>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+  </div>
+</nz-modal>

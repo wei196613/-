@@ -1,0 +1,45 @@
+{
+  "prefixUrl": "http://192.168.1.226:9999/bhs",
+  "fakeDataUrl": "http://192.168.1.226:9999/bhs",
+  "Actiontpe": [{
+      "key": 1,
+      "value": "number"
+    },
+    {
+      "key": 2,
+      "value": "string"
+    },
+    {
+      "key": 3,
+      "value": "boolean"
+    },
+    {
+      "key": 4,
+      "value": "time"
+    },
+    {
+      "key": 5,
+      "value": "datetime"
+    },
+    {
+      "key": 6,
+      "value": "string[ ]"
+    },
+    {
+      "key": 7,
+      "value": "number[ ]"
+    },
+    {
+      "key": 8,
+      "value": "select"
+    },
+    {
+      "key": 9,
+      "value": "password"
+    },
+    {
+      "key": 10,
+      "value": "multi-select"
+    }
+  ]
+}

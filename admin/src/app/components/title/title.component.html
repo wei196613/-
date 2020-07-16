@@ -1,0 +1,28 @@
+<form nz-form [formGroup]="formGroup" class="title">
+  <div class="form">
+    <div>
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input type="text" nz-input formControlName="msg" [placeholder]="placeholder">
+      </nz-input-group>
+    </div>
+    <ng-container *ngIf="titleType">
+      <div *ngFor="let d of selectAll">
+        <nz-select [formControlName]="d.name" [nzPlaceHolder]="d.placeholder">
+          <nz-option *ngFor="let i of d.arr" [nzLabel]="i.label" [nzValue]="i.value"></nz-option>
+        </nz-select>
+      </div>
+      <div class="title-time">
+        <span>{{dateMsg}}:</span>
+        <nz-range-picker formControlName="date"></nz-range-picker>
+      </div>
+    </ng-container>
+    <div>
+      <button nz-button nzType="primary" (click)="handleQuery()">查询</button>
+      <button nz-button nzType="primary" (click)="clear()">重置</button>
+    </div>
+  </div>
+</form>
+<ng-template #suffixTemplate>
+  <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+    *ngIf="inputValue" (click)="clear()"></i>
+  </ng-template>

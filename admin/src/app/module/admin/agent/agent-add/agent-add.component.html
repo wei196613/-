@@ -1,0 +1,41 @@
+<ng-container *ngIf="isAddSuccess; else elseTemplate">
+  <h2>添加代理</h2>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">代理级别</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>代理</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-divider></nz-divider>
+  <!-- <p></p> -->
+
+  <nz-form-item>
+    <nz-form-label nzSpan="8">新建账号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <input type="text" nz-input [(ngModel)]="account">
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item class="btn">
+    <button nz-button nzType="primary" (click)="handleAdd()">添加</button>
+  </nz-form-item>
+</ng-container>
+<ng-template #elseTemplate>
+  <h2>添加成功</h2>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">账号</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>{{account}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">密码</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>{{password}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <!-- <nz-divider></nz-divider> -->
+  <div class="footer">
+    <app-copy [tipText]="tipText"></app-copy>
+  </div>
+</ng-template>

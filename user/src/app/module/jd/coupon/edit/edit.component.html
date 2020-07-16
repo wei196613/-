@@ -1,0 +1,42 @@
+<h2>修改优惠券信息</h2>
+<form nz-form [formGroup]="formGroup" (ngSubmit)="submitForm()" class="coupon-edit">
+  <nz-form-item>
+    <nz-form-label nzSpan="6">优惠券名称</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input type="text" nz-input formControlName="oldName" disabled>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6">优惠券新名称</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <input type="text" nz-input formControlName="newName">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>实际配置</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <div>满
+        <nz-input-number formControlName="full"></nz-input-number>
+        元
+      </div>
+      <div>减
+        <nz-input-number formControlName="discount"></nz-input-number>
+        元
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="6" nzRequired>类型</nz-form-label>
+    <nz-form-control nzSpan="15">
+      <nz-select nzAllowClear formControlName="category" [nzDisabled]="data?.category >= 0">
+        <nz-option *ngFor="let i of categoryArr" [nzValue]="i.value" [nzLabel]="i.label"></nz-option>
+      </nz-select>&nbsp;<i nz-icon nzType="info-circle" nzTheme="fill" nz-tooltip nzTooltipTitle="一旦选择，不可修改"
+        nzTooltipPlacement="right"></i>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <div class="footer">
+      <button nz-button nzType="primary">修改</button>
+    </div>
+  </nz-form-item>
+</form>

@@ -1,0 +1,26 @@
+<h2>选择action</h2>
+<app-title placeholder="输入关键字搜索" (queryClick)="handleTitleQuery($event)" (clearClick)="handleTitleClear()">
+</app-title>
+<nz-table #basicTable [nzData]="actionTable?.arr" [nzTotal]="actionTable?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" [(nzPageSize)]="params.perPage" (nzPageIndexChange)="getData()"
+  (nzPageSizeChange)="getData()">
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>名称</th>
+      <th>键值</th>
+      <th>输入参数数量</th>
+      <th>输出参数数量</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data" (click)="handleCheck(data?.id)"
+      [ngStyle]="{'background': data?.checked? '#7efaf0': '#fff'}">
+      <td>{{data?.id}}</td>
+      <td>{{data?.name}}</td>
+      <td>{{data?.key}}</td>
+      <td>{{data?.inputParasTotal}}</td>
+      <td>{{data?.outputParasTotal}}</td>
+    </tr>
+  </tbody>
+</nz-table>

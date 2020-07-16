@@ -1,0 +1,40 @@
+<h2>修改角色</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">角色名称</nz-form-label>
+    <nz-form-control [nzSpan]="16" nzErrorTip="请输入角色名称">
+      <input type="text" nz-input formControlName="name" placeholder="请输入角色名称">
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<nz-form-item>
+  <nz-form-label [nzSpan]="5">权限选择</nz-form-label>
+  <nz-form-control [nzSpan]="16">
+    <div>
+      <div nz-row>
+        <div nz-col nzSpan="16">
+          <input type="text" nz-input [(ngModel)]="params.keyword" placeholder="请输入关键字搜索">
+        </div>
+        <div nz-col [nzOffset]="2" nzSpan="6"><button nz-button [nzType]="'primary'"
+            (click)="handleGetData('clear')">查询</button></div>
+      </div>
+      <div>
+        <nz-checkbox-wrapper class="checkbox-wrapper">
+          <div nz-row>
+            <div nz-col nzSpan="12" *ngFor="let i of data?.arr">
+              <label nz-checkbox (nzCheckedChange)="checkboxChange($event,i.id)"
+                [ngModel]="getIsChecked(i.id)">{{i.name}}</label>
+            </div>
+          </div>
+        </nz-checkbox-wrapper>
+        <nz-pagination [(nzPageIndex)]="params.curPage" [nzTotal]="data?.total" [(nzPageSize)]="params.perPage"
+          [nzHideOnSinglePage]="true" (nzPageIndexChange)="handleGetData()"></nz-pagination>
+      </div>
+    </div>
+  </nz-form-control>
+</nz-form-item>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">修改</button>
+</div>

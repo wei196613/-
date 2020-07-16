@@ -1,0 +1,29 @@
+<h2>新增标签</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>标签名</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入标签名">
+      <input type="text" nz-input formControlName="name" placeholder="请输入标签名" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">重置时间</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入重置时间">
+      <nz-input-number nz-input formControlName="resetDays" placeholder="请输入重置时间"></nz-input-number>
+      天 <i nz-icon nzType="info-circle" nzTheme="fill" nz-tooltip nzTooltipTitle="此参数用于控制收货地址一旦被使用后，在指定天数内将不再被使用。"
+        nzTooltipPlacement="right"></i>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">每日可用上限</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入每日可用上限">
+      <nz-input-number nz-input formControlName="maximum" placeholder="请输入每日可用上限"></nz-input-number>
+      个 <i nz-icon nzType="info-circle" nzTheme="fill" nz-tooltip nzTooltipTitle="含有本标签的所有收货地址中，每日最多使用其中的指定数量的地址。"
+        nzTooltipPlacement="right"></i>
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</form>

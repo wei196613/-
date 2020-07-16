@@ -1,0 +1,28 @@
+<h2>导入账号信息</h2>
+<div class="subtitle">
+  <span>您确定要添加以下信息为新的账号信息吗?</span>
+  <span class="right">总共：<strong> {{data?.total}}</strong>条</span>
+</div>
+<!-- <nz-table #basicTable [nzData]="data" [nzShowPagination]="false"> -->
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total">
+  <thead>
+    <tr>
+      <!--       <th>QQ号</th>
+      <th>QQ密码</th> -->
+      <th>微博号</th>
+      <th>微博密码</th>
+      <!--       <th>手机号</th>
+      <th>码址</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data.weiboAccount}}</td>
+      <td>{{data.weiboPswd}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="footer">
+  <button nz-button nzType='primary' (click)="handleAdds()">确定</button>
+</div>

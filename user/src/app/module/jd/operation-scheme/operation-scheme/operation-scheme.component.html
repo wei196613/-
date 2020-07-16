@@ -1,0 +1,101 @@
+<ng-container *ngIf="applyData; else elseTemplate">
+  <div class="apply" nz-row>
+    <div nz-col nzSpan="4">
+      <span>当前执行方案：</span>
+      <span>{{applyData?.name}} </span>
+    </div>
+    <div nz-col nzSpan="20">
+      <div>账号选择：{{applyData?.couponNames}}</div>
+      <div>地址选择：{{applyData?.labelNames}}</div>
+      <div>
+        <strong>最终付款要小于{{applyData?.finalPrice}}元</strong>
+        <strong>飞行模式时长{{applyData?.flyModeSec}}秒</strong>
+        <strong>付款方式:{{ getPayment(applyData?.payment)}}</strong>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="vacancy">
+    <h2>暂无运行方案</h2>
+  </div>
+</ng-template>
+
+
+<nz-divider></nz-divider>
+<div class="oper-title">
+  <app-title (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+  <span class="right-btn">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">添加方案</button>
+  </span>
+</div>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+  (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>方案名称</th>
+      <th>地址选择</th>
+      <th>账号选择</th>
+      <th>最终付款</th>
+      <th>登录方式</th>
+      <th>飞行模式时长</th>
+      <th>付款方式</th>
+      <th>组合任务</th>
+      <th>状态</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.name}}</td>
+      <td>
+        <ng-container *ngIf="data?.labelNames?.length>20; else labelTemplate">
+          <span nz-tooltip [nzTooltipTitle]="data?.labelNames">{{data?.labelNames | slice: 0: 20}}...</span>
+        </ng-container>
+        <ng-template #labelTemplate>
+          <span>{{data?.labelNames}}</span>
+        </ng-template>
+      </td>
+      <td>
+        <ng-container *ngIf="data?.couponNames?.length>20; else couponTemplate">
+          <span nz-tooltip [nzTooltipTitle]="data?.couponNames">{{data?.couponNames | slice: 0: 20}}...</span>
+        </ng-container>
+        <ng-template #couponTemplate>
+          <span>{{data?.couponNames}}</span>
+        </ng-template>
+      </td>
+      <td>小于{{data?.finalPrice}}元</td>
+      <td>{{data?.loginType | loginType}}</td>
+      <td>{{data?.flyModeSec}}秒</td>
+      <td>{{getPayment(data?.payment)}}</td>
+      <td>{{data?.isRunJx ? '京喜': ''}}</td>
+      <ng-container *ngIf="data?.applyTime; else elseTemplate">
+        <td>应用中</td>
+      </ng-container>
+      <ng-template #elseTemplate>
+        <td>
+          <button nz-button nzType="primary" (click)="handleApplyProgram(data.id)">应用</button>
+        </td>
+      </ng-template>
+      <td>
+        <button nz-button nzType="primary" (click)="handleOpenModal('open_edit',data)">修改</button>
+        <button nz-button nzType="primary" (click)="handleOpenModal('open_copy',data)">复制</button>
+        <!-- <button nz-button nzType="danger" (click)="handleOpenModal('delect',data)">删除</button> -->
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-add></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-edit [data]="checkData" [isCopy]="isCopy"></app-edit>
+    </ng-container>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>

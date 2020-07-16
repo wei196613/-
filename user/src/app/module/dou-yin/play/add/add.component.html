@@ -1,0 +1,48 @@
+<h2>添加剧本</h2>
+
+<nz-form-item>
+  <nz-form-label nzSpan="3">剧本名称</nz-form-label>
+  <nz-form-control nzSpan="8">
+    <input type="text" nz-input [(ngModel)]="name">
+  </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+  <nz-form-label nzSpan="3">剧本内容</nz-form-label>
+  <nz-form-control>
+    <nz-upload nzAccept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      [nzBeforeUpload]="onBeforeUpload">
+      <button nz-button><i nz-icon nzType="upload"></i><span>导入剧本</span></button>
+    </nz-upload>
+  </nz-form-control>
+</nz-form-item>
+
+<div *ngIf="data">
+  <nz-form-item>
+    <nz-form-label nzSpan="3">剧本预览</nz-form-label>
+    <nz-form-control nzSpan="21">
+      <nz-form-text>
+        <strong>角色数：{{data?.characterNumber}}；发言：{{data?.commentNumber}}；总时长：{{data?.totalTime | dyFormattingTime}}</strong>
+      </nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-table #basicTable [nzData]="data.arr" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th>角色名</th>
+        <th>发言时间</th>
+        <th>发言内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{data?.characterName}}</td>
+        <td>{{data?.relativeTime | dyFormattingTime}}</td>
+        <td>{{data?.content}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div style="text-align: right;">(仅显示前10条发言)</div>
+</div>
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">确定</button>
+</div>

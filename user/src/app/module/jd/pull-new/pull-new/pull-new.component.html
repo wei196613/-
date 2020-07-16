@@ -1,0 +1,85 @@
+<!-- title -->
+<div class="title" nz-row>
+  <div class="input" nz-col nzSpan="12">
+    <app-title (titleReset)="handleReset()" (titleQuery)="handleQuery($event)"></app-title>
+  </div>
+  <div class="right-btn" nz-col nzSpan="12">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('OPEN_ADD')">添加</button>
+  </div>
+</div>
+
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+  (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>地址</th>
+      <th>每日最多可用</th>
+      <th>地址类型</th>
+      <th>禁用</th>
+      <!--  <th><button nz-button nzType="primary">批量修改</button> </th>  -->
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>
+        <ng-container *ngIf="data?.url?.length > 30; else urlTemplate">
+          <span nz-tooltip [nzTooltipTitle]="data?.url"> {{data?.url | slice : 0: 30 }}...</span>
+        </ng-container>
+        <ng-template #urlTemplate>
+          <span>{{data?.url}}</span>
+        </ng-template>
+      </td>
+      <td>{{data?.maximum >= 1000000 ? '无限制': data.maximum}}</td>
+      <td>{{data?.tpe | jdPullNewTpe}}</td>
+      <td><span class="ant-btn-danger">{{data?.disableTime ? '已禁用': ''}}</span></td>
+      <td>
+        <ng-container *ngIf="!data?.disableTime; else elseTemplate">
+          <button nz-button class="ant-btn-warning" nz-popconfirm nzPopconfirmTitle="是否禁用该地址"
+            (nzOnConfirm)="handleConfirm(data)">禁用</button>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <button nz-button nzType="primary" nz-popconfirm nzPopconfirmTitle="是否启用该地址"
+            (nzOnConfirm)="handleConfirm(data)">启用</button>
+        </ng-template>
+        <button nz-button nzType="primary" (click)="handleOpenModal('OPEN_EDIT',data)">修改</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'OPEN_ADD'">
+      <app-add></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'OPEN_EDIT'">
+      <app-edit [data]="eidtData"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'MULTIPLE_BONUS_URL'">
+      <nz-table #basicTable [nzData]="multipleBonusUrl">
+        <thead>
+          <tr>
+            <th>拉新地址</th>
+            <th>错误原因</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{data?.line}}</td>
+            <td>{{data?.error}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div></div>
+    </ng-container>
+  </div>
+</nz-modal>

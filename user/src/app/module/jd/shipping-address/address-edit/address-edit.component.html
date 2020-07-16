@@ -1,0 +1,37 @@
+<h2>修改</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label nzSpan="3">详细地址</nz-form-label>
+    <nz-form-control nzSpan="21" nzErrorTip="请输入详细地址">
+      <input type="text" nz-input formControlName="address" placeholder="请输入详细地址">
+    </nz-form-control>
+  </nz-form-item> 
+   <!-- <nz-form-item>
+    <nz-form-label nzSpan="3">地址名</nz-form-label>
+    <nz-form-control nzSpan="21" nzErrorTip="请输入地址名">
+      <input type="text" nz-input formControlName="stationName" placeholder="请输入地址名">
+    </nz-form-control>
+  </nz-form-item> -->
+  <div class="multiple">
+    <nz-form-item>
+      <nz-form-label nzSpan="3">标签</nz-form-label>
+      <nz-form-control nzSpan="21" nzErrorTip="最少选择一个标签">
+        <nz-select nzAllowClear formControlName="labelIds" nzMode="multiple">
+          <nz-option *ngFor="let i of labelAll" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="3">后缀标签</nz-form-label>
+      <nz-form-control nzSpan="10">
+        <nz-select nzAllowClear formControlName="suffixId" nzErrorTip="请选择后缀标签">
+          <nz-option *ngFor="let i of suffixlabel" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">修改</button>
+  </div>
+</form>

@@ -1,0 +1,31 @@
+<div class="login-title">
+  <app-title (titleReset)="handleReset()" (titleQuery)="handleQuery($event)"></app-title>
+  <span class="right-btn">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal()">新任务</button>
+    <!-- <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_adds')">导入</button> -->
+  </span>
+</div>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+  (nzPageSizeChange)="pageSizeChange($event)" [nzSize]="'default'">
+  <thead>
+    <tr>
+      <th>设备名称</th>
+      <th>当前运行账号</th>
+      <th>登录时间</th>
+      <th>已运行</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.deviceName}}</td>
+      <td>{{data?.runningAccount}}</td>
+      <td> <span *ngIf="data?.loginTime">{{data?.loginTime * 1000 | date : 'yyyy年MM月dd日 HH:mm:ss'}}</span> </td>
+      <td>{{data?.totalRuntime * 1000 | dyFormattingTime}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="1000px">
+  <app-add *ngIf="modalCode"></app-add>
+</nz-modal>

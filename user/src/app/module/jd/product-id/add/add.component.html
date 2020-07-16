@@ -1,0 +1,19 @@
+<h2>添加商品ID</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>商品ID</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入商品ID">
+      <input type="text" nz-input formControlName="productId" placeholder="请输入商品ID" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">金额</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <input type="text" nz-input formControlName="price" placeholder="请输入商品金额" />
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</form>

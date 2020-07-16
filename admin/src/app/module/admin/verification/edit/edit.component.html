@@ -1,0 +1,23 @@
+<h2>修改邀请码权限</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">权限名</nz-form-label>
+    <nz-form-control [nzSpan]="16" nzErrorTip="请输入权限名">
+      <input type="text" nz-input formControlName="name" placeholder="请输入权限名">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">微博号</nz-form-label>
+    <nz-form-control [nzSpan]="16" nzErrorTip="请选择角色">
+      <nz-select nzMode="multiple" formControlName="roleIds" name="value" nzPlaceHolder="请选择角色" nzAllowClear>
+        <nz-option *ngFor="let item of roleList" [nzLabel]="item.name" [nzValue]="item.id">
+        </nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submit()">修改</button>
+</div>

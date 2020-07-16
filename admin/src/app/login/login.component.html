@@ -1,0 +1,21 @@
+<nz-card class="loginBox" nzTitle="登录">
+  <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <nz-form-control [nzErrorTip]="phoneErrorTip">
+        <nz-input-group nzPrefixIcon="phone">
+          <input type="text" nz-input formControlName="phone" placeholder="登录账号" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入密码">
+        <nz-input-group nzPrefixIcon="lock">
+          <input type="password" nz-input formControlName="password" placeholder="密码" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-control>
+      <button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
+    </nz-form-control>
+  </form>
+</nz-card>

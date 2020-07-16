@@ -1,0 +1,20 @@
+.account-title {
+  position: relative;
+
+  /deep/ div.title {
+    &>nz-select[nzmode="multiple"] {
+      width: 250px;
+    }
+  }
+
+  .right-btn {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+
+    button {
+      width: 88px;
+      margin-right: 10px;
+    }
+  }
+}

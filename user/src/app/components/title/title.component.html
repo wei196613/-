@@ -1,0 +1,16 @@
+<div class="title">
+  <div>
+    <nz-input-group [nzSuffix]="suffixTemplate">
+      <input type="text" nz-input placeholder="输入关键字搜索" [(ngModel)]="msg">
+    </nz-input-group>
+    <ng-template #suffixTemplate>
+      <i nz-icon nz-tooltip class="ant-input-clear-icon" nzTheme="fill" nzType="close-circle"
+        *ngIf="msg" (click)="msg = null"></i>
+      </ng-template>
+  </div>
+  <ng-template #titleTem></ng-template>
+  <div>
+    <button nz-button nzType="primary" (click)="query()">查询</button>
+  </div>
+  <div><button nz-button nzType="primary" (click)="reset()">重置</button></div>
+</div>

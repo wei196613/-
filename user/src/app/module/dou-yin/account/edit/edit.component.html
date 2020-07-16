@@ -1,0 +1,105 @@
+<h2>修改账号</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">账号类型</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-form-text>抖音</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">微博号</nz-form-label>
+    <nz-form-control [nzSpan]="16" nzErrorTip="请输入微博号码">
+      <input type="text" nz-input formControlName="weiboAccount" placeholder="请输入微博号码">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="5">微博密码</nz-form-label>
+    <nz-form-control [nzSpan]="16" nzErrorTip="请输入微博密码">
+      <app-password-input formControlName="weiboPswd" [ngModel]="formGroup.get('weiboPswd').value" ngDefaultControl
+        placeholder="请输入微博密码"></app-password-input>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!--  不要删 -->
+  <!--  不要删 -->
+  <!--  不要删 -->
+  <!--  不要删 -->
+
+  <!-- <nz-form-item>
+    <nz-form-label [nzSpan]="8">账号类型</nz-form-label>
+    <nz-form-control [nzSpan]="16">3
+      <label *ngFor="let i of checkAll" [nzChecked]="i.checked" (nzCheckedChange)="checkChange($event, i.value)"
+        nz-checkbox [nzValue]="i.value">{{i.label}}</label>
+    </nz-form-control>
+  </nz-form-item>
+  <div nz-row *ngIf="qqType">
+    <nz-divider></nz-divider>
+    <div nz-col [nzSpan]="5" class="right">
+      <button nz-button [nzType]="'danger'" (click)="checkChange(false,1)"><i nz-icon nzType="close-circle"
+          nzTheme="outline"></i></button>
+      <strong>QQ登录</strong>
+    </div>
+    <div nz-col [nzSpan]="16">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">QQ号</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入qq号码">
+          <input type="text" nz-input formControlName="qq" placeholder="请输入qq号码">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">QQ密码</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入qq密码">
+          <app-password-input formControlName="qqPwd" ngDefaultControl placeholder="请输入qq密码"></app-password-input>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row *ngIf="wbType">
+    <nz-divider></nz-divider>
+    <div nz-col [nzSpan]="5" class="right">
+      <button nz-button [nzType]="'danger'" (click)="checkChange(false,2)"><i nz-icon nzType="close-circle"
+          nzTheme="outline"></i></button>
+      <strong>微博</strong>
+    </div>
+    <div nz-col [nzSpan]="16">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">微博号</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入微博号码">
+          <input type="text" nz-input formControlName="wb" placeholder="请输入微博号码">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">微博密码</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入微博密码">
+          <app-password-input formControlName="wbPwd" ngDefaultControl placeholder="请输入微博密码"></app-password-input>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row *ngIf="mobileType">
+    <nz-divider></nz-divider>
+    <div nz-col [nzSpan]="5" class="right">
+      <button nz-button [nzType]="'danger'" (click)="checkChange(false,3)"><i nz-icon nzType="close-circle"
+          nzTheme="outline"></i></button>
+      <strong>手机号登录</strong>
+    </div>
+    <div nz-col [nzSpan]="16">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">手机号</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入手机号码">
+          <input type="text" nz-input formControlName="mb" placeholder="请输入手机号码">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5">码址</nz-form-label>
+        <nz-form-control [nzSpan]="16" nzErrorTip="请输入码址">
+          <app-password-input formControlName="mbPwd" ngDefaultControl placeholder="请输入码址"></app-password-input>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div> -->
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">修改</button>
+  </div>
+</form>

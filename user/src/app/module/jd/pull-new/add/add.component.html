@@ -1,0 +1,21 @@
+<h2>添加</h2>
+<div class="subtitle">拉新地址：<span>如若想一次录入多个地址，则以回车作为分隔</span></div>
+<textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
+<nz-form-item>
+  <nz-form-label nzSpan="6">每日最多可用次数</nz-form-label>
+  <nz-form-control nzSpan="15">
+    <nz-input-number [(ngModel)]="maximum"></nz-input-number>次（大于等于1000000表示无限制）
+  </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+  <nz-form-label nzSpan="6">拉新地址类型</nz-form-label>
+  <nz-form-control nzSpan="15">
+    <nz-select [(ngModel)]="tpe" nzPlaceHolder="请选择拉新地址类型" >
+      <nz-option *ngFor="let item of radioAll" [nzLabel]="item.value" [nzValue]="item.key">
+      </nz-option>
+    </nz-select>
+  </nz-form-control>
+</nz-form-item>
+<div class="footer">
+  <button nz-button nzType="primary" (click)="add()">添加</button>
+</div>

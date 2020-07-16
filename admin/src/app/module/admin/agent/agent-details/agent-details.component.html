@@ -1,0 +1,64 @@
+<h2>查看详情</h2>
+<div class="agent-details">
+  <nz-form-item>
+    <nz-form-label nzSpan="8">账号</nz-form-label>
+    <nz-form-control nzSpan="14">
+      <div><span>{{data?.account}}</span> <button class="right" nz-button nzType="primary"
+          (click)="handleOpenModal('OPEN_RESET_PASSWORD')">重置密码</button></div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">级别</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <nz-form-text>{{data?.agentType | agentType}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">持有米币</nz-form-label>
+    <nz-form-control nzSpan="14">
+      <div><span>{{data?.balance}}</span> <button *ngIf="data?.agentType === getAgentType('AGENT')" class="right"
+          nz-button nzType="primary" (click)="handleOpenModal('ADJUSTMENT')">调整</button></div>
+    </nz-form-control>
+  </nz-form-item>
+  <ng-container *ngIf="data?.agentType === getAgentType('USER')">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">今日已消耗</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text>{{data?.today}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">总消耗</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text>{{data?.total}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">关系代理</nz-form-label>
+      <nz-form-control nzSpan="16">
+        <nz-form-text>{{data?.userAgent?.account}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">角色</nz-form-label>
+    <nz-form-control [nzSpan]="16">
+      <nz-select nzMode="multiple" nzPlaceHolder="请选择角色" [(ngModel)]="roleIds">
+        <nz-option *ngFor="let option of roles?.arr" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="footer">
+    <button *ngIf="data?.agentType === getAgentType('AGENT')" nz-button nzType="primary"
+      (click)="handleOpenModal('GENERATE_INVITE_CODE')">生成邀请码</button>
+    <button nz-button nzType="primary" (click)="close()">确定</button>
+  </nz-form-item>
+</div>
+
+
+<!-- modal -->
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="550px">
+  <app-agent-details-moal [roleGroupList]="roleGroupList" [(modalKey)]="modalKey"></app-agent-details-moal>
+</nz-modal>

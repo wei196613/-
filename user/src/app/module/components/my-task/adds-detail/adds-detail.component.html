@@ -1,0 +1,56 @@
+<h2>批量任务预览</h2>
+<div nz-row>
+  <div nz-col [nzSpan]="12"><span>任务类型：{{taskTypeName}}</span></div>
+  <div nz-col [nzSpan]="12"><span>任务名称：{{params?.name}}</span></div>
+  <div nz-col [nzSpan]="12"><span>执行方式：{{params?.executeMethod | JdLoginExecute}}</span></div>
+  <!-- <div nz-col [nzSpan]="12"><span>是否备份</span></div> -->
+  <div nz-col [nzSpan]="12"><span>已选设备：{{device?.length}}个</span><button (click)="handleOpenModal('open_device')"
+      nz-button nzType="link">查看</button></div>
+  <div nz-col [nzSpan]="12"><span>共同参数：{{subform?.subParams?.length}}个</span><button nz-button nzType="link"
+      *ngIf="subform?.subParams?.length" (click)="handleOpenModal('adds_para')">查看</button>
+  </div>
+  <div nz-col [nzSpan]="12"><span>导入参数：{{data?.total}}</span></div>
+</div>
+
+<nz-table #basicTable [nzData]="tableData" [nzPageSize]="15" [nzShowPagination]="false" [nzFrontPagination]="false">
+  <thead>
+    <tr>
+      <th *ngFor="let i of subform.paramsName">{{i.name}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td *ngFor="let i of subform.paramsName">{{data[i.key]}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">确定添加</button>
+</div>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <ng-container [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_device'">
+      <nz-table #basicTable [nzData]="device">
+        <thead>
+          <tr>
+            <th>设备名</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{data?.name}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+    <div *ngSwitchCase="'adds_para'">
+      
+    </div>
+    <div *ngSwitchDefault>
+      <div></div>
+    </div>
+  </ng-container>
+</nz-modal>

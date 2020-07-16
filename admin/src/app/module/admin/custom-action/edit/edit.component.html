@@ -1,0 +1,177 @@
+<h2>查看详情</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">名称</nz-form-label>
+    <nz-form-control [nzSpan]="20" nzErrorTip="请输入名称">
+      <input type="text" nz-input formControlName="name" placeholder="请输入名称">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">键值</nz-form-label>
+    <nz-form-control [nzSpan]="20" nzErrorTip="请输入键值">
+      <input type="text" nz-input formControlName="key" placeholder="请输入键值">
+    </nz-form-control>
+  </nz-form-item>
+  <!-- <nz-form-item>
+    <nz-form-label [nzSpan]="4">参数列表</nz-form-label>
+    <nz-form-control [nzSpan]="20">
+      <div class="paras-number">
+        <span>{{paras?.value?.length}} </span>
+        <span> <button nz-button nzType="link" (click)="handleAddParas()">增加</button>
+        </span>
+      </div>
+
+    </nz-form-control>
+  </nz-form-item> -->
+  <div class="paras">
+    <nz-collapse>
+
+      <!-- 输入参数 -->
+      <nz-collapse-panel [nzHeader]="inputListHeader">
+        <div formArrayName="inputParas">
+          <ng-template #inputListHeader>
+            <div class="collapse-header">
+              <span>输入参数： 共（{{inputParas.controls.length}}）个</span><button nz-button nzType="link"
+                (click)="handleAddParas($event,'inputParas')">增加</button>
+            </div>
+          </ng-template>
+          <nz-collapse>
+            <nz-collapse-panel *ngFor="let i of inputParas.controls; let index = index" [formGroupName]="index"
+              [nzHeader]="inputItemHeader" [nzActive]="true">
+              <ng-template #inputItemHeader>
+                <div class="collapse-header">
+                  <span [ngClass]="{'collapse-color': hasError(i)}">参数{{ index + 1 }}</span><button nz-button
+                    nzType="link" (click)="handleDelParas(index, 'inputParas')">删除</button>
+                </div>
+              </ng-template>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">名称</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
+                  <input type="text" nz-input formControlName="name" placeholder="请输入名称">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">键值</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
+                  <input type="text" nz-input formControlName="key" placeholder="请输入名称">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">类型</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="请选择参数类型">
+                  <nz-select nzAllowClear formControlName="tpe" (ngModelChange)="handleParasTpeChange($event,i)"
+                    [nzPlaceHolder]="'请选择参数类型'">
+                    <nz-option *ngFor="let i of ActionTpe" [nzValue]="i.key" [nzLabel]="i.value"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item *ngIf="i.get('tpe').value === 8 || i.get('tpe').value == 10">
+                <nz-form-label [nzSpan]="4" nzNoColon></nz-form-label>
+                <nz-form-control [nzSpan]="20" nzErrorTip="请输入类型数组">
+                  <input type="text" nz-input formControlName="values"
+                    placeholder='请输入类型数组例如：[{"key":"吃饭","value":1},{"key":"洗衣服","value":2}]  (value必须是number)'>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">独立约束</nz-form-label>
+                <nz-form-control [nzSpan]="20" nzErrorTip="请输入独立约束">
+                  <input type="text" nz-input formControlName="constraint" placeholder="请输入独立约束">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">级联约束</nz-form-label>
+                <nz-form-control [nzSpan]="20" nzErrorTip="请输入级联约束">
+                  <input type="text" nz-input formControlName="cascadeConstraint" placeholder="请输入级联约束">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">字段描述</nz-form-label>
+                <nz-form-control [nzSpan]="20" nzErrorTip="请输入字段描述">
+                  <input type="text" nz-input formControlName="tip" placeholder="请输入字段描述">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">错误提示</nz-form-label>
+                <nz-form-control [nzSpan]="20" nzErrorTip="请输入错误提示">
+                  <input type="text" nz-input formControlName="errTip" placeholder="请输入错误提示">
+                </nz-form-control>
+              </nz-form-item>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </div>
+      </nz-collapse-panel>
+
+      <!-- 输出参数 -->
+      <nz-collapse-panel [nzHeader]="outputListHeader">
+        <div formArrayName="outputParas">
+          <ng-template #outputListHeader>
+            <div class="collapse-header">
+              <span>输出参数： 共（{{outputParas.controls.length}}）个</span><button nz-button nzType="link"
+                (click)="handleAddParas($event,'outputParas')">增加</button>
+            </div>
+            <span></span>
+          </ng-template>
+          <nz-collapse>
+            <nz-collapse-panel *ngFor="let i of outputParas.controls; let index = index" [formGroupName]="index"
+              [nzHeader]="inputItemHeader" [nzActive]="true">
+              <ng-template #inputItemHeader>
+                <div class="collapse-header">
+                  <span [ngClass]="{'collapse-color': hasError(i)}">参数{{ index + 1 }}</span><button nz-button
+                    nzType="link" (click)="handleDelParas(index, 'outputParas')">删除</button>
+                </div>
+              </ng-template>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">名称</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
+                  <input type="text" nz-input formControlName="name" placeholder="请输入名称">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">键值</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
+                  <input type="text" nz-input formControlName="key" placeholder="请输入名称">
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4">类型</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzErrorTip="请选择参数类型">
+                  <nz-select nzAllowClear formControlName="tpe" [nzPlaceHolder]="'请选择参数类型'">
+                    <nz-option *ngFor="let i of ActionTpe.slice(0,7)" [nzValue]="i.key" [nzLabel]="i.value"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </div>
+      </nz-collapse-panel>
+    </nz-collapse>
+  </div>
+</form>
+
+<div class="footer">
+  <button nz-button nzType="success" (click)="modalKey = 'open_import'">导入</button>
+  <button nz-button nzType="primary" (click)="query()">确定</button>
+</div>
+<nz-modal nzWrapClassName="vertical-center-modal" [nzVisible]="modalKey === 'open_confim'" [nzOkText]='null'
+  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="404px">
+  <h2>修改提示</h2>
+  <div>界面内容发生变动，确定要提交修改吗？</div>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">修改</button>
+  </div>
+</nz-modal>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [nzVisible]="modalKey === 'open_import'" [nzOkText]='null'
+  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="600px" [nzMaskClosable]="false">
+  <h2>填充json</h2>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">输入JSON</nz-form-label>
+    <nz-form-control [nzSpan]="20" nzErrorTip="请输入JSON">
+      <input type="text" nz-input [(ngModel)]="inputJson" placeholder="请输入JSON">
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="patchValueJSON()">确定</button>
+  </div>
+</nz-modal>

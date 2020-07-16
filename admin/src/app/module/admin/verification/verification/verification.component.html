@@ -1,0 +1,59 @@
+<div class="veri-title">
+  <app-title placeholder="关键字" dateMsg="代理获得时间" [selectAll]="selectAll" [titleType]="true"></app-title>
+  <button class="right-btn" nz-button nzType="primary" (click)="handleOpenModal('open_role')">权限管理</button>
+</div>
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>类型</th>
+      <th>权限</th>
+      <th>邀请码</th>
+      <th>代理</th>
+      <th>代理获得时间</th>
+      <th>赠与用户</th>
+      <th>用户使用时间</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{getType(data?.balance)}}</td>
+      <td>{{data?.roleGroupName}}</td>
+      <td>{{data?.code}}</td>
+      <td>{{data?.agent}}</td>
+      <td>{{data?.createTime * 1000 | date: 'yyyy-MM-dd hh:mm:ss'}}</td>
+      <td>{{data?.user}}</td>
+      <td>{{data?.useTime * 1000 | date: 'yyyy-MM-dd hh:mm:ss'}}</td>
+      <td>
+        <ng-container *ngIf="data?.useTime || data?.deleteTime; else elseTemplate">
+          <p>{{data?.deleteTime *1000 | date: 'yyyy-MM-dd hh:mm:ss'}}</p>
+          <p *ngIf="data.deleteTime">已作废</p>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <button nz-button nzType="primary" (click)="handleOpenModal('open_affirm',data.id)">作废</button>
+        </ng-template>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_affirm'">
+      <h2>提示</h2>
+      <p>您确定要将这些邀请码作废吗？</p>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="cancellation()">确定</button>
+      </div>
+    </div>
+    <ng-container *ngSwitchCase="'open_role'">
+      <app-role></app-role>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">关闭</button>
+      </div>
+    </ng-container>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>

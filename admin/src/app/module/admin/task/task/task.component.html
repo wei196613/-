@@ -1,0 +1,139 @@
+<app-title placeholder="关键字" dateMsg="任务起始时间" [selectAll]="selectAll" [titleType]="true"></app-title>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>任务ID</th>
+      <th>执行用户</th>
+      <th>任务起始时间</th>
+      <th>任务结束时间</th>
+      <th>商品价格</th>
+      <th>实际支付</th>
+      <th>任务结果</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.id}}</td>
+      <td>{{data?.account}}</td>
+      <td>{{data?.startTime *1000 | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+      <td>{{data?.endTime *1000 | date: 'yyyy/MM/dd HH:mm:ss'}}</td>
+      <td>{{data?.product?.price}}</td>
+      <td>{{data?.payPrice?.price}}</td>
+      <td>{{getStartText(data.status)}}</td>
+      <td><button nz-button nzType="primary" (click)="handleOpenModal(data)">查看详情</button></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <h2>任务详情</h2>
+  <div class="task-detail">
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>任务ID</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.id}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>执行用户</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.account}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>任务起始时间</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.startTime *1000 | date: 'yyyy/MM/dd HH:mm:ss'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>任务结束时间</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.endTime *1000 | date: 'yyyy/MM/dd HH:mm:ss'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>商品价格</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.product?.price}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>实际支付</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.payPrice?.price}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>任务结果</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{getStartText(checkData?.status)}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-divider></nz-divider>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>账号</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{taskDetail?.account}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>密码</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{taskDetail?.pwd}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>优惠卷</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{taskDetail?.coupons.join(',')}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>拉新URP</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{taskDetail?.url}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>收货地址</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{taskDetail?.address}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan='4'>商品ID</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{checkData?.product?.id}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="checkData?.status === 'success'">
+      <nz-form-label nzSpan='4'>订单号</nz-form-label>
+      <nz-form-control nzSpan="20">
+        <nz-form-text>{{taskDetail?.orderId}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzSpan="20">
+        <button nz-button nzType='primary' (click)="taskLog()">查看任务LOG</button>
+      </nz-form-control>
+    </nz-form-item>
+    <div class="footer">
+      <button nz-button nzType='primary' (click)="onCancel()">确定</button>
+    </div>
+  </div>
+</nz-modal>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="taskLogVisible" [nzOkText]='null'
+  (nzOnCancel)="taskOnCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <h2>任务LOG</h2>
+  <div *ngFor="let i of taskLogMsg">
+    <div>{{i}}</div>
+    <nz-divider class="log-msg"></nz-divider>
+  </div>
+  <div class="footer">
+    <button nz-button nzType='primary' (click)="taskOnCancel()">确定</button>
+  </div>
+</nz-modal>

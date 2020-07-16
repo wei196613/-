@@ -1,0 +1,35 @@
+<h2>设备分配</h2>
+
+<app-title placeholder="输入关键字搜索" (titleReset)="handleReset()"  (titleQuery)="handleQuery($event)" ></app-title>
+
+<div class="subtitle">
+  <div>请选择设备</div>
+  <div>已选择：{{deviceIds.length}}</div>
+</div>
+
+<nz-table #rowSelectionTable nzShowPagination nzShowSizeChanger [nzData]="list.arr" [nzTotal]="list?.total"
+  (nzPageIndexChange)="handleIndexChange($event)" [(nzPageIndex)]="params.curPage">
+  <thead>
+    <tr>
+      <th nzShowCheckbox [nzChecked]="checkedAll" [nzIndeterminate]="isIndeterminate"
+        (nzCheckedChange)="checkAll($event)"></th>
+      <th>设备名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of rowSelectionTable.data; let i = index">
+      <td nzShowCheckbox [nzChecked]="data.checked" (nzCheckedChange)="refreshStatus($event,i)"></td>
+      <td>{{ data.name }}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="account">
+  <span>转移给账号：</span>
+  <span><input type="text" nz-input [(ngModel)]="userId"></span>
+</div>
+
+
+<div class="footer">
+  <button nz-button nzType='primary' (click)="add()">确定</button>
+</div>

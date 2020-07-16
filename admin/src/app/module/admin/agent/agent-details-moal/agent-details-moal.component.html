@@ -1,0 +1,120 @@
+<div [ngSwitch]="modalKey">
+
+  <!-- 重置密码 -->
+  <div *ngSwitchCase="'OPEN_RESET_PASSWORD'">
+    <h2>重置密码</h2>
+    <div>请问确定要重置{{agentType? '用户': '代理'}}账号【{{account}}】的登录密码吗？</div>
+    <div class="footer">
+      <button nz-button nzType="primary" (click)="handleCick('RESET_PWD_START')">确定</button>
+    </div>
+  </div>
+
+  <!-- 重置密码成功 -->
+  <div *ngSwitchCase="'OPEN_RESET_PASSWORD_SUCCESS'">
+    <h2>重置成功</h2>
+    <!-- <div>代理账号【{{account}}】的新登录密码已被重置为 {{password}}, 请尽快登录并修改密码。</div> -->
+    <div>{{password}}</div>
+    <div class="footer">
+      <button nz-button nzType="warning" (click)="close()">关闭</button>
+      <app-copy [tipText]="password"></app-copy>
+    </div>
+  </div>
+
+  <!-- 调整米币 -->
+  <div *ngSwitchCase="'ADJUSTMENT'">
+    <h2>调整米币数量</h2>
+    <div>【{{account}}】当前的米币数量位： {{balance}}</div>
+    <div>请输入要调整的米币数量</div>
+    <div class="adjustment-input">
+      <!-- <nz-input-number [(ngModel)]="adjustmentNunber" [nzMin]="1" [nzMax]="10" [nzStep]="1" nzPlaceHolder=""></nz-input-number> -->
+      <div>
+        <nz-input-number [(ngModel)]="adjustmentNunber" [nzStep]="1">
+        </nz-input-number>
+      </div>
+      <div>本次最多可增加1000000米币</div>
+      <div>本次最多可扣除{{balance}}米币</div>
+    </div>
+    <div class="footer">
+      <button nz-button nzType="warning" (click)="handleCick('REDUCE_MI')">扣除</button>
+      <button nz-button nzType="primary" (click)="handleCick('ADD_MI')">增加</button>
+    </div>
+  </div>
+  <!-- 生成邀请码 -->
+  <div *ngSwitchCase="'GENERATE_INVITE_CODE'">
+    <h2>生成邀请码</h2>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">代理账号</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-form-text>{{account}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">邀请码类型</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-select [(ngModel)]="generateInviteType">
+          <nz-option *ngFor="let item of generateInviteTypeAll" [nzValue]="item.value" [nzLabel]="item.label">
+          </nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">邀请码权限</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-select [(ngModel)]="roleGroupId">
+          <nz-option *ngFor="let item of roleGroupList" [nzValue]="item.id" [nzLabel]="item.name">
+          </nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">数量</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-input-number [(ngModel)]="amount" [nzMin]="1" [nzMax]="10" [nzStep]="1" nzPlaceHolder="">
+        </nz-input-number>
+      </nz-form-control>
+    </nz-form-item>
+
+    <div class="footer">
+      <button nz-button nzType="primary" (click)="handleGenerate()">生成</button>
+    </div>
+  </div>
+  <!-- 生成邀请码再次确认 -->
+  <div *ngSwitchCase="'GENERATE_INVITE_CODE2'">
+    <h2>提示</h2>
+    <div>将要为代理账号【{{account}}】生成邀请码</div>
+    <nz-form-item>
+      <nz-form-label nzSpan="6">邀请码类型</nz-form-label>
+      <nz-form-control nzSpan="18">
+        <nz-form-text>{{getInviteType}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">邀请码权限</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-form-text>{{getInviteRole}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">数量</nz-form-label>
+      <nz-form-control nzSpan="8">
+        <nz-form-text>{{amount}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <div class="footer">
+      <button nz-button nzType="primary" (click)="handleCick('GENERATE_START')">确认生成</button>
+    </div>
+  </div>
+  <!-- 邀请码生成成功 -->
+  <div *ngSwitchCase="'GENERATE_INVITE_CODE_SUCCESS'">
+    <h2>提示</h2>
+    <div class="adjustment-input">
+      <div>邀请码生成成功</div>
+    </div>
+    <div class="footer">
+      <button nz-button nzType="primary" (click)="close()">确认</button>
+    </div>
+  </div>
+  <div *ngSwitchCase="''">
+
+  </div>
+</div>

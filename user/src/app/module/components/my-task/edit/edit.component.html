@@ -1,0 +1,55 @@
+<h2>{{isCopy ? '复制': '修改'}}任务</h2>
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>任务类型</nz-form-label>
+    <nz-form-control [nzSpan]="9">
+      <nz-form-text>{{data?.tpe?.name}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8">任务名</nz-form-label>
+    <nz-form-control [nzSpan]="9" nzErrorTip="请输入任务名">
+      <input nz-input formControlName="name" placeholder="请输入任务名">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>选择设备</nz-form-label>
+    <nz-form-control [nzSpan]="9" nzErrorTip="最少选择一台设备">
+      <div nz-row class="device">
+        <div nz-col [nzSpan]="16">{{checkedDeviceNumber}}台</div>
+        <button nz-col nz-button [nzType]="'primary'" (click)="handleOpenModal('open_device')">选择</button>
+      </div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>执行方式</nz-form-label>
+    <nz-form-control [nzSpan]="9" nzErrorTip="请选择执行方式">
+      <nz-select nzAllowClear formControlName="executeMethod" nzPlaceHolder="请选择执行方式"
+        (ngModelChange)="handleExecuteChange($event)">
+        <nz-option *ngFor="let i of executeMethodArr" [nzValue]="i.key" [nzLabel]="i.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="scheduledTimeCode">
+    <nz-form-label [nzSpan]="8" nzRequired>执行时间</nz-form-label>
+    <nz-form-control [nzSpan]="9" [nzErrorTip]="dateErrorTip">
+      <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="请选择执行时间" formControlName="scheduledTime">
+      </nz-date-picker>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<app-input-tpe [paras]="formConfig?.paras" [data]="data.paras"></app-input-tpe>
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">{{isCopy ? '复制': '修改'}}</button>
+</div>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="700px">
+  <ng-container [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_device'">
+      <app-device [device]="bindDeviceIds"></app-device>
+    </div>
+    <div *ngSwitchDefault>
+      <div></div>
+    </div>
+  </ng-container>
+</nz-modal>

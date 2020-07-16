@@ -1,0 +1,15 @@
+<app-title (titleReset)="handleReset()" (titleQuery)="handleQuery($event)"></app-title>
+<nz-table #basicTable [nzData]="taskTypeTable?.arr" [nzTotal]="taskTypeTable?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+  (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>任务类型</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td [ngClass]="{'td-bg': data?.checked}" (click)="handleTdClick(data)">{{data?.name}}</td>
+    </tr>
+  </tbody>
+</nz-table>

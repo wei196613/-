@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="user-info">
+    <nz-form-item>
+      <nz-form-label nzSpan="8">用户名</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-form-text>{{userInfo?.account}}
+          <!-- <button (click)="changePassword()">修改密码</button> -->
+          <a nz-button nzType="primary" [routerLink]="[ '/change-password' ]">修改密码</a>
+        </nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">余额</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-form-text>{{(userInfo?.total / 100) | currency: 'CNY':'symbol-narrow'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">限时余额</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-form-text>{{(freeMibi / 100) | currency: 'CNY':'symbol-narrow'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="8">过期时间</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-form-text *ngIf="userInfo?.freeList[0]">
+          {{userInfo?.freeList[0]?.endTime *1000 |  date:'yyyy年MM月dd日 HH:mm:ss'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="userInfo?.token">
+      <nz-form-label nzSpan="8">token</nz-form-label>
+      <nz-form-control nzSpan="14">
+        <nz-form-text>
+          {{userInfo?.token}}
+        </nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div>
+    <button nz-button class="ant-btn-warning" (click)="logout()">退出登录</button>
+  </div>
+</div>

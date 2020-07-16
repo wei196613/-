@@ -1,0 +1,81 @@
+<app-title [titleTemRef]="titleTemRef" (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+<ng-template #titleTemRef>
+  <nz-select nzAllowClear [(ngModel)]="params.result" nzPlaceHolder="任务结果" *ngIf="tabIndex===0">
+    <nz-option *ngFor="let i of resultArr" [nzValue]="i.key" [nzLabel]="i.value"></nz-option>
+  </nz-select>
+  <nz-range-picker [(ngModel)]="date" nzShowTime></nz-range-picker>
+</ng-template>
+
+<nz-tabset [nzType]="'card'" [(nzSelectedIndex)]="tabIndex" (nzSelectedIndexChange)="getData()">
+  <nz-tab [nzTitle]="'捧主播'">
+    <nz-table #basicTable [nzData]="claqueData?.arr" [nzTotal]="claqueData?.total" [nzFrontPagination]="false"
+      [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+      (nzPageSizeChange)="pageSizeChange($event)">
+      <thead>
+        <tr>
+          <th>任务ID</th>
+          <th>任务名称</th>
+          <th>主播ID</th>
+          <th>开始剧本时间</th>
+          <th>结束时间</th>
+          <th>设备数</th>
+          <th>任务结果</th>
+          <th>累计运行时间</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{data?.id}}</td>
+          <td>{{data?.name}}</td>
+          <td>{{data?.anchorId}}</td>
+          <td>{{data?.scriptStartTime * 1000 | date:'yyyy年MM月dd日 HH:mm:ss'}}</td>
+          <td>{{data?.taskRealEndTime *1000| date:'yyyy年MM月dd日 HH:mm:ss'}}</td>
+          <td>{{data?.deviceNumber}}</td>
+          <td>{{data?.taskEndStatus | taskEndStatus}}</td>
+          <td><span *ngIf="data?.totalRuntime">{{data?.totalRuntime | dyFormattingTime}}</span></td>
+          <td><button nz-button nzType="primary" (click)="handleOpenModal(data)">查看详情</button></td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-tab>
+  <nz-tab [nzTitle]="'登录'">
+    <nz-table #basic2Table [nzData]="loginData?.arr" [nzTotal]="loginData?.total" [nzFrontPagination]="false"
+      [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+      (nzPageSizeChange)="pageSizeChange($event)">
+      <thead>
+        <tr>
+          <th>任务ID</th>
+          <th>设备(成功/失败/未用/全部)</th>
+          <th>抖音号(成功/失败/未用/全部)</th>
+          <th>开始登录时间</th>
+          <th>登录结束时间</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basic2Table.data">
+          <td>{{data?.id}}</td>
+          <td>
+            {{data?.devices.success}}/{{data?.devices.fail}}/{{data?.devices.unused}}/{{data?.devices.success + data?.devices.fail+data?.devices.unused}}
+          </td>
+          <td>
+            {{data?.accounts.success}}/{{data?.accounts.fail}}/{{data?.accounts.unused}}/{{data?.accounts.success + data?.accounts.fail+data?.accounts.unused}}
+          </td>
+          <td>{{data?.loginBeginTime *1000 | date:'yyyy年MM月dd日 HH:mm:ss'}}</td>
+          <td>{{data?.loginEndTime *1000 | date:'yyyy年MM月dd日 HH:mm:ss'}}</td>
+          <td><button nz-button nzType="primary" (click)="handleOpenModal(data)">查看详情</button></td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-tab>
+</nz-tabset>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="1005px">
+  <app-his-task-details (loginTaskMore)="getHisLoginDetail($event)" [data]="checkData" [tableData]="taskDetail"
+    [tabIndex]="tabIndex"></app-his-task-details>
+  <div class="footer">
+    <button nz-button nzType='primary' (click)="onCancel()">确定</button>
+  </div>
+</nz-modal>

@@ -1,0 +1,62 @@
+<h2>选择设备设备</h2>
+
+
+<nz-transfer [nzOperations]="['移出', '选择']" [nzDataSource]="list" [nzShowSelectAll]="false"
+  [nzRenderList]="[leftList, rightList]" (nzChange)="change($event)">
+  <ng-template #leftList let-items let-direction="direction" let-stat="stat" let-disabled="disabled"
+    let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
+    <div class="subtitle">
+      <div>已选设备：{{items.length}}</div>
+    </div>
+    <!-- <nz-table class="left-table" #l [nzData]="items" [nzTotal]="leftTotal" [nzFrontPagination]="false" [nzData]="items"
+      [(nzPageIndex)]="hasParams.curPage" (nzPageIndexChange)="getHasDevice()" nzSize="small"> -->
+    <nz-table class="left-table" #l [nzData]="items" nzSize="small">
+      <thead>
+        <tr>
+          <th nzShowCheckbox [nzDisabled]="false" [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+            (nzCheckedChange)="onItemSelectAll($event)" nzWidth="10%"></th>
+          <th nzWidth="90%">设备名</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of l.data" (click)="handleTdClick(data)">
+          <td nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="false" (nzCheckedChange)="onItemSelect(data)">
+          </td>
+          <td>{{ data?.name }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-template>
+  <ng-template #rightList let-items let-direction="direction" let-stat="stat" let-disabled="disabled"
+    let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
+    <div class="table-title">
+      <app-title placeholder="输入关键字搜索" (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+      <div>可选设备：</div>
+      <nz-table class="right-table" #r [nzData]="items" [nzFrontPagination]="false" [nzShowPagination]="false"
+        [nzData]="items" nzSize="small">
+        <thead>
+          <tr>
+            <th nzShowCheckbox [nzDisabled]="false" [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+              (nzCheckedChange)="onItemSelectAll($event)" nzWidth="10%"></th>
+            <th nzWidth='90%'>设备名</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of r.data" (click)="handleTdClick(data)">
+            <td nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="false" (nzCheckedChange)="onItemSelect(data)">
+            </td>
+            <td>{{ data?.name }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <div class="page">
+        <nz-pagination [(nzPageIndex)]="params.curPage" [nzTotal]="rightTotal" (nzPageIndexChange)="getData()">
+        </nz-pagination>
+      </div>
+    </div>
+  </ng-template>
+</nz-transfer>
+
+<div class="footer">
+  <button nz-button nzType='primary' (click)="submit()">确定</button>
+</div>
