@@ -1,0 +1,28 @@
+<div class="title">
+  <app-title (titleReset)="handleReset()" (titleQuery)="handleQuery($event)"></app-title>
+</div>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+   [(nzPageIndex)]="params.curPage"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>优惠劵名称</th>
+      <th>实际金额</th>
+      <th>类型</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.name}}</td>
+      <td>满{{data?.full}}减{{data?.discount}}</td>
+      <td>{{getCateText(data.category)}}</td>
+      <td><button nz-button nzType="primary" (click)="handleOpenModal(data)">修改</button></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <app-edit [data]="checkData"></app-edit>
+</nz-modal>

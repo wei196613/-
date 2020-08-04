@@ -1,0 +1,35 @@
+<div class="card-item">
+  <nz-card [nzTitle]="titleTemp" [nzExtra]="extraTemplate">
+    <div class="input">
+      <h5>输入参数</h5>
+      <ng-container *ngFor="let item of data.inputTags;let i = index">
+        <nz-tag [ngStyle]="{'border-color': color(item)?.color, 'color':color(item)?.color }"
+          [ngClass]="{'bg': color(item)}" (click)="handleTagClick(item,'inputTags', i)">
+          <span *ngIf="color(item)" class="queue">{{item?.queue}}</span>
+          {{item.newName?item.newName: item.oldName}} <span (click)="handleEdit($event, i)"><i nz-icon nzType="edit"
+              nzTheme="outline"></i></span>
+        </nz-tag>
+        <!-- <app-tag [data]="item" [actionInex]="index"></app-tag> -->
+      </ng-container>
+    </div>
+    <div class="output">
+      <h5>输出参数</h5>
+      <ng-container *ngFor="let item of data.outputTags; let i = index">
+        <nz-tag [ngStyle]="{'border-color': color(item)?.color, 'color':color(item)?.color }"
+          [ngClass]="{'bg': color(item)}" (click)="handleTagClick(item, 'outputTags', i)">
+          <span *ngIf="color(item)" class="queue">{{item.queue}}</span>
+          {{item.newName?item.newName: item.oldName}}
+        </nz-tag>
+        <!-- <ng-container *ngFor="let item of data.outputTags; let i = index">
+        <app-tag [data]="item" [actionInex]="index"></app-tag>
+      </ng-container> -->
+      </ng-container>
+    </div>
+  </nz-card>
+  <ng-template #extraTemplate>
+    <a (click)="handleDel()">删除</a>
+  </ng-template>
+  <ng-template #titleTemp>
+    <span>action{{index+1}}: {{data.name}}</span>
+  </ng-template>
+</div>

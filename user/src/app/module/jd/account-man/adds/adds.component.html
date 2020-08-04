@@ -1,0 +1,38 @@
+<h2>添加账号信息</h2>
+<ng-container *ngIf="inputValueType; else elseTemplate">
+  <div>请将账号信息按照固定格式粘贴到输入框中：</div>
+  <div style="color: red;">账号----密码----优惠券1|优惠券2----帐号校验地址<span>(多条账号信息用回车隔开)</span></div>
+  <textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="formatInputValue()">添加</button>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div>您确定要添加以下信息为新的账号信息吗?</div>
+  <nz-table #basicTable [nzData]="data">
+    <thead>
+      <tr>
+        <th nzWidth="20%">账号</th>
+        <th nzWidth="20%">密码</th>
+        <th nzWidth="40%">优惠券</th>
+        <th nzWidth="20%">校验地址</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td *ngFor="let i of data">
+          <ng-container *ngIf="i?.length > 50; else elseTemplate">
+            <span nz-tooltip [nzTooltipTitle]="i">{{i | slice: 0: 11}}...</span>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <span>{{i}}</span>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div class="account-footer">
+    <button nz-button class="ant-btn-warning" (click)="handleCancel()">取消</button>
+    <button nz-button nzType="primary" (click)="adds()">确定添加</button>
+  </div>
+</ng-template>

@@ -1,0 +1,91 @@
+<form nz-form [formGroup]="SubFromGroup">
+  <ng-container *ngFor="let i of paras">
+    <nz-form-item *ngIf="getIsShow(i)">
+      <nz-form-label [nzSpan]="8" [nzRequired]="getRequired(i)">
+        <ng-container *ngIf="isAdds;else templateName"><label nz-checkbox
+            (nzCheckedChange)="handleIsParaChange($event, i)">{{i.name}}</label>
+        </ng-container>
+        <ng-template #templateName>
+          <span>{{i.name}}</span>
+        </ng-template>
+      </nz-form-label>
+      <nz-form-control [nzSpan]="9" [nzErrorTip]="getEorrorTip(i)">
+        <ng-container [ngSwitch]="i.tpe">
+          <ng-container *ngSwitchCase="1">
+            <nz-input-number nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
+              [nzMin]="getMin(i)" [nzMax]="getMax(i)" [nzStep]="1" [nzPlaceHolder]="getPlaceHolder(i)">
+            </nz-input-number>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <input nz-input nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
+              [placeholder]="getPlaceHolder(i)">
+          </ng-container>
+          <ng-container *ngSwitchCase="3">
+            <nz-switch nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"></nz-switch>
+          </ng-container>
+          <ng-container *ngSwitchCase="4">
+            <nz-time-picker nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
+              nzPlaceHolder="请选择时间"></nz-time-picker>
+          </ng-container>
+          <ng-container *ngSwitchCase="5">
+            <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="请选择日期时间" nz-tooltip
+              [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key">
+            </nz-date-picker>
+          </ng-container>
+          <ng-container *ngSwitchCase="6">
+            <ng-container [formArrayName]="i.key">
+              <nz-form-item *ngFor="let absCol of getFormArray(i.key)?.controls; let index = index">
+                <nz-form-control [nzErrorTip]="getEorrorTip(i)" nz-row>
+                  <input nz-col nzSpan="20" nz-input [placeholder]="getPlaceHolder(i)" nz-tooltip
+                    [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="index" />
+                  <i nz-col nzSpan="4" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                    (click)="removeField(index,i.key,$event)"></i>
+                </nz-form-control>
+              </nz-form-item>
+              <button nz-button nzType="dashed" class="add-button" (click)="addField(i.key,$event)">
+                <i nz-icon nzType="plus"></i>
+              </button>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="7">
+            <ng-container [formArrayName]="i.key">
+              <nz-form-item *ngFor="let absCol of getFormArray(i.key)?.controls; let index = index">
+                <nz-form-control [nzErrorTip]="getEorrorTip(i)" nz-row>
+                  <nz-input-number nz-col nzSpan="20" nz-input [nzPlaceHolder]="getPlaceHolder(i)" nz-tooltip
+                    [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="index" [nzMin]="getMin(i)"
+                    [nzMax]="getMax(i)">
+                  </nz-input-number>
+                  <i nz-col nzSpan="4" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                    (click)="removeField(index,i.key,$event)"></i>
+                </nz-form-control>
+              </nz-form-item>
+              <button nz-button nzType="dashed" class="add-button" (click)="addField(i.key,$event)">
+                <i nz-icon nzType="plus"></i>
+              </button>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="8">
+            <nz-select nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
+              [nzPlaceHolder]="getPlaceHolder(i)" nzAllowClear>
+              <nz-option *ngFor="let item of i.values" [nzLabel]="item.key" [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </ng-container>
+          <ng-container *ngSwitchCase="9">
+            <app-password-input nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
+              ngDefaultControl [placeholder]="getPlaceHolder(i)">
+            </app-password-input>
+          </ng-container>
+          <ng-container *ngSwitchCase="10">
+            <nz-select nzMode="multiple" nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
+              [nzPlaceHolder]="getPlaceHolder(i)" nzAllowClear>
+              <nz-option *ngFor="let item of i.values" [nzLabel]="item.key" [nzValue]="item.value">
+              </nz-option>
+            </nz-select>
+          </ng-container>
+          <ng-container *ngSwitchDefault></ng-container>
+        </ng-container>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+</form>

@@ -1,0 +1,29 @@
+<nz-layout class="left-layout">
+  <nz-sider>
+    <div class="logo">
+      <a nz-dropdown [nzDropdownMenu]="menu">
+        <span>{{user?.userInfo?.account}}</span>
+        <i nz-icon nzType="down"></i>
+      </a>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item (click)="changePassword()">修改密码</li>
+          <li nz-menu-item (click)="logout()">退出登录</li>
+        </ul>
+      </nz-dropdown-menu>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item *ngFor="let mi of menuItems" (click)="navigate(mi.path)" [nzSelected]="router.url==mi.path">
+        <i nz-icon nzType="{{mi.icon}}" *ngIf="mi.icon"></i>
+        <span>{{mi.title}}</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class="right-layout">
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

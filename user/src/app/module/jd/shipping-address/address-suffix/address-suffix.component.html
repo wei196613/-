@@ -1,0 +1,32 @@
+<h2>后缀标签管理</h2>
+<nz-list [nzDataSource]="data" nzSize="large" nzBordered [nzHeader]="headerTem" [nzFooter]="null"
+  [nzRenderItem]="largeItem">
+  <ng-template #largeItem let-item>
+    <nz-list-item>
+      <div class="list-content">
+        <div>标签名：{{item?.name}}</div>
+        <div>内容：{{item?.content}}</div>
+        <div><button nz-button nzType="primary" (click)="handleOpenModal('open_edit',item)">修改</button></div>
+      </div>
+    </nz-list-item>
+  </ng-template>
+</nz-list>
+<div class="footer">
+  <!-- <button nz-button nzType="primary">确定</button> -->
+</div>
+
+<ng-template #headerTem>
+  <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">新增标签</button>
+</ng-template>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-address-suffix-add></app-address-suffix-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-address-suffix-edit [data]="checkData"></app-address-suffix-edit>
+    </ng-container>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>

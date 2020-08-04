@@ -1,0 +1,83 @@
+<!-- title -->
+<div class="title" nz-row>
+  <div class="input" nz-col nzSpan="12">
+    <app-title placeholder="输入关键字搜索" [titleTemRef]="titleTemRef" (titleQuery)="handleQuery($event)"
+      (titleReset)="handleReset()"></app-title>
+    <ng-template #titleTemRef>
+      <!-- <div>1111</div> -->
+    </ng-template>
+  </div>
+  <div class="right-btn" nz-col nzSpan="12">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('OPEN_ADD')">单个添加</button>
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('OPEN_ADDS')">文本输入</button>
+  </div>
+</div>
+
+<!-- table -->
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+   [(nzPageIndex)]="params.curPage"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th nzWidth="15%">账号</th>
+      <th nzWidth="15%">密码 <app-password-text (visibleChange)="handleEye($event)"></app-password-text>
+      </th>
+      <th nzWidth="20%">优惠券</th>
+      <th nzWidth="20%">状态</th>
+      <th nzWidth="20%">添加时间</th>
+      <!--  <th><button nz-button nzType="primary">批量修改</button></th><th><button nz-button nzType="wanring">批量删除</button></th> -->
+      <th nzWidth="10%">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td nzWidth="20%">
+        <ng-container *ngIf="data?.account?.length > 11; else accTemplate">
+          <span nz-tooltip [nzTooltipTitle]="data?.account">{{data?.account | slice: 0: 11}}...</span>
+        </ng-container>
+        <ng-template #accTemplate>
+          <span>{{data?.account}}</span>
+        </ng-template>
+      </td>
+      <td nzWidth="10%">
+        <app-password-text *ngIf="data?.pwd" [text]="data?.pwd" [(visible)]="data.eye"></app-password-text>
+      </td>
+      <td nzWidth="20%">
+        <ng-container *ngIf="data?.coupon?.length > 20; else couTemplate">
+          <span nz-tooltip [nzTooltipTitle]="data?.coupon"> {{data?.coupon  | slice: 0: 20}}...</span>
+        </ng-container>
+        <ng-template #couTemplate>
+          <span>{{data?.coupon}}</span>
+        </ng-template>
+      </td>
+      <td nzWidth="20%">{{data?.status}}</td>
+      <td nzWidth="20%">{{data?.time * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+      <td nzWidth="10%">
+        <button nz-button nzType="primary" (click)="handleOpenModal('EDIT',data)">修改</button>
+        <!-- <button nz-button nzType="danger" (click)="handleOpenModal('DELECT',data)">删除</button> -->
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'OPEN_ADD'">
+      <app-add></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'OPEN_ADDS'">
+      <app-adds></app-adds>
+    </ng-container>
+    <ng-container *ngSwitchCase="'EDIT'">
+      <app-edit [data]="editData"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'ADDS_ERROR'">
+      <app-adds-err [data]="errorData"></app-adds-err>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div></div>
+    </ng-container>
+  </div>
+</nz-modal>

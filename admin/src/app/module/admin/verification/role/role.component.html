@@ -1,0 +1,37 @@
+<h2>邀请码权限管理</h2>
+
+<div class="add">
+  <button nz-button nzType="success" (click)="handleOpenModal('open_add')">新建权限</button>
+</div>
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+  (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>权限名称</th>
+      <th>角色</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.name}}</td>
+      <td>{{getRoleName(data?.roles)}}</td>
+      <td><button nz-button nzType="primary" (click)="handleOpenModal('open_edit', data)">修改</button></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-add [roleList]="roleList"></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-edit [roleList]="roleList" [data]="checkData"></app-edit>
+    </ng-container>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>

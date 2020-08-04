@@ -1,0 +1,88 @@
+<div class="address-title">
+  <app-title [titleTemRef]="titleTem" (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+  <span class="right-btn">
+    <button nz-button nzType="primary" (click)="handleOpenModal('open_address_label')">普通标签</button>
+    <button nz-button nzType="primary" (click)="handleOpenModal('open_address_suffix')">后缀标签</button>
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_address_add')">添加</button>
+    <!-- <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">导入</button> -->
+  </span>
+</div>
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+   [(nzPageIndex)]="params.curPage"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>收货地址</th>
+      <th>标签</th>
+      <th>后缀标签</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td> {{data?.address}} </td>
+      <td>{{data?.labels}}</td>
+      <td>{{data?.suffixLabel}}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="handleOpenModal('open_address_edit',data)">修改</button>
+        <!-- <button nz-button nzType="danger" (click)="handleOpenModal('delect',data)">删除</button> -->
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_address_add'">
+      <app-address-add [labelAll]="labelArr" [suffixlabel]="addressSuffix"></app-address-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_address_edit'">
+      <app-address-edit [data]="checkData" [labelAll]="labelArr" [suffixlabel]="addressSuffix"></app-address-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'add_address_error'">
+      <h2>错误提示</h2>
+      <nz-table #basicTable [nzData]="addAddressError" [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th>导入内容</th>
+            <th>出错信息</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{data?.line}}</td>
+            <td>{{data?.error}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
+    </ng-container>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="labelVisible" [nzOkText]='null'
+  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="1000px">
+
+  <ng-container [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_address_label'">
+      <app-address-label [data]="labelArr"></app-address-label>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_address_suffix'">
+      <app-address-suffix [data]="addressSuffix"></app-address-suffix>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div></div>
+    </ng-container>
+  </ng-container>
+</nz-modal>
+
+<ng-template #titleTem>
+  <nz-select nzAllowClear [(ngModel)]="params.labelName" nzPlaceHolder="标签">
+    <nz-option *ngFor="let i of labelArr" [nzValue]="i.name" [nzLabel]="i.name"></nz-option>
+  </nz-select>
+</ng-template>

@@ -1,0 +1,120 @@
+<h2>任务详情</h2>
+<ng-container *ngIf="tabIndex; else elseTemplate">
+  <div nz-row>
+    <div nz-col nzSpan="2">任务ID:</div>
+    <div nz-col nzSpan="20">{{data?.id}}</div>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="5">设备(成功/失败/未用/全部):</div>
+    <div nz-col nzSpan="10">
+      {{data?.devices?.success}}/{{data?.devices?.fail}}/{{data?.devices?.unused}}/{{data?.devices?.success + data?.devices?.fail+data?.devices?.unused}}
+    </div>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="5">抖音号(成功/失败/未用/全部):</div>
+    <div nz-col nzSpan="10">
+      {{data?.accounts?.success}}/{{data?.accounts?.fail}}/{{data?.accounts?.unused}}/{{data?.accounts?.success + data?.accounts?.fail+data?.accounts?.unused}}
+    </div>
+  </div>
+  <nz-table #basicTable [nzData]="tableData?.arr" [nzTotal]="tableData?.total" [nzShowPagination]="false"
+    (nzPageIndexChange)="handleIndexChange($event)">
+    <thead>
+      <tr>
+        <th>抖音号</th>
+        <th>登陆账号</th>
+        <th>设备名称</th>
+        <th>开始登录时间</th>
+        <th>登录结束时间</th>
+        <th>结果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{data?.dyAccount?.account}}</td>
+        <td>{{handleGetAccount(data?.dyAccount)}}</td>
+        <td>{{data?.deviceName}}</td>
+        <td>{{data?.loginBeginTime *1000 | date:'yyyy年MM月dd日 HH:mm:ss'}}</td>
+        <td>{{data?.loginEndTime *1000 | date:'yyyy年MM月dd日 HH:mm:ss'}}</td>
+        <td>{{data?.res | loginResult}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</ng-container>
+
+<ng-template #elseTemplate>
+  <div class="detail">
+    <nz-form-item>
+      <nz-form-label nzSpan="12">任务ID</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.id}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">任务名称</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.name}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">主播ID</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.anchorId}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">剧本名称</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.script?.name}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">剧本总时长</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.script?.totalTime | dyFormattingTime}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">角色数</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.script?.characterNumber}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">发言总条数</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.script?.commentNumber}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">开始进场时间</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.deviceEnterTime *1000 | date:'yyyy年MM月dd日 HH:mm:ss'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <!-- <nz-form-item>
+      <nz-form-label nzSpan="12">剧本结束时间</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text *ngIf="data?.taskRealEndTime">{{data?.taskRealEndTime| date:'yyyy年MM月dd日 HH:mm:ss'}}
+        </nz-form-text>
+      </nz-form-control>
+    </nz-form-item> -->
+    <nz-form-item>
+      <nz-form-label nzSpan="12">任务结束时间</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.taskRealEndTime * 1000| date:'yyyy年MM月dd日 HH:mm:ss'}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">任务结果</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text>{{data?.taskEndStatus | loginResult}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="12">累计运行时长</nz-form-label>
+      <nz-form-control nzSpan="12">
+        <nz-form-text *ngIf="data?.totalRuntime">{{data?.totalRuntime | dyFormattingTime}}</nz-form-text>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</ng-template>

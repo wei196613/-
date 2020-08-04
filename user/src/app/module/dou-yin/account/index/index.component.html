@@ -1,0 +1,56 @@
+<div class="account-title">
+  <app-title [titleTemRef]="titleTemRef" (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+  <ng-template #titleTemRef>
+    <!--     <nz-select nzAllowClear [(ngModel)]="params.result" nzMode="multiple" nzPlaceHolder="任务结果">
+      <nz-option *ngFor="let i of securityUserArr" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+    </nz-select> -->
+  </ng-template>
+  <span class="right-btn">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">添加账号</button>
+    <nz-upload nzAccept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      [nzBeforeUpload]="onBeforeUpload">
+      <button nz-button class="ant-btn-success"><i nz-icon nzType="upload"></i><span>导入</span></button>
+    </nz-upload>
+    <!-- <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_adds')">导入</button> -->
+  </span>
+</div>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+   [(nzPageIndex)]="params.curPage"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>抖音号</th>
+      <th>QQ号登录</th>
+      <th>微博登录</th>
+      <th>手机号登录</th>
+      <th>当前运行设备</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.account}}</td>
+      <td></td>
+      <td>{{data?.weibo}}</td>
+      <td></td>
+      <td>{{data?.runningAccount}}</td>
+      <td><button nz-button nzType="primary" (click)="handleOpenModal('open_edit', data)">修改</button></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-add></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-edit [data]="checkData"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_adds'">
+      <app-adds [data]="uploadData"></app-adds>
+    </ng-container>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>

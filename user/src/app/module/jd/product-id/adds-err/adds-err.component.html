@@ -1,0 +1,15 @@
+<h2>错误提示</h2>
+<nz-table #basicTable [nzData]="data" [nzShowPagination]="false">
+  <thead>
+    <tr>
+      <th>导入内容</th>
+      <th>出错信息</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.line}}</td>
+      <td>{{data?.error}}</td>
+    </tr>
+  </tbody>
+</nz-table>

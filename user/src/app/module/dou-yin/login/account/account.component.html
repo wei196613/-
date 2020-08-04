@@ -1,0 +1,34 @@
+<h2>选择账号</h2>
+<div class="account-title">
+  <app-title (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+  <!--   <span class="right-btn">
+    <label *ngFor="let i of checkAll" [(nzChecked)]="i.checked" (nzCheckedChange)="checkChange($event, i.value)"
+      nz-checkbox [nzValue]="i.value">{{i.label}}</label>
+  </span> -->
+</div>
+
+<nz-table #basicTable [nzVirtualItemSize]="54" [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)">
+  <thead>
+    <tr>
+      <th nzWidth="16%" nzShowCheckbox [nzChecked]="allChecked" [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="tableCheckAll($event)"></th>
+      <th nzWidth="20%">账号名</th>
+      <th nzWidth="30%">微博登录</th>
+      <th nzWidth="30%">当前运行设备</th>
+      <!-- <th></th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data" (click)="data.checked= !data.checked">
+      <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
+      <td>{{data?.account}}</td>
+      <td>{{data?.weibo}}</td>
+      <td>{{data?.runningDeviceName}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="handleMake()">确定</button>
+</div>

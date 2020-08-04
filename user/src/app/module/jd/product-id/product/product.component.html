@@ -1,0 +1,63 @@
+<div class="product-title">
+  <app-title [titleTemRef]="titleTem" (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+  <span class="right-btn">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">单个添加</button>
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_adds')">文本输入</button>
+  </span>
+</div>
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+   [(nzPageIndex)]="params.curPage"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>商品ID</th>
+      <th>金额</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{data?.productId}}</td>
+      <td>{{data?.price}}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="handleOpenModal('open_edit',data)">修改</button>
+        <!-- <button nz-button nzType="danger" (click)="handleOpenModal('delect',data)">删除</button> -->
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-add></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_adds'">
+      <app-adds></app-adds>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-edit [data]="checkData"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'adds_error'">
+      <app-adds-err [data]='addsErr'></app-adds-err>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
+    </ng-container>
+  </div>
+</nz-modal>
+
+<ng-template #titleTem>
+  <div class="title-tem">
+    <span class="title-text">金额</span>
+    <span>
+      <nz-input-number [(ngModel)]="params.priceStart"></nz-input-number>
+    </span>
+    <span class="title-text">至</span>
+    <span>
+      <nz-input-number [(ngModel)]="params.priceEnd"></nz-input-number>
+    </span>
+  </div>
+</ng-template>

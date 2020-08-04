@@ -1,0 +1,166 @@
+<!-- title -->
+<div class="task-title">
+  <div class="input">
+    <app-title (titleReset)="handleReset()" (titleQuery)="handleQuery($event)" [titleTemRef]="titleTem"></app-title>
+    <ng-template #titleTem>
+      <div>
+        <nz-select [(ngModel)]="params.status" nzPlaceHolder="任务状态" nzAllowClear>
+          <nz-option *ngFor="let item of taskStatus" [nzLabel]="item.value" [nzValue]="item.key">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div>
+        <nz-select [(ngModel)]="params.taskTypeId" nzPlaceHolder="任务类型" nzAllowClear>
+          <nz-option *ngFor="let item of taskTypeArr?.arr" [nzLabel]="item.name" [nzValue]="item.id">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div>
+        <nz-date-picker [nzShowTime]="nzDefaultOpenValue" [(ngModel)]="params.startTime1" nzPlaceHolder="请选择要查询开始时间"
+          (ngModelChange)="handleTitleTimeChange()">
+        </nz-date-picker>
+      </div>
+      <div>
+        <nz-date-picker [nzShowTime]="nzDefaultOpenValue" [(ngModel)]="params.startTime2" nzPlaceHolder="请选择要查询结束时间"
+          (ngModelChange)="handleTitleTimeChange()">
+        </nz-date-picker>
+      </div>
+    </ng-template>
+  </div>
+  <div class="right-btn">
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">添加</button>
+    <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_adds')">批量添加</button>
+  </div>
+</div>
+
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+  (nzPageSizeChange)="pageSizeChange($event)" [nzFooter]="tableFooter">
+  <thead>
+    <tr>
+      <th nzShowCheckbox [nzDisabled]="getCheckDis()" [nzChecked]="onCheckedAll"
+        (nzCheckedChange)="handleCheckAll($event)" nzWidth="4%"></th>
+      <th nzWidth="8%">任务ID</th>
+      <th nzWidth="8%">任务名称</th>
+      <th nzWidth="10%">任务类型</th>
+      <th nzWidth="10%">运行设备</th>
+      <th nzWidth="10%">执行方式</th>
+      <th nzWidth="10%">执行时间</th>
+      <th nzWidth="10%">状态</th>
+      <th nzWidth="10%">结束时间</th>
+      <th nzWidth="20%">操作</th>
+    </tr>
+    <div class="refresh">
+      <div nz-row>
+        <div nz-col [nzSpan]="20"><span>自动刷新：</span>
+          <nz-switch nzCheckedChildren="开" nzUnCheckedChildren="关" [(ngModel)]="refresh"
+            (ngModelChange)="handleRefreshChange($event)">
+          </nz-switch>
+        </div>
+        <div nz-col [nzSpan]="4">
+          <button nz-button nzType="link" (click)="getData()">刷新</button>
+        </div>
+      </div>
+    </div>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data" (click)="handleCheckItem(data)">
+      <td appClickStop nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="getCheckDis(data)"
+        (nzCheckedChange)="handleCheckItem(data,$event)">
+      </td>
+      <td>{{data?.id}}</td>
+      <td>{{data?.name}}</td>
+      <td>{{data?.tpe?.name}}</td>
+      <td>{{data?.runningDevice?.name}}</td>
+      <td>
+        <div>{{ data?.executeMethod | JdLoginExecute}}</div>
+        <div *ngIf="data?.executeMethod === 3">
+          {{data?.scheduledTime * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}
+        </div>
+      </td>
+      <td>
+        <div *ngIf="data?.startTime">
+          {{data?.startTime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}
+        </div>
+      </td>
+      <td>
+        <span [ngSwitch]="data?.status">
+          <span *ngSwitchCase="4">
+            <nz-tag nzColor="success">{{data?.status | JdLoginStatus}}</nz-tag>
+          </span>
+          <span *ngSwitchCase="5">
+            <nz-tag nzColor="error">{{data?.status | JdLoginStatus}}</nz-tag>
+          </span>
+          <span *ngSwitchCase="6">
+            <nz-tag nzColor="warning">{{data?.status | JdLoginStatus}}</nz-tag>
+          </span>
+          <span *ngSwitchDefault> {{data?.status | JdLoginStatus}}</span>
+        </span>
+        <button appClickStop *ngIf="data.status === 4 || data.status === 5" nz-button nzType="link" nzSize="small"
+          (click)="handleOpenModal('open_result',data)">查看</button></td>
+      <td>
+        <div *ngIf="data?.endTime">
+          {{data?.endTime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}
+        </div>
+      </td>
+      <td class="operation-btn">
+        <button appClickStop *ngIf="handleIsEdit(data)" nz-button nzType="primary"
+          (click)="handleOpenModal('open_edit',data)" nzSize="small">修改</button>
+        <button appClickStop nz-button nzType="primary" (click)="handleOpenModal('open_copy',data)"
+          nzSize="small">复制</button>
+        <button appClickStop *ngIf="data.status === 0" nz-button class="ant-btn-warning"
+          (click)="handleExecuteTask(data.id)" nzSize="small">执行</button>
+        <button appClickStop *ngIf="handleIsRun(data)" nz-button class="ant-btn-warning"
+          (click)="handleRunTask(data.id)" nzSize="small">重新运行</button>
+        <button appClickStop *ngIf="handleIsClose(data)" nz-button nzType="danger" nz-popconfirm
+          nzPopconfirmTitle="是否取消该任务" (nzOnConfirm)="closeTask(data.id)" nzSize="small">取消</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #tableFooter>
+  <label nz-checkbox [(ngModel)]="exportAll" (nzCheckedChange)="handleAllChange()"
+    [nzDisabled]="getCheckDis()">选择全部</label><span>(总共{{data?data?.total: 0}}条)</span><button nz-button nzType="link"
+    (click)="handleExportTask()">导出选中任务</button>
+</ng-template>
+
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-add [formConfig]="formConfig" [taskTypeTable]="taskTypeTable" [isAdds]="isAdds"></app-add>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_export'">
+      <app-export-data [formConfig]="formConfig"></app-export-data>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-edit [data]="eidtData" [isCopy]="isCopy" [formConfig]="formConfig"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_result'">
+      <h2>查看任务运行详情</h2>
+      <pre>{{ getResult }}</pre>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_time'">
+      <h2>设置自动刷新时间</h2>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="12">请设置自动刷新时间</nz-form-label>
+        <nz-form-control nzSpan="12">
+          <nz-input-number [(ngModel)]="refreshTime" [nzMin]="1" [nzStep]="1">
+          </nz-input-number>秒
+        </nz-form-control>
+      </nz-form-item>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="handleSetInterval()">确定</button>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div></div>
+    </ng-container>
+  </div>
+</nz-modal>

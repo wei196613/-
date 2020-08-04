@@ -1,0 +1,29 @@
+<h2>添加账号信息</h2>
+<ng-container *ngIf="inputValueType; else elseTemplate">
+  <div>请将账号信息按照固定格式粘贴到输入框中：</div>
+  <div style="color: red;">商品ID----金额<span>(多条账号信息用回车隔开)</span></div>
+  <textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="formatInputValue()">添加</button>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div>您确定要添加以下信息为新的账号信息吗?</div>
+  <nz-table #basicTable [nzData]="data">
+    <thead>
+      <tr>
+        <th>商品ID</th>
+        <th>金额</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td *ngFor="let i of data">{{i}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div class="product-footer">
+    <button nz-button class="ant-btn-warning" (click)="handleCancel()">取消</button>
+    <button nz-button nzType="primary" (click)="adds()">确定添加</button>
+  </div>
+</ng-template>

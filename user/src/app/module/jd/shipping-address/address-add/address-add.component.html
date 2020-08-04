@@ -1,0 +1,27 @@
+<h2>添加</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <div> 请将地址按照固定格式粘贴到输入框中: <span style="color: red;">(多条地址用回车换行隔开)</span></div>
+  <textarea rows="4" nz-input formControlName="addresses"></textarea>
+  <div>
+    <nz-form-item>
+      <nz-form-label nzSpan="3">标签</nz-form-label>
+      <nz-form-control nzSpan="21"  nzErrorTip="最少选择一个标签">
+        <nz-select nzAllowClear formControlName="labelIds" nzMode="multiple">
+          <nz-option *ngFor="let i of labelAll" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzSpan="3">后缀标签</nz-form-label>
+      <nz-form-control nzSpan="10">
+        <nz-select nzAllowClear formControlName="suffixId" nzErrorTip="请选择后缀标签">
+          <nz-option *ngFor="let i of suffixlabel" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</form>

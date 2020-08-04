@@ -1,0 +1,25 @@
+<h2>选择设备</h2>
+<app-title (titleQuery)="handleQuery($event)" (titleReset)="handleReset()"></app-title>
+<nz-table #basicTable [nzVirtualItemSize]="54" [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)">
+  <thead>
+    <tr>
+      <th nzWidth="20%" nzShowCheckbox [nzChecked]="allChecked" [nzIndeterminate]="indeterminate"
+        (nzCheckedChange)="tableCheckAll($event)"></th>
+      <th nzWidth="40%">设备名称</th>
+      <th nzWidth="40%">当前运行账号</th>
+      <!-- <th></th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data" (click)="data.checked= !data.checked">
+      <td nzShowCheckbox [(nzChecked)]="data.checked"></td>
+      <td>{{data?.name}}</td>
+      <td>{{data?.runningAccount}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="handleMake()">确定</button>
+</div>

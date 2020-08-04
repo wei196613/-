@@ -1,0 +1,43 @@
+<h2>修改账号信息</h2>
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4" nzRequired>账号</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入账号">
+      <input type="text" nz-input formControlName="account" placeholder="请输入账号" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">密码</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入账号密码">
+      <app-password-input formControlName="pwd" ngDefaultControl placeholder="请输入账号密码"></app-password-input>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="4">账号校验地址</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <input type="text" nz-input formControlName="smsUrl" placeholder="请输入帐号校验地址" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container formArrayName="couponList">
+    <nz-form-item *ngFor="let coup of couponList.controls; let i = index">
+      <nz-form-label [nzXs]="24" [nzSm]="4">优惠券{{i+1}}
+      </nz-form-label>
+      <nz-form-control [nzXs]="24" [nzSm]="20" nzErrorTip="最少一个优惠券">
+        <input class="passenger-input" nz-input placeholder="请输入优惠券" [formControlName]="i" />
+        <i *ngIf="!(coup.disabled || i === 0)" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+          (click)="removeField(i, $event)"></i>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+  <nz-form-item>
+    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 20, offset: 4 }">
+      <button nz-button nzType="dashed" class="add-button" (click)="addField($event)">
+        <i nz-icon nzType="plus"></i>
+      </button>
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">修改</button>
+  </div>
+</form>

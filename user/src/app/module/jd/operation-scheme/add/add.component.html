@@ -1,0 +1,68 @@
+<h2>添加新方案</h2>
+
+<form nz-form [formGroup]="formGroup">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>方案名</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入方案名">
+      <input type="text" nz-input formControlName="name" placeholder="请输入方案名" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>最终付款</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入最终付款金额">
+      小于<nz-input-number formControlName="finalPrice"></nz-input-number>元
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>飞行模式时长</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="请输入飞行模式时长时间">
+      <nz-input-number formControlName="flyModeSec"></nz-input-number>秒
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>付款方式</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <nz-select nzAllowClear formControlName="payment">
+        <nz-option *ngFor="let i of payment" [nzValue]="i.value" [nzLabel]="i.label"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>登录方式</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <nz-select nzAllowClear formControlName="loginType">
+        <nz-option *ngFor="let i of loginType" [nzValue]="i.key" [nzLabel]="i.value"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="formGroup.get('loginType').value === 1">
+    <nz-form-label [nzSpan]="8" nzRequired>账号选择</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="最少选择一个优惠券">
+      <div>
+        <nz-radio-group formControlName="category" (ngModelChange)="handleRadioChange()">
+          <label *ngFor="let i of categoryArr" nz-radio [nzValue]="i.value">{{i.label}}</label>
+        </nz-radio-group>
+      </div>
+      <nz-select nzAllowClear formControlName="couponIds" nzMode="multiple">
+        <nz-option *ngFor="let i of couponSeeAll" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="formGroup.get('category').value === 1">
+    <nz-form-label [nzSpan]="8" nzRequired>地址标签</nz-form-label>
+    <nz-form-control [nzSpan]="8" nzErrorTip="最少选择一个地址标签">
+      <nz-select nzAllowClear formControlName="addressLabels" nzMode="multiple">
+        <nz-option *ngFor="let i of addressAll" [nzValue]="i.id" [nzLabel]="i.name"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="8" nzRequired>组合任务</nz-form-label>
+    <nz-form-control [nzSpan]="8">
+      <label nz-checkbox formControlName="isRunJx">运行京喜任务</label>
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</form>

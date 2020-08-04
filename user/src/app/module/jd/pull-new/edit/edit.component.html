@@ -1,0 +1,26 @@
+<h2>修改</h2>
+<nz-form-item>
+  <nz-form-label nzSpan="8">拉新地址</nz-form-label>
+  <nz-form-control nzSpan="8">
+    <nz-form-text>{{data?.url}}</nz-form-text>
+  </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+  <nz-form-label nzSpan="8">每日最多可用次数</nz-form-label>
+  <nz-form-control nzSpan="8">
+    <nz-input-number [(ngModel)]="maximum" [nzStep]="1">
+    </nz-input-number>
+  </nz-form-control>
+</nz-form-item>
+<nz-form-item>
+  <nz-form-label nzSpan="8">拉新地址类型</nz-form-label>
+  <nz-form-control nzSpan="8">
+    <nz-select [(ngModel)]="tpe" nzPlaceHolder="请选择拉新地址类型" >
+      <nz-option *ngFor="let item of radioAll" [nzLabel]="item.value" [nzValue]="item.key">
+      </nz-option>
+    </nz-select>
+  </nz-form-control>
+</nz-form-item>
+<div class="footer">
+  <button nz-button nzType="primary" (click)="edit()">修改</button>
+</div>

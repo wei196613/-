@@ -1,0 +1,72 @@
+<nz-layout class="left-layout">
+  <nz-sider>
+    <div class="logo">
+      <div class="img">
+        <img>
+      </div>
+      <div class="user-name">
+        <div>{{ userInfo.userInfo?.account | slice:0:11}} <span *ngIf="userInfo.userInfo?.account?.length >11"
+            nz-tooltip [nzTooltipTitle]="userInfo.userInfo.account">...</span>
+        </div>
+        <div>
+          <span class="ant-btn-primary" (click)="navigate('/user-info')">个人中心</span>
+        </div>
+      </div>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li *ngIf="menuItem.jd.length > 1" nz-submenu [nzTitle]="jdTitleTem" [nzOpen]="nzOpen === 1">
+        <ul>
+          <li nz-menu-item *ngFor="let mi of menuItem.jd" (click)="navigate(mi.path)"
+            [nzSelected]="router.url==mi.path">
+            <i nz-icon nzType="{{mi.icon}}" *ngIf="mi.icon"></i>
+            <span>{{mi.title}}</span>
+          </li>
+        </ul>
+      </li>
+      <li *ngIf="menuItem.dy.length > 1" nz-submenu [nzTitle]="dyTitleTem" [nzOpen]="nzOpen === 2">
+        <ul>
+          <li nz-menu-item *ngFor="let mi of menuItem.dy" (click)="navigate(mi.path)"
+            [nzSelected]="router.url==mi.path">
+            <i nz-icon nzType="{{mi.icon}}" *ngIf="mi.icon"></i>
+            <span>{{mi.title}}</span>
+          </li>
+        </ul>
+      </li>
+      <li nz-menu-item *ngFor="let mi of menuItem.common" (click)="navigate(mi.path)"
+        [nzSelected]="router.url==mi.path">
+        <i nz-icon nzType="{{mi.icon}}" *ngIf="mi.icon"></i>
+        <span>{{mi.title}}</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class="right-layout">
+    <nz-content>
+      <div class="inner-content">
+        <ng-container *ngIf="IsAuth; else elseTemplate">
+          <div class="auth">
+            <nz-result nzStatus="warning" nzTitle="请联系管理员获取权限再试">
+              <div nz-result-extra>
+                <button nz-button nzType="link" (click)="login.logout()">切换账号</button>
+              </div>
+            </nz-result>
+          </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <router-outlet></router-outlet>
+        </ng-template>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+<ng-template #jdTitleTem>
+  <ng-container>
+    <jd-icon></jd-icon>
+    京东
+  </ng-container>
+</ng-template>
+<ng-template #dyTitleTem>
+  <ng-container>
+    <dy-icon></dy-icon>
+    抖音
+  </ng-container>
+</ng-template>

@@ -1,0 +1,99 @@
+<h2> {{isAdds? '批量导入': '新建'}}任务</h2>
+<nz-steps [nzCurrent]="current">
+  <nz-step nzTitle="请选择要执行的任务"></nz-step>
+  <nz-step nzTitle="填写执行任务详情"></nz-step>
+</nz-steps>
+
+<div class="steps-content">
+  <!-- 任务选择表格 -->
+  <div *ngIf="current === 0">
+    <app-task-tpe [taskTypeTable]="taskTypeTable"></app-task-tpe>
+  </div>
+  <!-- 任务参数填写表格 -->
+  <div *ngIf="current === 1">
+    <form nz-form [formGroup]="formGroup">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>任务类型</nz-form-label>
+        <nz-form-control [nzSpan]="9">
+          <div nz-row class="device">
+            <div nz-col [nzSpan]="16">{{taskTypeCheck?.name}}</div>
+            <button nz-col nz-button [nzType]="'primary'" (click)="handlePre()">选择</button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" [nzRequired]="isAdds">任务名</nz-form-label>
+        <nz-form-control [nzSpan]="9" nzErrorTip="请输入任务名">
+          <input nz-input formControlName="name" placeholder="请输入任务名">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>选择设备</nz-form-label>
+        <nz-form-control [nzSpan]="9" nzErrorTip="最少选择一台设备">
+          <div nz-row class="device">
+            <div nz-col [nzSpan]="16">{{checkedDeviceNumber}}台</div>
+            <button nz-col nz-button [nzType]="'primary'" (click)="handleOpenModal('open_device')">选择</button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="8" nzRequired>执行方式</nz-form-label>
+        <nz-form-control [nzSpan]="9" nzErrorTip="请选择执行方式">
+          <nz-select nzAllowClear formControlName="executeMethod" nzPlaceHolder="请选择执行方式"
+            (ngModelChange)="handleExecuteChange($event)">
+            <nz-option *ngFor="let i of executeMethodArr" [nzValue]="i.key" [nzLabel]="i.value"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="scheduledTimeCode">
+        <nz-form-label [nzSpan]="8" nzRequired>执行时间</nz-form-label>
+        <nz-form-control [nzSpan]="9" [nzErrorTip]="dateErrorTip">
+          <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="请选择执行时间"
+            formControlName="scheduledTime">
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <app-input-tpe [paras]="formConfig?.paras" [isAdds]="isAdds"></app-input-tpe>
+  </div>
+</div>
+
+
+
+<ng-container *ngIf="!isAdds; else elseTem">
+  <div class="footer" *ngIf="current === 1">
+    <button nz-button nzType="dashed" (click)="handlePre()">上一步</button>
+    <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  </div>
+</ng-container>
+
+<ng-template #elseTem>
+  <div class="footer" *ngIf="current === 1">
+    <button nz-button nzType="dashed" (click)="handleGenTem()">下载模板</button>
+    <div class="shade">
+      <nz-upload nzAccept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        [nzBeforeUpload]="onBeforeUpload">
+        <button nz-button class="ant-btn-success"><i nz-icon nzType="upload"></i><span>上传文件</span></button>
+      </nz-upload>
+      <div class="shade-top" *ngIf="!(formGroup?.valid && subformValid && bindDeviceIds.length > 0)"
+        (click)="handleExamine()"></div>
+    </div>
+  </div>
+</ng-template>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="700px">
+  <ng-container [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_device'">
+      <app-device [device]="bindDeviceIds"></app-device>
+    </div>
+    <div *ngSwitchCase="'adds_detail'">
+      <app-adds-detail [data]="parseExcelRes" [params]="formGroup.value" [device]="bindDeviceIds" [subform]="subform"
+        [taskTypeName]="taskTypeCheck?.name">
+      </app-adds-detail>
+    </div>
+    <div *ngSwitchDefault>
+      <div></div>
+    </div>
+  </ng-container>
+</nz-modal>

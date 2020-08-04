@@ -1,0 +1,43 @@
+<app-title placeholder="输入账号搜索"></app-title>
+<div class="btn">
+  <nz-tabset [nzTabPosition]="'top'" [nzType]="'card'">
+    <nz-tab [nzTitle]="'代理'" (nzClick)="setAgentType('AGENT')"></nz-tab>
+    <nz-tab [nzTitle]="'用户'" (nzClick)="setAgentType('USER')"></nz-tab>
+  </nz-tabset>
+  <!-- <span>历史获得米币：</span> -->
+  <button nz-button nzType="success" *ngIf="isBigAgent" class="add" (click)="handleAdd()">添加</button>
+</div>
+<nz-table #basicTable [nzData]="data?.arr" [(nzPageIndex)]="curPage" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>级别</th>
+      <th>账号</th>
+      <th>持有米币</th>
+      <th>{{agentType?'今日消耗':'今日转出'}}</th>
+      <th>{{agentType?'总消耗':'历史获得米币'}}</th>
+      <th>角色</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{agentType| agentType}}</td>
+      <td>{{ data?.account }}</td>
+      <td>{{ data?.balance }}</td>
+      <td>{{data?.today}}</td>
+      <td>{{data?.total}}</td>
+      <td>{{getRolesString(data?.roleIds) | slice:0:20}} <span
+          *ngIf="getRolesString(data?.roleIds).length > 20">...</span> </td>
+      <td><button nz-button nzType="primary" (click)="handleDetails(data)">查看详情</button></td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="addCode" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <app-agent-add></app-agent-add>
+</nz-modal>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="detailsCode" [nzOkText]='null'
+  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <app-agent-details [roleGroupList]="roleGroupList"></app-agent-details>
+</nz-modal>

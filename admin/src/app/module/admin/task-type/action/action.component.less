@@ -1,0 +1,66 @@
+nz-card {
+  width: 100%;
+}
+
+.input {
+  width: 60%;
+  border-right: 1px solid #e8e8e8;
+}
+
+.input,
+.output {
+  display: inline-block;
+  padding: 20px;
+
+  h5 {
+    text-align: center;
+  }
+}
+
+.output {
+  width: 40%;
+}
+
+nz-tag {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2;
+}
+
+nz-tag:hover {
+  transform: scale(1.1);
+}
+
+.card-item {
+  /deep/.ant-card-body {
+    padding: 0;
+
+    .ant-tag {
+      border: 2px solid
+    }
+  }
+
+  .ant-tag-has-color,
+  .ant-tag-has-color a,
+  .ant-tag-has-color a:hover,
+  .ant-tag-has-color .anticon-close,
+  .ant-tag-has-color .anticon-close:hover {
+    color: #000;
+  }
+}
+
+.queue {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  line-height: 13px;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid;
+}
+
+.ant-tag.bg{
+  background: #333;
+}
