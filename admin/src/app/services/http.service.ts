@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { NzMessageService } from 'ng-zorro-antd';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -95,7 +96,11 @@ export class HttpService {
   public getUrl(url: string, params): string {
     for (const key in params) {
       if (params[key] !== null && params[key] !== undefined && params[key] !== '') {
-        url += `${key}=${params[key]}&`
+        if (Object.prototype.toString.call(params[key]) === '[object Date]') {
+          url += `${key}=${format(params[key], 'yyyy-MM-dd HH:mm:ss')}&`
+        } else {
+          url += `${key}=${params[key]}&`
+        }
       }
     }
     return url.slice(0, -1);

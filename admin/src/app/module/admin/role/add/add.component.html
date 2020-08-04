@@ -7,6 +7,12 @@
       <input type="text" nz-input formControlName="name" placeholder="请输入角色名称">
     </nz-form-control>
   </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="5">可见任务</nz-form-label>
+    <nz-form-control nzSpan="16">
+      <button nz-button nzType="primary" (click)="handleOpenModal()">设置</button>
+    </nz-form-control>
+  </nz-form-item>
 </form>
 <nz-form-item>
   <nz-form-label [nzSpan]="5">权限选择</nz-form-label>
@@ -38,3 +44,7 @@
 <div class="footer">
   <button nz-button nzType="primary" (click)="submitForm()">添加</button>
 </div>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="705px">
+  <app-task-select (taskSelectChange)="handleTaskSelectChange($event)"></app-task-select>
+</nz-modal>

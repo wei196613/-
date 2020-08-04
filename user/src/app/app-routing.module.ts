@@ -18,22 +18,6 @@ const routes: Routes = [
     path: '', component: AppFrameComponent, canActivate: [AuthGuardService], children:
       [
         {
-          path: 'jd', component: MainComponent, children: [
-            {
-              path: '',
-              children: [
-                { path: 'account-man', loadChildren: () => import('src/app/module/jd/account-man/account-man.module').then(m => m.AccountManModule) },
-                { path: 'pull-new', loadChildren: () => import('src/app/module/jd/pull-new/pull-new.module').then(m => m.PullNewModule) },
-                { path: 'shipping-address', loadChildren: () => import('src/app/module/jd/shipping-address/shipping-address.module').then(m => m.ShippingAddressModule) },
-                { path: 'product-id', loadChildren: () => import('src/app/module/jd/product-id/product-id.module').then(m => m.ProductIdModule) },
-                { path: 'coupon', loadChildren: () => import('src/app/module/jd/coupon/coupon.module').then(m => m.CouponModule) },
-                { path: 'operation-scheme', loadChildren: () => import('src/app/module/jd/operation-scheme/operation-scheme.module').then(m => m.OperationSchemeModule) },
-                { path: 'task', loadChildren: () => import('src/app/module/jd/task/task.module').then(m => m.TaskModule) },
-              ]
-            }
-          ], canActivate: [AuthGuardService]
-        },
-        {
           path: 'dy', component: MainComponent, children: [
             {
               path: '',

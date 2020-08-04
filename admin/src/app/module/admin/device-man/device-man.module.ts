@@ -6,10 +6,12 @@ import { DeviceManRoutingModule } from './device-man-routing.module';
 import { DeviceComponent } from './device/device.component';
 import { EidtComponent } from './eidt/eidt.component';
 import { TransferComponent } from './transfer/transfer.component';
+import { IndexComponent } from './index/index.component';
+import { AllocationComponent } from './allocation/allocation.component';
 
 
 @NgModule({
-  declarations: [DeviceComponent, EidtComponent, TransferComponent],
+  declarations: [DeviceComponent, EidtComponent, TransferComponent, IndexComponent, AllocationComponent],
   imports: [
     CommonModule,
     DeviceManRoutingModule,

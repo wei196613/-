@@ -1,6 +1,5 @@
 import { SelfRoute } from './entity';
 import { Injectable, Component } from '@angular/core';
-import { RouterService as jdRouter } from "./../module/jd/router.service";
 import { RouterService as dyRouter } from "./../module/dou-yin/router.service";
 import { RegComponent } from 'src/app/components/reg/reg.component';
 import { ChangePasswordComponent } from 'src/app/components/change-password/change-password.component';
@@ -16,23 +15,15 @@ import { MainComponent } from 'src/app/components/main.component';
   providedIn: 'root'
 })
 export class RouterService {
-  constructor(private jdRouter: jdRouter, private dyRouter: dyRouter) { }
+  constructor(private dyRouter: dyRouter) { }
   get rootroute() {
     return [
       { path: 'login', component: LoginComponent },
       { path: 'change-password', component: ChangePasswordComponent },
       { path: 'reg', component: RegComponent },
       {
-        path: '', component: AppFrameComponent,  children:
+        path: '', component: AppFrameComponent, children:
           [
-            {
-              path: 'jd', component: MainComponent, children: [
-                {
-                  path: '',
-                  children: this.jdRouter.routerCogfig
-                }
-              ], canActivate: [AuthGuardService]
-            },
             {
               path: 'dy', component: MainComponent, children: [
                 {

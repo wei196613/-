@@ -11,14 +11,16 @@ export class GenTemXLSXService {
       let workbook = { Sheets: {}, SheetNames: [] };
       const XLSXTitle = {}
       arr.forEach(v => {
-        XLSXTitle[v] = '';
+        XLSXTitle[v] = null;
       });
       arr.forEach(v => {
         workbook.Sheets[v] = xlsx.utils.json_to_sheet([XLSXTitle]);
         workbook.SheetNames.push(v);
       })
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer);
+      console.log(workbook);
+      const excelBuffer: any = xlsx.writeFile(workbook, '模板' + new Date().getTime() + '.xlsx', { sheet: '编辑' });
+      // const excelBuffer: any = xlsx.writeFile(workbook, { bookType: 'xlsx', type: 'array' });
+      // this.saveAsExcelFile(excelBuffer);
     });
   }
 

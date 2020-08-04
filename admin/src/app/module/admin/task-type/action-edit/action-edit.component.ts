@@ -1,3 +1,4 @@
+import { NzMessageService } from 'ng-zorro-antd';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Component, OnInit, Input } from '@angular/core';
 import { Tags } from 'src/app/services/entity';
@@ -12,36 +13,52 @@ export class ActionEditComponent implements OnInit {
   formGroup: FormGroup;
   @Input() data: Tags;
   @Input() selectArr: { value: string, name: string }[];
-  constructor(private fb: FormBuilder, private byVal: ByValueService) { }
+  constructor(private fb: FormBuilder, private byVal: ByValueService, private hintMsg: NzMessageService) { }
 
   ngOnInit() {
     this.formGroup = this.fb.group({
       oldName: [{ value: null, disabled: true }, Validators.required],
       oldKey: [{ value: null, disabled: true }, Validators.required],
-      newName: [null, [this.some()]],
-      newKey: [null, [this.some()]],
-      refOrder: [null, [this.some()]],
-      defaultValue: [null, [this.some()]],
+      newKey: [null, [Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
+      newName: [null],
+      refOrder: [null, [this.refSome()]],
+      defaultValue: [null]
     })
     this.patchValue();
   }
   private patchValue() {
     if (this.data) {
-      const { oldName, oldKey, newName, newKey, refOrder } = this.data;
-      this.formGroup.patchValue({ oldName, oldKey, newName, newKey, refOrder })
+      const { oldName, oldKey, newName, newKey, refOrder, defaultValue } = this.data;
+      this.formGroup.patchValue({ oldName, oldKey, newName, newKey, refOrder, defaultValue });
     }
   }
-  some() {
+
+  handleInputChange(value: string, key: string) {
+    const name = this.formGroup.get(key);
+    if (this.hasError(value)) {
+      name.setValidators(Validators.required);
+    } else {
+      name.clearValidators();
+      name.updateValueAndValidity();
+    }
+  }
+
+
+  private refSome() {
     return () => {
       if (this.formGroup) {
-        const name = this.formGroup.get('newName').value;
-        const key = this.formGroup.get('newKey').value;
+        const name = this.formGroup.get('newName');
+        const key = this.formGroup.get('newKey');
         const order = this.formGroup.get('refOrder').value;
-        const defaultValue = this.formGroup.get('defaultValue').value;
-        if ((this.hasError(name) && this.hasError(key)) || this.hasError(order) || this.hasError(defaultValue)) {
-          return null;
+        const defaultValue = this.formGroup.get('defaultValue');
+        if (this.hasError(order)) {
+          name.disable();
+          key.disable();
+          defaultValue.disable();
         } else {
-          return { some: true }
+          name.enable();
+          key.enable();
+          defaultValue.enable();
         }
       }
     }
@@ -56,7 +73,6 @@ export class ActionEditComponent implements OnInit {
       this.formGroup.controls[i].markAsDirty();
       this.formGroup.controls[i].updateValueAndValidity();
     }
-    console.log(this.formGroup);
     if (this.formGroup.valid) {
       const v = this.formGroup.value;
       for (const key in v) {
@@ -64,11 +80,16 @@ export class ActionEditComponent implements OnInit {
           v[key] = null;
         }
       }
-      this.data.refOrder = v.refOrder;
-      this.data.newKey = v.newKey;
-      this.data.newName = v.newName;
-      this.data.defaultValue = v.defaultValue
-      this.byVal.sendMeg({ key: 'edit_tag_success', data: this.data })
+      this.byVal.sendMeg({ key: 'edit_tag_success', data: v })
     }
+  }
+  /**默认值提示*/
+  get tioltipTitle() {
+    const { tpe } = this.data
+    return tpe === 6 ? 'stringList类型默认值请输入{spilt："," ,value: ["test1","test2"]}格式' : null;
+  }
+  /**键值命名不符合规则错误提示*/
+  handleGetErrorTip(abs: AbstractControl) {
+    return abs && abs.hasError('pattern') ? '键值命名规则不正确，应以字母或者下划线开头,由字母数字下划线组成' : '请输入名称';
   }
 }

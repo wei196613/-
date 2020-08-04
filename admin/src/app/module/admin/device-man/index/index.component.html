@@ -1,0 +1,42 @@
+<div class="title">
+  <app-title [placeholder]="'输入关键字查询'"></app-title>
+  <button nz-button class="btn ant-btn-success" (click)="handleOpenModal('open_transfer')">设备分配</button>
+</div>
+<nz-tabset [nzTabPosition]="'top'" [nzType]="'card'" [(nzSelectedIndex)]="tabIndex"
+  (nzSelectChange)="handleTabChange()">
+  <nz-tab [nzTitle]="'用户'"></nz-tab>
+  <nz-tab [nzTitle]="'设备'"></nz-tab>
+</nz-tabset>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [(nzPageSize)]="params.perPage"
+  [(nzPageIndex)]="params.curPage" [nzFrontPagination]="false" (nzPageIndexChange)="getData()"
+  (nzPageSizeChange)="getData()">
+  <thead>
+    <tr>
+      <th>{{tabIndex ? '设备': '用户'}}</th>
+      <th>{{tabIndex? '用户数' : '设备数'}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>{{ tabIndex?data?.deviceName :data?.account}}</td>
+      <td>{{ tabIndex? data?.accounts: data?.devices}}</td>
+      <td><button nz-button nzType="primary" (click)="handleOpenModal('open_edit',data)">修改</button></td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="1084px">
+  <div [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-eidt [data]="checkData" [tabIndex]="tabIndex"></app-eidt>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_transfer'">
+      <app-allocation></app-allocation>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div> </div>
+    </ng-container>
+  </div>
+</nz-modal>

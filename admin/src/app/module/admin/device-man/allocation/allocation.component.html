@@ -1,0 +1,32 @@
+<h2>设备分配</h2>
+<nz-steps [nzCurrent]="current" nzSize="small">
+  <nz-step nzTitle="选择设备分配方式"></nz-step>
+  <nz-step nzTitle="选择设备/用户"></nz-step>
+  <nz-step nzTitle="分配"></nz-step>
+</nz-steps>
+<div [ngSwitch]="current">
+  <div *ngSwitchCase="0">
+    <div class="way">
+      <div>请选择分配方式:</div>
+      <div>
+        <button nz-button nzSize="large" (click)="handleWayChange(0)">给指定用户分配多个设备</button>
+      </div>
+      <div>
+        <button nz-button nzSize="large" (click)="handleWayChange(1)">给指定设备分配多个用户</button>
+      </div>
+    </div>
+  </div>
+  <div *ngSwitchCase="1">
+    <div class="select">
+      <ng-container *ngIf="tabIndex === 0;else templateName">
+        <app-user-account (idChange)="handleUserOrDevChange($event)"></app-user-account>
+      </ng-container>
+      <ng-template #templateName>
+        <app-device (idChange)="handleUserOrDevChange($event)"></app-device>
+      </ng-template>
+    </div>
+  </div>
+  <div *ngSwitchCase="2">
+    <app-transfer [tabIndex]="tabIndex" [data]="checkedData"></app-transfer>
+  </div>
+</div>

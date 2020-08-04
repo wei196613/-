@@ -2,7 +2,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { ByValueService } from 'src/app/services/by-value.service';
 import { AppSpinService } from 'src/app/components/spin-mask/app-spin.service';
-import { ActionTypeNames, GetActionById, ActionTypeNameItem, EditTaskType, TaskTypes, AddTaskType, TaskTypeItem } from 'src/app/services/entity';
+import { ActionTypeNames, GetActionByKey, ActionTypeNameItem, EditTaskType, TaskTypes, AddTaskType, TaskTypeItem, SortTaskTypeInput } from 'src/app/services/entity';
 import { Subscription } from 'rxjs';
 import { CustomActionService } from 'src/app/services/custom-action.service';
 import { TaskTypeService } from 'src/app/services/task-type.service';
@@ -23,12 +23,12 @@ export class IndexComponent implements OnInit {
   sub: Subscription;
   /**查寻taskType的数据*/
   params = {
-    perPage: 10,
+    perPage: 15,
     curPage: 1,
     keyword: null
   }
   /**控制打开对话框内容*/
-  modalKey: 'open_add' | 'open_edit' | 'open_export' = null;
+  modalKey: 'open_add' | 'open_edit' | 'open_export' | 'open_select' | 'open_sort' = null;
   constructor(
     private hintMsg: NzMessageService,
     private byVal: ByValueService,
@@ -55,12 +55,24 @@ export class IndexComponent implements OnInit {
         case 'get_action_config_all':
           this.getActionTypeAll(res.data)
           break;
+        case 'task_checkbox_query':
+          this.getData(res.data)
+          break;
+        case 'edit_task_visible':
+          this.toggleTaskVisible(res.data)
+          break;
+        case 'colse_modal':
+          this.onCancel()
+          break;
+        case 'sort_start':
+          this.sortTaskType(res.data)
+          break;
       }
     })
   }
   handleTitleQuery(keyword: string) {
     this.params = {
-      perPage: 10,
+      perPage: 15,
       curPage: 1,
       keyword
     }
@@ -68,7 +80,7 @@ export class IndexComponent implements OnInit {
   }
   handleTitleClear() {
     this.params = {
-      perPage: 10,
+      perPage: 15,
       curPage: 1,
       keyword: null
     }
@@ -85,12 +97,29 @@ export class IndexComponent implements OnInit {
       this.handleError(error.msg)
     }
   }
+  /**参数排序*/
+  private async sortTaskType(params: SortTaskTypeInput) {
+    this.spin.open("排序中。。。")
+    try {
+      const res = await this.taskType.reorderParasOfTaskType(params);
+      this.onCancel();
+      this.spin.close();
+      this.hintMsg.success(res.msg);
+    } catch (error) {
+      this.handleError(error.msg)
+    }
+  }
   /**获取taskType数据*/
-  private async getData() {
+  async getData(params?) {
     this.spin.open("获取数据中")
     try {
-      const data = await this.taskType.getTaskType(this.params);
-      this.data = data;
+      params = this.modalKey === 'open_select' ? params : this.params
+      const data = await this.taskType.getTaskType(params);
+      if (this.modalKey === 'open_select') {
+        this.byVal.sendMeg({ key: 'get_task_checkedbox_success', data })
+      } else {
+        this.data = data;
+      }
       this.spin.close()
     } catch (error) {
       this.handleError(error.msg)
@@ -128,10 +157,10 @@ export class IndexComponent implements OnInit {
   }
 
   /**获取action详情*/
-  private async getActionType(id: number) {
+  private async getActionType(key: string) {
     this.spin.open("获取数据")
     try {
-      const data = await this.custom.getActionById(id);
+      const data = await this.custom.getActionByKey(key);
       this.byVal.sendMeg({ key: 'get_action_config_success', data });
       this.spin.close()
     } catch (error) {
@@ -139,10 +168,11 @@ export class IndexComponent implements OnInit {
     }
   }
   /**获取taskType详情*/
-  private async getTaskType(id: number, key: 'open_add' | 'open_edit' | 'open_export') {
+  private async getTaskType(id: number, key: 'open_add' | 'open_edit' | 'open_export' | 'open_sort', withDefaultParas = true) {
     this.spin.open("获取数据")
     try {
-      const data = await this.taskType.getTaskTypeById(id);
+      const data = await this.taskType.getTaskTypeById(id, withDefaultParas);
+      data.paras.sort((a, b) => a.order - b.order)
       this.checkData = data;
       this.modalKey = key;
       this.visible = true;
@@ -152,12 +182,12 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  private async getActionTypeAll(ids: number[]) {
-    const promiseAll = ids.map(i => (this.custom.getActionById(i)))
+  private async getActionTypeAll(keys: string[]) {
+    const promiseAll = keys.map(i => (this.custom.getActionByKey(i)))
     this.spin.open('获取数据中')
     try {
       const data = await Promise.all(promiseAll);
-      this.byVal.sendMeg({ key: 'get_action_config_all_success', data});
+      this.byVal.sendMeg({ key: 'get_action_config_all_success', data });
       this.spin.close();
     } catch (error) {
       this.handleError(error.msg)
@@ -176,9 +206,11 @@ export class IndexComponent implements OnInit {
     }, 100);
   }
   /**打开弹框*/
-  handleOpenModal(key: 'open_add' | 'open_edit' | 'open_export', data?: ActionTypeNameItem) {
+  handleOpenModal(key: 'open_add' | 'open_edit' | 'open_export' | 'open_select' | 'open_sort', data?: TaskTypeItem) {
     if (key === 'open_edit' || key === 'open_export') {
       this.getTaskType(data.id, key)
+    } else if (key === 'open_sort') {
+      this.getTaskType(data.id, key, false)
     } else {
       this.modalKey = key;
       this.visible = true;
@@ -187,21 +219,23 @@ export class IndexComponent implements OnInit {
   /**获取导出的JSON对象*/
   get getActionTypeJSON() {
     if (this.checkData) {
-      delete this.checkData.id;
       return JSON.stringify(this.checkData, null, 2)
     }
     return ''
   }
-
-  pageIndexChange(e: number) {
-    this.params.curPage = e;
-    this.getData()
+  /**修改任务类型可见性*/
+  private async toggleTaskVisible(ids: number[]) {
+    this.spin.open('修改中。。。')
+    try {
+      const res = await this.taskType.toggleTaskTypeVisible(ids);
+      await this.getData()
+      this.onCancel();
+      this.hintMsg.success(res.msg)
+    } catch (error) {
+      this.handleError(error.msg)
+    }
   }
 
-  pageSizeChange(e: number) {
-    this.params.perPage = e;
-    this.getData()
-  }
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.

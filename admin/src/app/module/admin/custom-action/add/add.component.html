@@ -9,7 +9,7 @@
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSpan]="4">键值</nz-form-label>
-    <nz-form-control [nzSpan]="20" nzErrorTip="请输入键值">
+    <nz-form-control [nzSpan]="20" [nzErrorTip]="handleGetErrorTip(formGroup.get('key'))">
       <input type="text" nz-input formControlName="key" placeholder="请输入键值">
     </nz-form-control>
   </nz-form-item>
@@ -52,8 +52,8 @@
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSpan]="4">键值</nz-form-label>
-                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
-                  <input type="text" nz-input formControlName="key" placeholder="请输入名称">
+                <nz-form-control [nzSpan]="16" [nzErrorTip]="handleGetErrorTip(i.get('key'))">
+                  <input type="text" nz-input formControlName="key" placeholder="请输入键值">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -128,8 +128,8 @@
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSpan]="4">键值</nz-form-label>
-                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
-                  <input type="text" nz-input formControlName="key" placeholder="请输入名称">
+                <nz-form-control [nzSpan]="16" [nzErrorTip]="handleGetErrorTip(i.get('key'))">
+                  <input type="text" nz-input formControlName="key" placeholder="请输入键值">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -149,7 +149,7 @@
 </form>
 
 <div class="footer">
-  <button nz-button nzType="success" (click)="onCancel()">导入</button>
+  <button nz-button class="ant-btn-success" (click)="onCancel()">导入</button>
   <button nz-button nzType="primary" (click)="submitForm()">添加</button>
 </div>
 <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"

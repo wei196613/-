@@ -20,7 +20,8 @@ export interface RolesItem {
   id: number,
   name: string,
   permissions: [number],
-  userCount: number
+  userCount: number,
+  checked: boolean
 }
 
 export interface AddRoleParams {
@@ -144,24 +145,25 @@ export interface ActionTypeNameItem {
   inputParasTotal: number,
   outputParasTotal: number,
   checked?: boolean;
+  usable?: boolean,// 是否可用
+  defaultVisible?: boolean,
 }
 
 export interface ActionTypeNames extends Common<ActionTypeNameItem> {
 
 }
 
-export interface GetActionById extends AddAction {
-  id: number
+export interface GetActionByKey extends AddAction {
+  newKey?: string;
 }
 
 export interface OutputParas {
-  id: number,
   /**参数名*/
   name: string,
   /**参数键值*/
   key: string,
   /**参数类型*/
-  tpe: number
+  tpe: number;
 }
 
 export interface InputParas extends OutputParas {
@@ -172,6 +174,7 @@ export interface InputParas extends OutputParas {
   /**格式如注所说明，满足该参数值=value或a<=参数值<=b时，隐藏/显示其他的字段*/
   cascadeConstraint?: string,
   tip: string,
+  errTip?: string
 }
 
 export interface AddAction {
@@ -196,21 +199,24 @@ export interface OutputRefs {
 export interface ParaAlias {
   key: string,
   alias: string,
-
 }
 
 export interface Paras {
-  /**前端点击哪个action的参数得到的新输入参数，就用那个参数的actionConfId*/
-  actionConfId: number,
+  /**前端点击哪个action的参数得到的新输入参数，就用那个参数所属的action的key*/
+  actionKey: string,
+  /**前端点击哪个action的参数得到的新输入参数，就用那个参数原来的key名*/
+  actionConfKey: string
   /**原action的key或重命名后的key(如有)*/
   key?: string,
   /*** 原action的key或重命名后的key(如有) */
   name?: string, //
   defaultValue?: string;
+  newKey?: string;
+  order?: number;
 }
 
 export interface Actions {
-  id: number,
+  key: string,
   order: number,
   name?: string,
   outputRefs?: string | OutputRefs[],
@@ -219,6 +225,7 @@ export interface Actions {
 
 export interface AddTaskType {
   name: string;
+  key: string;
   actionRels: Actions[];
   paras: Paras[]
 }
@@ -230,6 +237,8 @@ export interface EditTaskType extends AddTaskType {
 export interface TaskTypeItem {
   id: number,
   name: string,
+  usable: boolean,
+  defaultVisible?: boolean,
   actionRels: Actions[],
 }
 
@@ -239,7 +248,7 @@ export interface TaskTypes extends Common<TaskTypeItem> {
 
 /**组合任务所需*/
 export interface ActionTagsItem {
-  id: number;
+  key: string;
   name: string;
   /**输入参数 Tag*/
   inputTags: Tags[],
@@ -248,7 +257,8 @@ export interface ActionTagsItem {
 }
 
 export interface Tags {
-  id?: number;
+  actionConfKey: string;
+  actionKey: string;
   /**点击顺序*/
   queue?: number;
   /**绑定action的id*/
@@ -264,7 +274,12 @@ export interface Tags {
   /**记录该参数出现action的位置数组*/
   actionIndex?: number[];
   /**保存该参数绑定的其他参数的位置*/
-  bindTag?: [number,number][];
+  bindTag?: [number, number][];
+}
+
+export interface SortTaskTypeInput {
+  taskTypeId: number,
+  paras: { actionKey: string, actionConfKey: string, order: number }[]
 }
 
 export class Common<T> {

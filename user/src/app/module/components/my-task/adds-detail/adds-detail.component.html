@@ -2,7 +2,7 @@
 <div nz-row>
   <div nz-col [nzSpan]="12"><span>任务类型：{{taskTypeName}}</span></div>
   <div nz-col [nzSpan]="12"><span>任务名称：{{params?.name}}</span></div>
-  <div nz-col [nzSpan]="12"><span>执行方式：{{params?.executeMethod | JdLoginExecute}}</span></div>
+  <div nz-col [nzSpan]="12"><span>执行方式：{{params?.executeMethod | loginExecute}}</span></div>
   <!-- <div nz-col [nzSpan]="12"><span>是否备份</span></div> -->
   <div nz-col [nzSpan]="12"><span>已选设备：{{device?.length}}个</span><button (click)="handleOpenModal('open_device')"
       nz-button nzType="link">查看</button></div>
@@ -47,7 +47,63 @@
       </nz-table>
     </div>
     <div *ngSwitchCase="'adds_para'">
-      
+      <h2>共同参数</h2>
+      <ng-container *ngFor="let i of subform?.difParamsName">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="8">
+            {{i?.name}}
+          </nz-form-label>
+          <!-- number -->
+          <nz-form-control [nzSpan]="9">
+            <ng-container [ngSwitch]="i.tpe">
+              <ng-container *ngSwitchCase="1">
+                <span>{{getParaName(i.key)?.numberValue}}</span>
+              </ng-container>
+              <!-- string -->
+              <ng-container *ngSwitchCase="2">
+                <span>{{getParaName(i.key)?.stringValue}}</span>
+              </ng-container>
+              <!-- boolean -->
+              <ng-container *ngSwitchCase="3">
+                <nz-switch nzCheckedChildren="是" nzUnCheckedChildren="否" [ngModel]="getParaName(i.key)?.boolValue"
+                  [disabled]="true"></nz-switch>
+              </ng-container>
+              <!-- time -->
+              <ng-container *ngSwitchCase="4">
+                <span>{{getParaName(i.key)?.stringValue | slice: 11:20}}</span>
+              </ng-container>
+              <!-- dateTime -->
+              <ng-container *ngSwitchCase="5">
+                <span>{{getParaName(i.key)?.stringValue}}</span>
+              </ng-container>
+              <!-- stringList -->
+              <ng-container *ngSwitchCase="6">
+                <span>{{getParaName(i.key)?.stringListValue}}</span>
+              </ng-container>
+              <!-- numberList -->
+              <ng-container *ngSwitchCase="7">
+                <span>{{getParaName(i.key)?.numberListValue}}</span>
+              </ng-container>
+              <!-- select -->
+              <ng-container *ngSwitchCase="8">
+                <span>{{getParaName(i.key)?.numberValue}}</span>
+              </ng-container>
+              <!-- password -->
+              <ng-container *ngSwitchCase="9">
+                <app-password-text [text]="getParaName(i.key)?.stringValue"></app-password-text>
+              </ng-container>
+              <!-- multiple-select -->
+              <ng-container *ngSwitchCase="10">
+                <span>{{getParaName(i.key)?.numberListValue}}</span>
+              </ng-container>
+              <ng-container *ngSwitchDefault></ng-container>
+            </ng-container>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
     </div>
     <div *ngSwitchDefault>
       <div></div>

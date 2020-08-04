@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
-import { AddTaskType, EditTaskType, CommonResp, TaskTypes } from './entity';
+import { AddTaskType, EditTaskType, CommonResp, TaskTypes, SortTaskTypeInput } from './entity';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,24 @@ export class TaskTypeService {
    * getTaskTypeById
    *  获取任务类型ById
   */
-  public getTaskTypeById(id: number) {
-    return this.http.get<EditTaskType>(`getTaskTypeById?id=${id}&withDefaultParas=true`).toPromise();
+  public getTaskTypeById(id: number, withDefaultParas = true) {
+    return this.http.get<EditTaskType>(`getTaskTypeById?id=${id}&withDefaultParas=${withDefaultParas}`).toPromise();
+  }
+  /**
+   * 改变任务类型的可见性（新）已写完 可测试
+   *  - POST / toggleTaskTypeVisible
+  */
+  public toggleTaskTypeVisible(ids: number[]) {
+    return this.http.post<CommonResp>('toggleTaskTypeVisible', { ids }).toPromise()
+  }
+
+  /**
+   * reorderParasOfTaskType
+   * 任务列表参数重新排序 已写完可测试
+   * - POST / reorderParasOfTaskType
+   */
+  public reorderParasOfTaskType(params: SortTaskTypeInput) {
+    return this.http.post<CommonResp>('reorderParasOfTaskType', params).toPromise();
   }
 }
+

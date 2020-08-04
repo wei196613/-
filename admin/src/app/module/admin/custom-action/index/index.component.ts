@@ -2,7 +2,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { ByValueService } from 'src/app/services/by-value.service';
 import { AppSpinService } from 'src/app/components/spin-mask/app-spin.service';
-import { ActionTypeNames, AddAction, GetActionById, ActionTypeNameItem } from 'src/app/services/entity';
+import { ActionTypeNames, AddAction, GetActionByKey, ActionTypeNameItem } from 'src/app/services/entity';
 import { Subscription } from 'rxjs';
 import { CustomActionService } from 'src/app/services/custom-action.service';
 @Component({
@@ -12,15 +12,15 @@ import { CustomActionService } from 'src/app/services/custom-action.service';
 })
 export class IndexComponent implements OnInit {
   data: ActionTypeNames;
-  checkData: GetActionById;
+  checkData: GetActionByKey;
   visible: boolean = false;
   sub: Subscription;
   params = {
-    perPage: 10,
+    perPage: 15,
     curPage: 1,
     keyword: null
   }
-  modalKey: 'open_add' | 'open_edit' = null;
+  modalKey: 'open_add' | 'open_edit' | 'open_export' = null;
   constructor(private hintMsg: NzMessageService, private byVal: ByValueService, private spin: AppSpinService, private custom: CustomActionService) { }
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class IndexComponent implements OnInit {
       switch (res.key) {
         case 'title_query':
           this.params = {
-            perPage: 10,
+            perPage: 15,
             curPage: 1,
             keyword: res.data.msg
           }
@@ -37,7 +37,7 @@ export class IndexComponent implements OnInit {
           break;
         case 'title_clear':
           this.params = {
-            perPage: 10,
+            perPage: 15,
             curPage: 1,
             keyword: null
           }
@@ -63,7 +63,7 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  private async edit(params: GetActionById) {
+  private async edit(params: GetActionByKey) {
     this.spin.open("正在修改中")
     try {
       const res = await this.custom.editAction(params);
@@ -88,13 +88,13 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  private async getActionType(id: number, key) {
+  private async getActionType(key: string, modalKey: 'open_add' | 'open_edit' | 'open_export') {
     this.spin.open("获取数据")
     try {
-      const data = await this.custom.getActionById(id);
+      const data = await this.custom.getActionByKey(key);
       this.checkData = data
       this.visible = true;
-      this.modalKey = key;
+      this.modalKey = modalKey;
       this.spin.close()
     } catch (error) {
       this.handleError(error.msg)
@@ -116,7 +116,7 @@ export class IndexComponent implements OnInit {
   /**打开弹框*/
   handleOpenModal(key: 'open_add' | 'open_edit' | 'open_export', data?: ActionTypeNameItem) {
     if (key === 'open_edit' || key === 'open_export') {
-      this.getActionType(data.id, key)
+      this.getActionType(data.key, key)
     } else {
       this.modalKey = key;
       this.visible = true;
@@ -125,7 +125,6 @@ export class IndexComponent implements OnInit {
   /**获取导出的JSON对象*/
   get getActionTypeJSON() {
     if (this.checkData) {
-      delete this.checkData.id;
       return JSON.stringify(this.checkData, null, 2)
     }
     return ''

@@ -5,13 +5,15 @@ import { IndexComponent } from './index/index.component';
 import { EditComponent } from './edit/edit.component';
 import { TransferComponent } from './transfer/transfer.component';
 import { DeviceRoutingModule } from './device-routing.module';
+import { ActiveComponent } from './active/active.component';
 
 
 @NgModule({
   declarations: [
     IndexComponent,
     EditComponent,
-    TransferComponent],
+    TransferComponent,
+    ActiveComponent],
   imports: [
     CommonModule,
     DeviceRoutingModule,

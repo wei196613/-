@@ -37,6 +37,15 @@ nz-tag:hover {
   /deep/.ant-card-body {
     padding: 0;
 
+    .ant-badge-count,
+    .ant-badge-dot,
+    .ant-badge .ant-scroll-number-custom-component {
+      left: 0px;
+      right: unset;
+      color: #333;
+      transform: translate(-50%, -50%);
+    }
+
     .ant-tag {
       border: 2px solid
     }
@@ -51,16 +60,6 @@ nz-tag:hover {
   }
 }
 
-.queue {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  line-height: 13px;
-  text-align: center;
-  border-radius: 50%;
-  border: 1px solid;
-}
-
-.ant-tag.bg{
+.ant-tag.bg {
   background: #333;
 }

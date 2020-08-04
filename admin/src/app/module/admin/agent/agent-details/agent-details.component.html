@@ -48,10 +48,12 @@
       </nz-select>
     </nz-form-control>
   </nz-form-item>
-  <nz-form-item class="footer">
-    <button *ngIf="data?.agentType === getAgentType('AGENT')" nz-button nzType="primary"
-      (click)="handleOpenModal('GENERATE_INVITE_CODE')">生成邀请码</button>
-    <button nz-button nzType="primary" (click)="close()">确定</button>
+  <nz-form-item>
+    <div class="footer">
+      <button *ngIf="data?.agentType === getAgentType('AGENT')" nz-button nzType="primary"
+        (click)="handleOpenModal('GENERATE_INVITE_CODE')">生成邀请码</button>
+      <button nz-button nzType="primary" (click)="close()">确定</button>
+    </div>
   </nz-form-item>
 </div>
 

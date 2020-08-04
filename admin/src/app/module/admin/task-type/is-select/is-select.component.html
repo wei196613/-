@@ -1,0 +1,36 @@
+<h2>任务可见性默认配置</h2>
+<app-title placeholder="输入关键字搜索" (queryClick)="handleTitleQuery($event)" (clearClick)="handleTitleClear()">
+</app-title>
+<div><span class="ant-btn-danger">注：勾上就是显示该任务，不勾就是不显示</span></div>
+
+<div>
+  <nz-checkbox-wrapper class="checkbox-wrapper">
+    <div nz-row>
+      <div nz-col nzSpan="12" *ngFor="let i of data?.arr">
+        <label nz-checkbox (nzCheckedChange)="checkboxChange(i.id)"
+          [ngModel]="getChecked(i)">{{i.name}}</label>
+      </div>
+    </div>
+  </nz-checkbox-wrapper>
+  <div class="pagination">
+    <nz-pagination [(nzPageSize)]="params.perPage" [(nzPageIndex)]="params.curPage" [nzTotal]="data?.total"
+      (nzPageIndexChange)="getData()"></nz-pagination>
+  </div>
+</div>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">
+    确定
+  </button>
+</div>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="600px" [nzMaskClosable]="false">
+  <h2>提示</h2>
+  <div>确定要保存吗？</div>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submitForm()">
+      确定
+    </button>
+  </div>
+</nz-modal>

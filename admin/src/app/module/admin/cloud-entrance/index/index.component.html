@@ -1,0 +1,42 @@
+<div class="custom-title">
+  <app-title placeholder="输入关键字搜索"></app-title>
+  <!-- <button class="right-btn ant-btn-success" nz-button (click)="handleOpenModal('open_add')">新建</button> -->
+</div>
+
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>码</th>
+      <th>所属用户</th>
+      <th>设备数</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data">
+      <td>
+        <div nz-typography nzCopyable [nzCopyText]="data?.code">{{data?.code}}</div>
+      </td>
+      <td>{{data?.user?.account}}</td>
+      <td>{{data?.registered? data.registered : 0}}/{{data?.deviceNum}}</td>
+      <td>
+        <button nz-button [nzType]="'primary'" (click)="handleOpenModal('open_edit', data)">修改</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="600px" [nzMaskClosable]="false">
+  <ng-container [ngSwitch]="modalKey">
+    <ng-container *ngSwitchCase="'open_add'">
+      <app-edit [parentKey]="modalKey"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchCase="'open_edit'">
+      <app-edit [data]="checkData" [parentKey]="modalKey"></app-edit>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div></div>
+    </ng-container>
+  </ng-container>
+</nz-modal>

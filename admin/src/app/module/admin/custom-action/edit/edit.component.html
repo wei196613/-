@@ -9,7 +9,7 @@
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSpan]="4">键值</nz-form-label>
-    <nz-form-control [nzSpan]="20" nzErrorTip="请输入键值">
+    <nz-form-control [nzSpan]="16" [nzErrorTip]="handleGetErrorTip(formGroup.get('key'))">
       <input type="text" nz-input formControlName="key" placeholder="请输入键值">
     </nz-form-control>
   </nz-form-item>
@@ -53,8 +53,8 @@
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSpan]="4">键值</nz-form-label>
-                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
-                  <input type="text" nz-input formControlName="key" placeholder="请输入名称">
+                <nz-form-control [nzSpan]="16" [nzErrorTip]="handleGetErrorTip(i.get('key'))">
+                  <input type="text" nz-input formControlName="key" placeholder="请输入键值">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>
@@ -129,8 +129,8 @@
               </nz-form-item>
               <nz-form-item>
                 <nz-form-label [nzSpan]="4">键值</nz-form-label>
-                <nz-form-control [nzSpan]="16" nzErrorTip="请输入名称">
-                  <input type="text" nz-input formControlName="key" placeholder="请输入名称">
+                <nz-form-control [nzSpan]="16" [nzErrorTip]="handleGetErrorTip(i.get('key'))">
+                  <input type="text" nz-input formControlName="key" placeholder="请输入键值">
                 </nz-form-control>
               </nz-form-item>
               <nz-form-item>

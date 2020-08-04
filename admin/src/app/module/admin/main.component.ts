@@ -40,9 +40,18 @@ export class MainComponent implements OnInit {
         icon: 'interaction'
       },
       {
-        title: '运行记录',
-        path: `${this.base}/task`,
-        icon: 'calendar'
+        title: '任务记录',
+        path: `${this.base}/task-record`,
+        icon: 'interaction'
+      },
+      {
+        title: '云控入口',
+        path: `${this.base}/cloud-entrance`,
+        icon: 'cloud'
+      }, {
+        title: '设备激活码',
+        path: `${this.base}/device-activation`,
+        icon: 'android'
       }
     ];
   }

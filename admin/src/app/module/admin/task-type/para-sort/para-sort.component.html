@@ -1,0 +1,11 @@
+<h2>参数排列</h2>
+
+<div cdkDropList (cdkDropListDropped)="drop($event)">
+  <div *ngFor="let item of data?.paras" cdkDrag class="drag">
+    <button nz-button nzSize="large">{{item?.name}}</button>
+  </div>
+</div>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submit()">提交</button>
+</div>

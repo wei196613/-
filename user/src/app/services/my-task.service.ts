@@ -23,7 +23,7 @@ export class MyTaskService {
    * GET /getTaskTypeNames?perPage?=number&curPage?=number&keyword?=string
    * 获取自定义任务类型名称
    */
-  public getTaskTypeNames(params: { perPage: number, curPage: number, keyword?: string }) {
+  public getTaskTypeNames(params: { perPage: number, curPage: number, keyword?: string, forSearch?: boolean }) {
     const url = this.http.getUrl('getTaskTypeNames?', params);
     return this.http.get<TaskTypeNames>(url);
   }
@@ -76,8 +76,8 @@ export class MyTaskService {
    * POST /rerunTask
    * 重新运行任务
    */
-  public rerunTask(id: number) {
-    return this.http.post<CommonResp>('rerunTask', { ids: [id] });
+  public rerunTask(ids: number[]) {
+    return this.http.post<CommonResp>('rerunTask', { ids });
   }
 
   /**
@@ -117,7 +117,7 @@ export interface TaskAddsParams {
   executeMethod: number,//1-立即执行，2-手动执行，3-计划执行
   scheduledTime: string,//选了计划执行才要填计划执行时间
   consistentParas: string, // 格式如下
-  difParas: string[],// 参数的key名
+  difParas: { key: string, spilt?: string }[],// 参数的key名
   excelKey: string
 }
 
@@ -136,9 +136,9 @@ export interface ParseExcelRes {
 export interface AddParams {
   taskTypeId: number,
   name?: string,
-  bindDeviceId: number,
+  bindDeviceIds: number[],
   executeMethod: number,//1-立即执行，2-手动执行，3-计划执行
-  scheduledTime: string,//选了计划执行才要填计划执行时间
+  scheduledTime?: string,//选了计划执行才要填计划执行时间
   paras: string // 格式如下[{"key":"xxx","value":1},{"key":"yyy","value":"aaa"}]
 }
 
@@ -153,17 +153,21 @@ export interface Constraint {
   required?: boolean
 }
 
+/**多个级联约束是OR的关系，如果都不满足，则隐藏控件*/
 export interface CascadeConstraint {
-  max?: number,
-  min?: number,
-  key: string // 关联的键
-  constraint: Constraint
+  /**关联的键*/
+  bindParaKey: any // 
+  /**当关联的键的value存在于此数组中，该约束生效*/
+  matchArr: number[],
+  /**如果constraint为空，则只是显示该控件，不用做额外的约束*/
+  constraint?: Constraint;
 }
-
 export interface TaskTypeNameItem {
   id: number,
-  name: string, // 任务名：中文
-  key: string, // 任务键值：英文
+  /** 任务名：中文*/
+  name: string, //
+  /**任务键值：英文*/
+  key: string, // 
   parasTotal: number,
   checked?: boolean;
 }
@@ -178,10 +182,11 @@ export interface Paras {
   tpe: number,
   values: string | { key: string, value: number }[],// select类型才有 {key:string,value:string}
   constraint: string | Constraint, // （该参数的独立约束）
-  cascadeConstraint: string | CascadeConstraint, // 格式如注所说明，满足该参数值=value或a<=参数值<=b时，隐藏/显示其他的字段
+  cascadeConstraint: string | CascadeConstraint[], // 格式如注所说明，满足该参数值=value或a<=参数值<=b时，隐藏/显示其他的字段
   tip: string,
   errTip?: string;
   checked?: boolean;
+  order?: number;
 }
 
 export interface GetTaskTypeById {

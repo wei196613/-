@@ -45,6 +45,14 @@ export class DeviceService {
     const url = this.http.getUrl("getDevices?", params);
     return this.http.get<DeviceList>(url);
   }
+  /**
+   * useActivationCode
+   * POST /useActivationCode
+   * 对设备使用激活码
+   */
+  public useActivationCode(params: { deviceId: number, code: string }) {
+    return this.http.post<CommonResp>("useActivationCode", params);
+  }
 }
 
 export interface DeviceBinItem {
@@ -68,6 +76,8 @@ export interface DeviceItem {
   direction?: 'right' | 'left',
   checked?: boolean;
   title?: string;
+  isActive: boolean, // 是否激活
+  timeRemaining?: number,// 秒数
 }
 
 export interface DeviceList extends Common<DeviceItem> { }

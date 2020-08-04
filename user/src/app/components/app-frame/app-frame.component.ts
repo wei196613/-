@@ -45,51 +45,6 @@ export class AppFrameComponent {
     }
   ];
 
-  private jdMenuitems = [
-    {
-      title: '京东账号',
-      name: '京东账号管理',
-      path: `/jd/account-man`,
-      icon: 'usergroup-add'
-    },
-    {
-      title: '拉新地址',
-      name: '京东拉新地址',
-      path: `/jd/pull-new`,
-      icon: 'api'
-    },
-    {
-      title: '收货地址',
-      name: '京东收货地址',
-      path: `/jd/shipping-address`,
-      icon: 'environment'
-    },
-    {
-      title: '商品ID',
-      name: '京东商品ID',
-      path: `/jd/product-id`,
-      icon: 'shopping'
-    },
-    {
-      title: '优惠券',
-      name: '京东优惠券',
-      path: `/jd/coupon`,
-      icon: 'property-safety'
-    },
-    {
-      title: '运行方案',
-      name: '京东运行方案',
-      path: `/jd/operation-scheme`,
-      icon: 'container'
-    },
-    {
-      title: '任务查询',
-      name: '京东任务查询',
-      path: `/jd/task`,
-      icon: 'control'
-    }
-  ];
-
   private commonMenuitems = [
     {
       title: '设备管理',
@@ -115,7 +70,6 @@ export class AppFrameComponent {
   }
 
   ngOnInit(): void {
-    this.menuItem.jd = this.handleFilterRouter(this.jdMenuitems);
     this.menuItem.dy = this.handleFilterRouter(this.dyMenuitems);
     this.menuItem.common = this.handleFilterRouter(this.commonMenuitems);
     if (this.handleIsCollapsed('/jd')) {

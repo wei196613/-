@@ -1,0 +1,14 @@
+<app-title placeholder="输入关键字搜索" (clearClick)="handleReset()" (queryClick)="handleReset()"></app-title>
+<nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="getData()" (nzPageSizeChange)="getData()">
+  <thead>
+    <tr>
+      <th>用户名</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of basicTable.data" (click)="handleTdClick(data)">
+      <td>{{data?.account}}</td>
+    </tr>
+  </tbody>
+</nz-table>

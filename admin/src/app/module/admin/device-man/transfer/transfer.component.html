@@ -1,116 +1,147 @@
-<h2 *ngIf="isEdit">设备分配</h2>
-
-<div *ngIf="isimport; else elseTemplate" class="account-input">
-  <span>分配给账号：</span>
-  <ng-container *ngIf="isEdit; else aTemplate">
-    <span><input type="text" nz-input [(ngModel)]="userId" (ngModelChange)="handleInputChange()"></span>
-  </ng-container>
-  <ng-template #aTemplate>
-    <span>{{data?.account}}</span>
-  </ng-template>
-</div>
-
-<ng-template #elseTemplate>
-  <nz-transfer [nzOperations]="['移出', '选择']" [nzDataSource]="list" [nzShowSelectAll]="false"
-    [nzRenderList]="[leftList, rightList]" (nzChange)="change($event)">
-    <ng-template #leftList let-items let-direction="direction" let-stat="stat" let-disabled="disabled"
-      let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
-      <app-title placeholder="输入关键字搜索" (queryClick)="getHasDevice($event)"></app-title>
-      <div class="subtitle">
-        <div>{{userId}}的设备</div>
-        <div>数量：{{leftTotal}}</div>
-      </div>
-      <nz-table class="left-table" #l [nzData]="items" [nzFrontPagination]="false" [nzShowPagination]="false"
-        nzSize="small">
-        <thead>
-          <tr>
-            <th nzShowCheckbox [nzDisabled]="false" [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
-              (nzCheckedChange)="onItemSelectAll($event)" nzWidth="10%"></th>
-            <th>设备名称</th>
-            <th>设备号</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of l.data" (click)="onItemSelect(data)">
-            <td nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="false" (nzCheckedChange)="onItemSelect(data)">
-            </td>
-            <td>{{ data?.name }}</td>
-            <td>
-              <ng-container *ngIf="data?.mac.length > 20; else rightTemplate">
+<nz-transfer [nzOperations]="['移出', '选择']" [nzDataSource]="list" [nzShowSelectAll]="false"
+  [nzRenderList]="[leftList, rightList]" (nzChange)="change($event)">
+  <ng-template #leftList let-items let-direction="direction" let-stat="stat" let-disabled="disabled"
+    let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
+    <app-title placeholder="输入关键字搜索" (queryClick)="handleHasTitleQuery($event)" (clearClick)="handleHasTitleQuery()">
+    </app-title>
+    <div class="subtitle">
+      <div>{{tabIndex? data.name: data.account }}的{{tabIndex?'用户':'设备'}}</div>
+      <div>数量：{{leftTotal}}</div>
+    </div>
+    <nz-table class="left-table" #l [nzData]="items" [nzFrontPagination]="false" [nzShowPagination]="false"
+      nzSize="small">
+      <thead>
+        <tr>
+          <th nzShowCheckbox [nzDisabled]="false" [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+            (nzCheckedChange)="onItemSelectAll($event)" nzWidth="10%"></th>
+          <th>{{tabIndex ?'用户': '设备名称'}}</th>
+          <th>{{tabIndex? '拥有设备数':'设备号'}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of l.data" (click)="handleTransfer(data)">
+          <td nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="false" (nzCheckedChange)="onItemSelect(data)">
+          </td>
+          <td>{{tabIndex?data?.account : data?.name }}</td>
+          <td>
+            <ng-container *ngIf="tabIndex === 0; else deviceTem">
+              <ng-container *ngIf="data?.mac?.length > 20; else rightTemplate">
                 <span nz-tooltip [nzTooltipTitle]="data?.mac">{{data?.mac | slice:0:20}}...</span>
               </ng-container>
               <ng-template #rightTemplate>
                 <span>{{data?.mac}}</span>
               </ng-template>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-      <div class="page">
-        <nz-pagination [(nzPageIndex)]="hasParams.curPage" [nzTotal]="leftTotal" (nzPageIndexChange)="getHasDevice()">
-        </nz-pagination>
+            </ng-container>
+            <ng-template #deviceTem>
+              <span>{{data?.devices?.length}}</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div class="page">
+      <nz-pagination [(nzPageIndex)]="hasParams.curPage" [nzTotal]="leftTotal" (nzPageIndexChange)="getHasDevice()">
+      </nz-pagination>
+    </div>
+  </ng-template>
+  <ng-template #rightList let-items let-direction="direction" let-stat="stat" let-disabled="disabled"
+    let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
+    <div class="table-title">
+      <app-title placeholder="输入关键字搜索" (queryClick)="handleTitleQuery($event)" (clearClick)="handleTitleQuery()">
+      </app-title>
+      <div class="btn" *ngIf="tabIndex === 0">
+        <a nz-dropdown [nzDropdownMenu]="menu">
+          {{menuTitle}}
+          <i nz-icon nzType="down"></i>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
+            <li nz-menu-item *ngFor="let i of menuItem" (click)="handleMenuClick(i.id)">{{i.name}}</li>
+          </ul>
+        </nz-dropdown-menu>
       </div>
-    </ng-template>
-    <ng-template #rightList let-items let-direction="direction" let-stat="stat" let-disabled="disabled"
-      let-onItemSelectAll="onItemSelectAll" let-onItemSelect="onItemSelect">
-      <div class="table-title">
-        <app-title placeholder="输入关键字搜索" (queryClick)="getData($event)"></app-title>
-        <div class="btn">
-          <a nz-dropdown [nzDropdownMenu]="menu">
-            {{menuTitle}}
-            <i nz-icon nzType="down"></i>
-          </a>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <ul nz-menu nzSelectable>
-              <li nz-menu-item *ngFor="let i of menuItem" (click)="handleMenuClick(i.id)">{{i.name}}</li>
-            </ul>
-          </nz-dropdown-menu>
-        </div>
-      </div>
-      <div>可选设备：</div>
-      <nz-table class="right-table" #r [(nzPageIndex)]="params.curPage" [nzData]="items" [nzShowPagination]="false"
-        [nzFrontPagination]="false" [nzData]="items" nzSize="small">
-        <thead>
-          <tr>
-            <th nzShowCheckbox [nzDisabled]="false" [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
-              (nzCheckedChange)="onItemSelectAll($event)" nzWidth="10%"></th>
-            <th nzWidth='20%'>设备名称</th>
-            <th nzWidth="20%">所属账号</th>
-            <th nzWidth="50%">设备号</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of r.data" (click)="onItemSelect(data)">
-            <td nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="false" (nzCheckedChange)="onItemSelect(data)">
-            </td>
-            <td>{{ data?.name }}</td>
-              <td>
-              <ng-container *ngIf="data?.url?.length > 20; else bindAccountTemplate">
-                <span nz-tooltip [nzTooltipTitle]="data?.bindAccount"> {{data?.bindAccount | slice : 0: 20 }}...</span>
-              </ng-container>
-              <ng-template #bindAccountTemplate>
-                <span>{{data?.bindAccount}}</span>
+    </div>
+    <div>可选{{tabIndex?'用户' : '设备'}}：</div>
+    <nz-table class="right-table" #r [(nzPageIndex)]="params.curPage" [nzData]="items" [nzShowPagination]="false"
+      [nzFrontPagination]="false" [nzData]="items" nzSize="small">
+      <thead>
+        <tr>
+          <th nzShowCheckbox [nzDisabled]="false" [nzChecked]="stat.checkAll" [nzIndeterminate]="stat.checkHalf"
+            (nzCheckedChange)="onItemSelectAll($event)" nzWidth="10%"></th>
+          <th>{{tabIndex? '用户': '设备名称'}}</th>
+          <th>{{tabIndex? '拥有设备数':'所属账号'}} </th>
+          <th nzWidth="50%" *ngIf="tabIndex === 0">设备号</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of r.data" (click)="handleTransfer(data)">
+          <td nzShowCheckbox [nzChecked]="data.checked" [nzDisabled]="false" (nzCheckedChange)="onItemSelect(data)">
+          </td>
+          <td>{{tabIndex?data?.account : data?.name }}</td>
+          <td>
+            <ng-container *ngIf="tabIndex;else templateName">
+              <span>{{data?.devices?.length}}</span><span appClickStop *ngIf="data?.devices?.length > 0" nz-tooltip
+                nzTooltipPlacement="right" [nzTooltipTitle]="devicesTem"><i nz-icon nzType="info-circle"
+                  nzTheme="outline"></i></span>
+              <ng-template #devicesTem>
+                <div *ngFor="let item of data?.devices?.length > 10 ?data?.devices?.slice(0,10):data?.devices">
+                  <div>设备ID：{{item.id}} 设备：{{item.name}}</div>
+                </div>
+                <div *ngIf="data?.devices?.length > 10"><button nz-button nzSize="small"
+                    (click)="handleOpenModal(data)">查看更多设备</button></div>
               </ng-template>
-            </td>
-            <td>
-              <ng-container *ngIf="data?.mac.length > 20; else elseTemplate">
-                <span nz-tooltip [nzTooltipTitle]="data?.mac">{{data?.mac | slice:0:20}}...</span>
-              </ng-container>
-              <ng-template #elseTemplate>
-                <span>{{data?.mac}}</span>
+            </ng-container>
+            <ng-template #templateName>
+              <span>{{data?.bindAccounts?.length}}</span><span *ngIf="data?.bindAccounts?.length > 0" nz-tooltip
+                nzTooltipPlacement="right" [nzTooltipTitle]="bindAccountsTem"><i nz-icon nzType="info-circle"
+                  nzTheme="outline"></i></span>
+              <ng-template #bindAccountsTem>
+                <div *ngFor="let item of data.bindAccounts">
+                  <div>账号ID：{{item.id}} 账号：{{item.account}}</div>
+                </div>
               </ng-template>
-            </td>
-          </tr>
-        </tbody>
-      </nz-table>
-      <div class="page">
-        <nz-pagination [(nzPageIndex)]="params.curPage" [nzTotal]="rightTotal" (nzPageIndexChange)="getData()">
-        </nz-pagination>
-      </div>
-    </ng-template>
-  </nz-transfer>
-</ng-template>
+            </ng-template>
+          </td>
+          <td *ngIf="tabIndex === 0">
+            <ng-container *ngIf="data?.mac.length > 20; else elseTemplate">
+              <span nz-tooltip [nzTooltipTitle]="data?.mac">{{data?.mac | slice:0:20}}...</span>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <span>{{data?.mac}}</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    <div class="page">
+      <nz-pagination [(nzPageIndex)]="params.curPage" [nzTotal]="rightTotal" (nzPageIndexChange)="getData()">
+      </nz-pagination>
+    </div>
+  </ng-template>
+</nz-transfer>
 
 <div class="footer">
   <button nz-button nzType='primary' (click)="submit()">确定</button>
 </div>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="600px">
+  <h2>更多设备</h2>
+  <nz-table #basicTable [nzData]="deviceData">
+    <thead>
+      <tr>
+        <th>设备ID</th>
+        <th>设备名</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{data?.id}}</td>
+        <td>{{data?.name}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+  </div>
+</nz-modal>

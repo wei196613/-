@@ -24,7 +24,7 @@ export class AddComponent implements OnInit {
   ngOnInit() {
     this.formGroup = this.fb.group({
       name: [null, [Validators.required]],
-      key: [null, [Validators.required]],
+      key: [null, [Validators.required, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
       inputParas: this.fb.array([this.getInputParas]),
       outputParas: this.fb.array([this.getOutputParas])
     })
@@ -34,7 +34,7 @@ export class AddComponent implements OnInit {
   private get getInputParas() {
     return this.fb.group({
       name: [null, Validators.required],
-      key: [null, Validators.required],
+      key: [null, [Validators.required, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
       tpe: [null, Validators.required],
       values: [{ value: null, disabled: true }, [Validators.required]],
       constraint: [null],
@@ -47,7 +47,7 @@ export class AddComponent implements OnInit {
   private get getOutputParas() {
     return this.fb.group({
       name: [null, Validators.required],
-      key: [null, Validators.required],
+      key: [null, [Validators.required, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
       tpe: [null, Validators.required]
     })
   }
@@ -135,5 +135,9 @@ export class AddComponent implements OnInit {
   /**关闭 | 关闭 弹框*/
   onCancel() {
     this.visible = !this.visible;
+  }
+  /**键值命名不符合规则错误提示*/
+  handleGetErrorTip(abs: AbstractControl) {
+    return abs && abs.hasError('pattern') ? '键值命名规则不正确，应以字母或者下划线开头,由字母数字下划线组成' : '请输入名称';
   }
 }

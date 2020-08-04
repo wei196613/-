@@ -31,8 +31,8 @@ export class ActionTableComponent implements OnInit {
     }
     this.getData()
   }
-  handleCheck(id: number) {
-    this.byVal.sendMeg({ key: 'get_action_config', data: id })
+  handleCheck(key: string) {
+    this.byVal.sendMeg({ key: 'get_action_config', data: key })
   }
 
   handleTitleClear() {

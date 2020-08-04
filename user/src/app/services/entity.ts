@@ -22,10 +22,13 @@ export interface UserInfo {
   permissions: number[];
   total: number,//总米币数
   token?: string,
+  key?: string;
   freeList: [{  //限时米币列表
     amount: number,
     endTime: number //过期时间
-  }]
+  }];
+  /**云控地址*/
+  cloudEntranceAddress?: string
 }
 
 export interface SelfRoute extends Route {

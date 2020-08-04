@@ -8,7 +8,8 @@ import { DeviceBinItem } from 'src/app/services/device.service';
   styleUrls: ['./eidt.component.less']
 })
 export class EidtComponent implements OnInit {
-  @Input() data: DeviceBinItem
+  @Input() data: DeviceBinItem;
+  @Input() tabIndex: number;
   constructor(private byVal: ByValueService) { }
 
   ngOnInit() {

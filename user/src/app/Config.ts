@@ -16,12 +16,14 @@ export interface ConfigData {
   loginResult: configChildren[];
   taskEndStatus: configChildren[];
   taskStatus: configChildren[];
-  jdLoginMethod: configChildren[];
-  jdLoginStatus: configChildren[];
-  jdLoginExecute: configChildren[];
+  loginMethod: configChildren[];
+  LoginStatus: configChildren[];
+  loginExecute: configChildren[];
   pullNewTpe: configChildren[];
   inputTpe: configChildren[];
   exportKey: configChildren[];
+  networkType: configChildren[];
+  spiltList: configChildren[];
 }
 
 export class Config {
@@ -39,17 +41,23 @@ export class Config {
   public static get exportKey() {
     return Config.data.exportKey;
   }
-  public static get jdLoginMethod() {
-    return Config.data.jdLoginMethod;
+  public static get spiltList() {
+    return Config.data.spiltList;
+  }
+  public static get networkType() {
+    return Config.data.networkType;
+  }
+  public static get loginMethod() {
+    return Config.data.loginMethod;
   }
   public static get pullNewTpe() {
     return Config.data.pullNewTpe;
   }
-  public static get jdLoginStatus() {
-    return Config.data.jdLoginStatus;
+  public static get LoginStatus() {
+    return Config.data.LoginStatus;
   }
-  public static get jdLoginExecute() {
-    return Config.data.jdLoginExecute;
+  public static get loginExecute() {
+    return Config.data.loginExecute;
   }
   public static get authority() {
     return Config.data.authority;

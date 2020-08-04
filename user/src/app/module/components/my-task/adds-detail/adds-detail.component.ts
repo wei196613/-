@@ -23,6 +23,7 @@ export class AddsDetailComponent implements OnInit {
   constructor(private byVal: ByValueService) { }
 
   ngOnInit(): void {
+    console.log(this.subform);
     if (this.data && this.data.arr) {
       this.tableData = this.data.arr.map(v => JSON.parse(v));
     }
@@ -51,8 +52,8 @@ export class AddsDetailComponent implements OnInit {
     }
     params.taskTypeId = this.params.taskTypeId;
     params.name = this.params.name;
-    params.difParas = this.subform.paramsName.map(v => v.key);
-    params.consistentParas = JSON.stringify(this.subform.subParams);
+    params.difParas = this.subform.paramsName.map(({ key, tpe }) => tpe === 6 ? { key, spilt: this.subform.subParams.find(v => v.key === key)?.spilt } : { key });
+    params.consistentParas = JSON.stringify(this.subform.subParams.filter(v => !this.subform.paramsName.some(i => v.key === i.key)));
     for (const key in params) {
       if (params[key] === null || params[key] === undefined || params[key] === '') {
         delete params[key];
@@ -72,10 +73,16 @@ export class AddsDetailComponent implements OnInit {
     this.modalKey = key;
     this.visible = true;
   }
+  getParaName(key: string) {
+    if (key) {
+      const v = this.subform.subParams.find(i => i.key == key);
+      return v
+    }
+  }
 }
 
 interface Subform {
   subParams: { [s: string]: any }[],
-  paramsName: { key: string, name: string }[],
-  difParamsName: { key: string, name: string }[]
+  paramsName: { key: string, name: string, spilt?: string, tpe: number }[],
+  difParamsName: { key: string, name: string, tpe: number }[]
 }

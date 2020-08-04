@@ -1,3 +1,6 @@
+import { ClickStopDirective } from './directive/clickStop.directive';
+import { TaskExecutePipe } from './pipe/JdLoginExecute.pipe';
+import { TaskStatusPipe } from './pipe/JdLoginStatus.pipe';
 import { AgentTypePipe } from './pipe/agentType.pipe';
 import { SpinMaskComponent } from './spin-mask/spin-mask.component';
 import { RouterModule } from '@angular/router';
@@ -9,6 +12,8 @@ import { AppFrameComponent } from './app-frame/app-frame.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { TitleComponent } from './title/title.component';
 import { CopyComponent } from './copy/copy.component';
+import { UserAccountComponent } from './user-account/user-account.component';
+import { InputTpePipe } from './pipe/inputTpe.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +22,12 @@ import { CopyComponent } from './copy/copy.component';
     ChangePasswordComponent,
     AgentTypePipe,
     TitleComponent,
-    CopyComponent
+    CopyComponent,
+    TaskStatusPipe,
+    TaskExecutePipe,
+    ClickStopDirective,
+    UserAccountComponent,
+    InputTpePipe
   ],
   imports: [
     CommonModule,
@@ -34,7 +44,12 @@ import { CopyComponent } from './copy/copy.component';
     AgentTypePipe,
     ReactiveFormsModule,
     TitleComponent,
-    CopyComponent
+    CopyComponent,
+    TaskStatusPipe,
+    TaskExecutePipe,
+    ClickStopDirective,
+    UserAccountComponent,
+    InputTpePipe
   ]
 })
 export class ComponentsModule { }

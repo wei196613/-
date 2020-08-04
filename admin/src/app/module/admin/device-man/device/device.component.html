@@ -1,36 +1,14 @@
-<div class="title">
-  <app-title [placeholder]="'输入关键字查询'"></app-title>
-  <button nz-button nzType="success" class="btn" (click)="handleOpenModal('open_transfer')">设备分配</button>
-</div>
+<app-title placeholder="输入关键字搜索" (clearClick)="handleReset()" (queryClick)="handleTitleQuery($event)"></app-title>
 <nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
-  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="getData()" (nzPageSizeChange)="getData()">
   <thead>
     <tr>
-      <th>平台账号</th>
-      <th>设备数</th>
-      <th>操作</th>
+      <th>设备名</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td>{{data?.account}}</td>
-      <td>{{data?.devices?.length}}</td>
-      <td><button nz-button nzType="primary" (click)="handleOpenModal('open_edit',data)">修改</button></td>
+    <tr *ngFor="let data of basicTable.data" (click)="handleTdClick(data)">
+      <td>{{data?.name}}</td>
     </tr>
   </tbody>
 </nz-table>
-
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
-  [nzCancelText]="null" [nzFooter]="null" nzWidth="1084px">
-  <div [ngSwitch]="modalKey">
-    <ng-container *ngSwitchCase="'open_edit'">
-      <app-eidt [data]="checkData"></app-eidt>
-    </ng-container>
-    <ng-container *ngSwitchCase="'open_transfer'">
-      <app-transfer></app-transfer>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-      <div> </div>
-    </ng-container>
-  </div>
-</nz-modal>

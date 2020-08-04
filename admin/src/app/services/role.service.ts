@@ -1,3 +1,4 @@
+import { Common } from 'src/app/services/entity';
 import { HttpService } from './http.service';
 import { Injectable } from '@angular/core';
 import { RolesList, PermissionsList, AddRoleParams, CommonResp, EditRoleParams } from './entity';
@@ -46,4 +47,37 @@ export class RoleService {
     return this.http.post<CommonResp>('editRole', params).toPromise();
   }
 
+  /**
+   * getTaskTypeVisibleOfRole
+   * 获取某角色的任务可见性配置（新）已写好，可测试
+   * - GET / getTaskTypeVisibleOfRole
+   */
+  public getTaskTypeVisibleOfRole(params: { roleId: number, curPage: number, perPage: number, keyword?: string }) {
+    const url = this.http.getUrl('getTaskTypeVisibleOfRole?', params);
+    return this.http.get<TaskTypeVisible>(url).toPromise();
+  }
+
+  /**
+   * batchEditTaskTypeVisibleOfRoles
+   * POST /batchEditTaskTypeVisibleOfRoles
+   * 批量修改角色（新）已写完，可测试
+   */
+  public batchEditTaskTypeVisibleOfRoles(params: EditTaskTypeVisibleOfRoles) {
+    return this.http.post<CommonResp>('batchEditTaskTypeVisibleOfRoles', params).toPromise();
+  }
 }
+
+export interface EditTaskTypeVisibleOfRoles {
+  roleIds: number[],
+  visibleIds: number[],
+  unvisibleIds: number[]
+
+}
+
+export interface TaskTypeVisibleItem {
+  id: number,
+  name: string,
+  visible: boolean
+}
+
+export interface TaskTypeVisible extends Common<TaskTypeVisibleItem> { }

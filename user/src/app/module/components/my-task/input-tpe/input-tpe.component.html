@@ -2,13 +2,14 @@
   <ng-container *ngFor="let i of paras">
     <nz-form-item *ngIf="getIsShow(i)">
       <nz-form-label [nzSpan]="8" [nzRequired]="getRequired(i)">
-        <ng-container *ngIf="isAdds;else templateName"><label nz-checkbox
-            (nzCheckedChange)="handleIsParaChange($event, i)">{{i.name}}</label>
+        <ng-container *ngIf="isAdds;else templateName"><label nz-checkbox [nzChecked]="handleIsParaChecked(i.key)"
+            (nzCheckedChange)="handleIsParaChange($event, i.key)">{{i.name}}</label>
         </ng-container>
         <ng-template #templateName>
           <span>{{i.name}}</span>
         </ng-template>
       </nz-form-label>
+      <!-- number -->
       <nz-form-control [nzSpan]="9" [nzErrorTip]="getEorrorTip(i)">
         <ng-container [ngSwitch]="i.tpe">
           <ng-container *ngSwitchCase="1">
@@ -16,54 +17,93 @@
               [nzMin]="getMin(i)" [nzMax]="getMax(i)" [nzStep]="1" [nzPlaceHolder]="getPlaceHolder(i)">
             </nz-input-number>
           </ng-container>
+          <!-- string -->
           <ng-container *ngSwitchCase="2">
             <input nz-input nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
               [placeholder]="getPlaceHolder(i)">
           </ng-container>
+          <!-- boolean -->
           <ng-container *ngSwitchCase="3">
             <nz-switch nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"></nz-switch>
           </ng-container>
+          <!-- time -->
           <ng-container *ngSwitchCase="4">
             <nz-time-picker nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
-              nzPlaceHolder="请选择时间"></nz-time-picker>
+              nzPlaceHolder="请选择时间" ngDefaultControl></nz-time-picker>
           </ng-container>
+          <!-- dateTime -->
           <ng-container *ngSwitchCase="5">
             <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="请选择日期时间" nz-tooltip
-              [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key">
+              [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key" ngDefaultControl>
             </nz-date-picker>
           </ng-container>
+          <!-- stringList -->
           <ng-container *ngSwitchCase="6">
-            <ng-container [formArrayName]="i.key">
-              <nz-form-item *ngFor="let absCol of getFormArray(i.key)?.controls; let index = index">
-                <nz-form-control [nzErrorTip]="getEorrorTip(i)" nz-row>
-                  <input nz-col nzSpan="20" nz-input [placeholder]="getPlaceHolder(i)" nz-tooltip
-                    [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="index" />
-                  <i nz-col nzSpan="4" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
-                    (click)="removeField(index,i.key,$event)"></i>
+            <form [formGroupName]="i.key">
+              <nz-form-item>
+                <nz-form-label nzRequired>是否随机</nz-form-label>
+                <nz-form-control nzErrorTip="请选择是否随机">
+                  <nz-switch nz-tooltip formControlName="isRandom" nzCheckedChildren="是" nzUnCheckedChildren="否">
+                  </nz-switch>
                 </nz-form-control>
               </nz-form-item>
-              <button nz-button nzType="dashed" class="add-button" (click)="addField(i.key,$event)">
-                <i nz-icon nzType="plus"></i>
-              </button>
-            </ng-container>
+              <nz-form-item *ngIf="SubFromGroup.get(i.key).get('isRandom').value">
+                <nz-form-label nzRequired>随机数</nz-form-label>
+                <nz-form-control nzErrorTip="请输入随机次数">
+                  <nz-input-number nz-tooltip [nzTooltipTitle]="'请输入随机次数'" formControlName="randomTime" [nzMin]="0"
+                    [nzStep]="1" [nzPlaceHolder]="'请输入随机次数'"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control [nzErrorTip]="getEorrorTip(i)" nz-row>
+                  <textarea nz-input [nzAutosize]="true" [formControl]="SubFromGroup.get(i.key).get('list')"
+                    [placeholder]="getPlaceHolder(i)" nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)"></textarea>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-label nzRequired>分隔符</nz-form-label>
+                <nz-form-control nzErrorTip="请选择分隔符">
+                  <nz-select nzPlaceHolder="请选择分隔符" formControlName="spiltType"
+                    (ngModelChange)="handleSpiltChange($event,i.key)" [nzDisabled]="handleGetSpiltTypeDis(i.key)">
+                    <nz-option *ngFor="let item of spiltList" [nzLabel]="item.value" [nzValue]="item.key">
+                    </nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item *ngIf="SubFromGroup.get(i.key).get('spiltType').value === 2">
+                <nz-form-label nzRequired>分隔符</nz-form-label>
+                <nz-form-control nzErrorTip="请输入分隔符">
+                  <input type="text" nz-input formControlName="spilt">
+                </nz-form-control>
+              </nz-form-item>
+            </form>
           </ng-container>
+          <!-- numberList -->
           <ng-container *ngSwitchCase="7">
-            <ng-container [formArrayName]="i.key">
-              <nz-form-item *ngFor="let absCol of getFormArray(i.key)?.controls; let index = index">
-                <nz-form-control [nzErrorTip]="getEorrorTip(i)" nz-row>
-                  <nz-input-number nz-col nzSpan="20" nz-input [nzPlaceHolder]="getPlaceHolder(i)" nz-tooltip
-                    [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="index" [nzMin]="getMin(i)"
-                    [nzMax]="getMax(i)">
-                  </nz-input-number>
-                  <i nz-col nzSpan="4" nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
-                    (click)="removeField(index,i.key,$event)"></i>
+            <form [formGroupName]="i.key">
+              <nz-form-item>
+                <nz-form-label nzRequired>是否随机</nz-form-label>
+                <nz-form-control nzErrorTip="请选择是否随机">
+                  <nz-switch nz-tooltip formControlName="isRandom" nzCheckedChildren="是" nzUnCheckedChildren="否">
+                  </nz-switch>
                 </nz-form-control>
               </nz-form-item>
-              <button nz-button nzType="dashed" class="add-button" (click)="addField(i.key,$event)">
-                <i nz-icon nzType="plus"></i>
-              </button>
-            </ng-container>
+              <nz-form-item *ngIf="SubFromGroup.get(i.key).get('isRandom').value">
+                <nz-form-label nzRequired>随机数</nz-form-label>
+                <nz-form-control nzErrorTip="请输入随机次数">
+                  <nz-input-number nz-tooltip [nzTooltipTitle]="'请输入随机次数'" formControlName="randomTime" [nzMin]="0"
+                    [nzStep]="1" [nzPlaceHolder]="'请输入随机次数'"></nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control [nzErrorTip]="getEorrorTip(i)" nz-row>
+                  <textarea nz-input [nzAutosize]="true" [formControl]="SubFromGroup.get(i.key).get('list')"
+                    [placeholder]="getPlaceHolder(i)" nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)"></textarea>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
           </ng-container>
+          <!-- select -->
           <ng-container *ngSwitchCase="8">
             <nz-select nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
               [nzPlaceHolder]="getPlaceHolder(i)" nzAllowClear>
@@ -71,11 +111,13 @@
               </nz-option>
             </nz-select>
           </ng-container>
+          <!-- password -->
           <ng-container *ngSwitchCase="9">
             <app-password-input nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
               ngDefaultControl [placeholder]="getPlaceHolder(i)">
             </app-password-input>
           </ng-container>
+          <!-- multiple-select -->
           <ng-container *ngSwitchCase="10">
             <nz-select nzMode="multiple" nz-tooltip [nzTooltipTitle]="getPlaceHolder(i)" [formControlName]="i.key"
               [nzPlaceHolder]="getPlaceHolder(i)" nzAllowClear>
@@ -86,6 +128,10 @@
           <ng-container *ngSwitchDefault></ng-container>
         </ng-container>
       </nz-form-control>
+      <div nz-col nzSpan="6" class="hint"
+        *ngIf="(i.tpe == 6 && SubFromGroup.get(i.key)?.value?.spiltType === 1) || i.tpe===7">
+        <span class="ant-btn-danger">一行一个数据</span>
+      </div>
     </nz-form-item>
   </ng-container>
 </form>

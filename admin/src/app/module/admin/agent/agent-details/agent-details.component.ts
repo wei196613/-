@@ -15,7 +15,7 @@ export class AgentDetailsComponent implements OnInit {
   modalKey = 'OPEN_RESET_PASSWORD';
   data: GetAgentItem | GetUserItem;
   roles: RolesList;
-  roleIds: number;
+  roleIds: number[] = [];
   sub: Subscription;
   adjustmentNunber: number;
   constructor(private byVal: ByValueService) { }
@@ -25,7 +25,9 @@ export class AgentDetailsComponent implements OnInit {
       switch (res.key) {
         case 'VIEW_DETAILS':
           this.data = res.data;
-          this.roleIds = res.data.roleIds
+          this.roleIds = res.data.roleIds;
+          console.log(this.roleIds);
+
           break;
         case 'GET_USER_AGENT':
           this.data.userAgent = res.data;
@@ -68,6 +70,6 @@ export class AgentDetailsComponent implements OnInit {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    this.sub.unsubscribe()
+    this.sub.unsubscribe();
   }
 }

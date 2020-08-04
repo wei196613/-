@@ -1,5 +1,3 @@
-import { JdPullNewTpePipe } from 'src/app/pipe/jd/jdPullNewTpe.pipe';
-
 import { SpinMaskComponent } from './spin-mask/spin-mask.component';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -17,9 +15,9 @@ import { DyIconComponent } from './dyIcon.component';
 import { JdIconComponent } from './jdIcon.component';
 import { LoginResultPipe } from '../pipe/loginResult.pipe';
 import { TaskEndStatusPipe } from '../pipe/taskEndStatus.pipe';
-import { JdLoginStatusPipe } from 'src/app/pipe/jd/JdLoginStatus.pipe';
-import { JdLoginMethodPipe } from 'src/app/pipe/jd/JdLoginMethod.pipe';
-import { JdLoginExecutePipe } from 'src/app/pipe/jd/JdLoginExecute.pipe';
+import { LoginStatusPipe } from 'src/app/pipe/jd/loginStatus.pipe';
+import { loginMethodPipe } from 'src/app/pipe/jd/loginMethod.pipe';
+import { LoginExecutePipe } from 'src/app/pipe/jd/loginExecute.pipe';
 import { ClickStopDirective } from './clickStop.directive';
 
 @NgModule({
@@ -35,18 +33,18 @@ import { ClickStopDirective } from './clickStop.directive';
       JdIconComponent,
       LoginResultPipe,
       TaskEndStatusPipe,
-      JdLoginStatusPipe,
-      JdLoginMethodPipe,
-      JdLoginExecutePipe,
-      JdPullNewTpePipe,
-      ClickStopDirective
+      LoginStatusPipe,
+      loginMethodPipe,
+      LoginExecutePipe,
+      ClickStopDirective,
+      
    ],
    imports: [
       CommonModule,
       NgZorroAntdModule,
       RouterModule,
       FormsModule,
-      ReactiveFormsModule
+      ReactiveFormsModule 
    ],
    exports: [
       NgZorroAntdModule,
@@ -61,10 +59,9 @@ import { ClickStopDirective } from './clickStop.directive';
       PasswordTextComponent,
       LoginResultPipe,
       TaskEndStatusPipe,
-      JdLoginStatusPipe,
-      JdLoginMethodPipe,
-      JdLoginExecutePipe,
-      JdPullNewTpePipe,
+      LoginStatusPipe,
+      loginMethodPipe,
+      LoginExecutePipe,
       ClickStopDirective
    ]
 })

@@ -1,5 +1,9 @@
-td.operation-btn button {
-  margin-right: 10px;
+td.operation-btn,
+th {
+
+  button {
+    margin-right: 10px;
+  }
 }
 
 h2,
@@ -8,13 +12,10 @@ h2,
 }
 
 nz-table {
-  position: relative;
+  // position: relative;
 
   .refresh {
-    width: 146px;
-    position: absolute;
-    top: 12px;
-    right: 10px;
+    text-align: right;
 
     div {
       line-height: 32px;
@@ -61,5 +62,54 @@ nz-table {
     button {
       margin-right: 10px;
     }
+  }
+}
+
+/deep/ .task-table {
+
+  .ant-table-title,
+  .ant-table-footer {
+    padding: 0px;
+  }
+}
+
+td,
+th,
+span.table-footer {
+  .td-checked {
+    width: 16px;
+    height: 21px;
+    position: relative;
+
+    .td-mask {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    .label-task {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+  }
+}
+
+span.table-footer {
+  display: inline-block;
+  line-height: 32px;
+
+  span {
+    display: inline-block;
+    height: 32px;
+  }
+
+  span.td-checked {
+    width: 88px;
   }
 }

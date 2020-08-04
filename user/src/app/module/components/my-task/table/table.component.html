@@ -33,7 +33,7 @@
       <td>{{data?.tpe?.name}}</td>
       <td>{{data?.runningDevice?.name}}</td>
       <td>
-        <div>{{ data?.executeMethod | JdLoginExecute}}</div>
+        <div>{{ data?.executeMethod | loginExecute}}</div>
         <div *ngIf="data?.executeMethod === 3">
           {{data?.scheduledTime * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}
         </div>
@@ -46,15 +46,15 @@
       <td>
         <span [ngSwitch]="data?.status">
           <span *ngSwitchCase="4">
-            <nz-tag nzColor="success">{{data?.status | JdLoginStatus}}</nz-tag>
+            <nz-tag nzColor="success">{{data?.status | LoginStatus}}</nz-tag>
           </span>
           <span *ngSwitchCase="5">
-            <nz-tag nzColor="error">{{data?.status | JdLoginStatus}}</nz-tag>
+            <nz-tag nzColor="error">{{data?.status | LoginStatus}}</nz-tag>
           </span>
           <span *ngSwitchCase="6">
-            <nz-tag nzColor="warning">{{data?.status | JdLoginStatus}}</nz-tag>
+            <nz-tag nzColor="warning">{{data?.status | LoginStatus}}</nz-tag>
           </span>
-          <span *ngSwitchDefault> {{data?.status | JdLoginStatus}}</span>
+          <span *ngSwitchDefault> {{data?.status | LoginStatus}}</span>
         </span>
         <button *ngIf="data.status === 4 || data.status === 5" nz-button nzType="link" nzSize="small"
           (click)="handleOpenModal('open_result',data)">查看</button></td>

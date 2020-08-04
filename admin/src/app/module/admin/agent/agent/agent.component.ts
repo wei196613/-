@@ -13,8 +13,10 @@ import { AppSpinService } from 'src/app/components/spin-mask/app-spin.service';
 })
 export class AgentComponent implements OnInit {
   agentType: 0 | 1 = 0;
-  addCode = false;
-  detailsCode = false;
+  /**控制对话框*/
+  visible = false;
+  /**对话框类型*/
+  modalKey: 'open_agent' | 'open_details' = null;
   data: GetAgentList | GetUserList;
   perPage = 10;
   curPage = 1;
@@ -57,7 +59,7 @@ export class AgentComponent implements OnInit {
           this.getData();
           break;
         case 'CLOSE_MODAL':
-          this.detailsCode = false;
+          this.onCancel()
           break;
         case 'RESET_PWD_START':
           this.resetAgentPwd(res.data);
@@ -176,25 +178,32 @@ export class AgentComponent implements OnInit {
    */
   public handleDetails(data) {
     data.agentType = this.agentType;
-    this.detailsCode = true;
-    if (this.agentType === AgentType.USER) {
-      this.admin.getUserAgent({ id: data.id });
-    }
-    this.byVal.sendMeg({ key: 'VIEW_DETAILS', data });
+    this.handleOpenModal('open_details');
+    let timer = setTimeout(() => {
+      if (this.agentType === AgentType.USER) {
+        this.admin.getUserAgent({ id: data.id });
+      }
+      this.getRoles();
+      this.byVal.sendMeg({ key: 'VIEW_DETAILS', data });
+      clearTimeout(timer);
+    }, 100);
   }
   /**
    * handleAdd 添加大管理
    */
   public handleAdd() {
+    this.handleOpenModal('open_agent')
     this.byVal.sendMeg({ key: 'OPEN_ADD' })
-    this.addCode = true;
   }
   /**
    * onCancel 关闭对话框
    */
   public onCancel() {
-    this.addCode = false;
-    this.detailsCode = false;
+    this.visible = false;
+    const timer = setTimeout(() => {
+      this.modalKey = null;
+      clearTimeout(timer);
+    }, 100);
   }
   pageIndexChange(e) {
     this.curPage = e;
@@ -208,5 +217,10 @@ export class AgentComponent implements OnInit {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
     this.sub.unsubscribe();
+  }
+  /**打开对话框*/
+  handleOpenModal(s: 'open_agent' | 'open_details') {
+    this.modalKey = s;
+    this.visible = true;
   }
 }

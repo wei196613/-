@@ -1,7 +1,7 @@
 <h2>邀请码权限管理</h2>
 
 <div class="add">
-  <button nz-button nzType="success" (click)="handleOpenModal('open_add')">新建权限</button>
+  <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_add')">新建权限</button>
 </div>
 
 <nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"

@@ -1,4 +1,10 @@
-<h2>新配置</h2>
+<h2>
+  <div [ngSwitch]="parentKey">
+    <div *ngSwitchCase="'open_edit'">修改</div>
+    <div *ngSwitchCase="'open_add'">新配置</div>
+    <div *ngSwitchDefault></div>
+  </div>
+</h2>
 
 <form nz-form [formGroup]="formGroup">
   <nz-form-item>
@@ -9,7 +15,10 @@
   </nz-form-item>
 </form>
 <nz-divider></nz-divider>
-
+<div class="add">
+  <button nz-button nzType="dashed" nzSize="large" (click)="handleOpenModal('open_action_table', 0)"><i nz-icon
+      nzType="plus" nzTheme="outline"></i></button>
+</div>
 <div *ngFor="let i of actionData;let index = index">
   <div class="arrows" *ngIf="index !== 0"><i nz-icon nzType="arrow-down" nzTheme="outline"></i></div>
   <app-action [index]="index" [data]="i" (dataDel)="handleDelAction($event)" (editClick)="handleEditTag($event, index)">
@@ -20,22 +29,26 @@
   </div>
 </div>
 
-<div class="add" *ngIf="actionData.length === 0">
-  <button nz-button nzType="dashed" nzSize="large" (click)="handleOpenModal('open_action_table')"><i nz-icon
-      nzType="plus" nzTheme="outline"></i></button>
-</div>
-
 <div class="check-paras">
-  <nz-tag *ngFor="let item of tagCheck" [ngStyle]="{'border-color': item.color, 'color':item.color}">
-    <span class="queue">{{item.queue}}</span>
-    {{item.newName? item.newName : item.oldName}}
-  </nz-tag>
+  <ng-container *ngFor="let item of tagCheck">
+    <nz-badge nzShowZero [nzStyle]='{backgroundColor:item.color}' [nzCount]="item?.queue"
+      *ngIf="!(item.defaultValue || item.refOrder)">
+      <nz-tag [ngStyle]="{'border-color': item.color, 'color':item.color}">
+        {{item.newName? item.newName : item.oldName}}
+      </nz-tag>
+    </nz-badge>
+  </ng-container>
 </div>
-
 
 <div class="footer">
-  <!-- <button nz-button nzType="success" (click)="onCancel()">导入</button> -->
-  <button nz-button nzType="primary" (click)="submitForm()">添加</button>
+  <button nz-button class="ant-btn-success" (click)="handleOpenModal('open_import')">导入</button>
+  <button nz-button nzType="primary" (click)="submitForm()">
+    <span [ngSwitch]="parentKey">
+      <span *ngSwitchCase="'open_edit'">修改</span>
+      <span *ngSwitchCase="'open_add'">添加</span>
+      <span *ngSwitchDefault></span>
+    </span>
+  </button>
 </div>
 <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
   [nzCancelText]="null" [nzFooter]="null" nzWidth="600px" [nzMaskClosable]="false">
@@ -56,9 +69,9 @@
         </nz-form-control>
       </nz-form-item>
       <div class="footer">
-        <button nz-button nzType="primary" (click)="patchValue()">确定</button>
+        <button nz-button nzType="primary" (click)="patchJsonValue()">确定</button>
       </div>
     </div>
-    <div *ngSwitchDefault>output2</div>
+    <div *ngSwitchDefault></div>
   </div>
 </nz-modal>

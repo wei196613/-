@@ -3,23 +3,25 @@
     <div class="input">
       <h5>输入参数</h5>
       <ng-container *ngFor="let item of data.inputTags;let i = index">
-        <nz-tag [ngStyle]="{'border-color': color(item)?.color, 'color':color(item)?.color }"
-          [ngClass]="{'bg': color(item)}" (click)="handleTagClick(item,'inputTags', i)">
-          <span *ngIf="color(item)" class="queue">{{item?.queue}}</span>
-          {{item.newName?item.newName: item.oldName}} <span (click)="handleEdit($event, i)"><i nz-icon nzType="edit"
-              nzTheme="outline"></i></span>
-        </nz-tag>
+        <nz-badge [nzShowDot]="!!color(item)" [nzStyle]='{backgroundColor:color(item)?.color}' [nzCount]="item?.queue">
+          <nz-tag [ngStyle]="{'border-color': color(item)?.color, 'color':color(item)?.color }"
+            [ngClass]="{'bg': color(item)}" (click)="handleTagClick(item,'inputTags', i)">
+            {{item.newName?item.newName: item.oldName}} <span (click)="handleEdit($event, i)"><i nz-icon nzType="edit"
+                nzTheme="outline"></i></span>
+          </nz-tag>
+        </nz-badge>
         <!-- <app-tag [data]="item" [actionInex]="index"></app-tag> -->
       </ng-container>
     </div>
     <div class="output">
       <h5>输出参数</h5>
       <ng-container *ngFor="let item of data.outputTags; let i = index">
-        <nz-tag [ngStyle]="{'border-color': color(item)?.color, 'color':color(item)?.color }"
-          [ngClass]="{'bg': color(item)}" (click)="handleTagClick(item, 'outputTags', i)">
-          <span *ngIf="color(item)" class="queue">{{item.queue}}</span>
-          {{item.newName?item.newName: item.oldName}}
-        </nz-tag>
+        <nz-badge [nzShowDot]="!!color(item)" [nzStyle]='{backgroundColor:color(item)?.color}' [nzCount]="item?.queue">
+          <nz-tag [ngStyle]="{'border-color': color(item)?.color, 'color':color(item)?.color }"
+            [ngClass]="{'bg': color(item)}" (click)="handleTagClick(item, 'outputTags', i)">
+            {{item.newName?item.newName: item.oldName}}
+          </nz-tag>
+        </nz-badge>
         <!-- <ng-container *ngFor="let item of data.outputTags; let i = index">
         <app-tag [data]="item" [actionInex]="index"></app-tag>
       </ng-container> -->

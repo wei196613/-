@@ -1,0 +1,48 @@
+<h2>请选择要导出数据名称</h2>
+
+<!-- <nz-list [nzSplit]="false" [nzFooter]="footerTem">
+  <div nz-row>
+    <nz-list-item *ngFor="let i of exportKeyAll" nz-col nzSpan="12">
+      <label nz-checkbox (nzCheckedChange)="checkboxChange($event,i.key)"
+        [ngModel]="getIsChecked(i.key)">{{ i.value }}</label>
+    </nz-list-item>
+    <nz-list-item *ngFor="let i of formConfig.paras" nz-col nzSpan="12">
+      <label nz-checkbox (nzCheckedChange)="checkboxChange($event,i.name)"
+        [ngModel]="getIsChecked(i.name)">{{ i.label }}</label>
+    </nz-list-item>
+  </div>
+</nz-list>
+<ng-template #footerTem>
+  <label nz-checkbox [ngModel]="getAllChecked" (nzCheckedChange)="handleAllChange($event)">全选</label>
+</ng-template> -->
+<!-- <nz-checkbox-wrapper class="checkbox-wrapper">
+  <div nz-row>
+    <div nz-col nzSpan="12" *ngFor="let i of exportKeyAll">
+      <label nz-checkbox>{{i.value }}</label>
+    </div>
+  </div>
+</nz-checkbox-wrapper> -->
+<nz-table #nzTable [nzData]="exportKeyAll" [nzSize]="'small'" [nzPageSize]="100" [nzShowPagination]="false">
+  <thead>
+    <tr>
+      <th nzWidth="20%" nzShowCheckbox="true" [nzChecked]="getAllChecked" (nzCheckedChange)="handleAllChange($event)">
+      </th>
+      <th nzWidth="80%"><strong>数据名称</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let i of nzTable.data" (click)="checkboxChange(i.key)">
+      <td nzShowCheckbox [(nzChecked)]="i.checked">
+      </td>
+      <td>{{ i.value }}</td>
+    </tr>
+    <tr *ngFor="let i of formConfig.paras" (click)="checkboxChange(i.name)">
+      <td nzShowCheckbox [(nzChecked)]="i.checked"></td>
+      <td>{{i.name}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">确定</button>
+</div>

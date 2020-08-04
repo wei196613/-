@@ -13,8 +13,8 @@ export class CommonService {
    * POST /manualExecuteTask
    * 手动执行任务
    */
-  public manualExecuteTask(id: number) {
-    return this.http.post<CommonResp>('manualExecuteTask', { ids: [id] });
+  public manualExecuteTask(ids: number[]) {
+    return this.http.post<CommonResp>('manualExecuteTask', { ids });
   }
 
   /**
@@ -22,7 +22,16 @@ export class CommonService {
    * POST /closeTask
    * 取消任务/关闭任务
    */
-  public closeTask(id) {
-    return this.http.post<CommonResp>('cancelTask', { ids: [id] });
+  public closeTask(ids: number[]) {
+    return this.http.post<CommonResp>('cancelTask', { ids });
+  }
+
+  /**
+   * pauseTask
+   * pauseTask{ids :number[]}
+   * 暂停
+   */
+  public pauseTask(ids: number[]) {
+    return this.http.post<CommonResp>('pauseTask', { ids });
   }
 }

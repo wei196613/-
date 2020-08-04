@@ -23,10 +23,6 @@ export class ActionComponent implements OnInit {
     if (type === 'outputTags') {
       const res = this.tags.findTagData(item);
       if (res) {
-        res.refOrder = null;
-        res.newKey = null;
-        res.newName = null;
-        res.defaultValue = null;
         this.tags.removeTag(item);
       }
     } else if (this.tags.findTagIndex(item) != -1) {
@@ -35,6 +31,7 @@ export class ActionComponent implements OnInit {
       tag.newKey = null;
       tag.newName = null;
       tag.defaultValue = null;
+      tag.queue = null;
       this.tags.removeTag(item);
     } else {
       this.data.inputTags[i] = this.tags.pushTag(item);
@@ -49,12 +46,18 @@ export class ActionComponent implements OnInit {
     const res = this.tags.findTagData(tag);
     if (res) {
       tag.queue = res.queue;
+      tag.defaultValue = res.defaultValue;
       if (res.actionIndex) {
         if (!res.actionIndex.some(v => v === this.index)) res.actionIndex.push(this.index)
       } else {
         res.actionIndex = [this.index];
       }
       return { color: res.color, background: '#333' };
+    }
+    tag.queue = null;
+    if (tag.type === 'inputTags') {
+      tag.refOrder = null;
+      tag.defaultValue = null;
     }
     return null;
   }

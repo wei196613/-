@@ -42,6 +42,36 @@ export class UserInfoService {
       this.router.navigate([path]);
     }
   }
+  /**获取用户的秘钥
+   * POST /getSecretKey
+   */
+  public async getSecretKey(password: string) {
+    try {
+      this.spin.open('获取密钥中');
+      this.userInfo.key = await this.http.post<string>('getSecretKey', { password })
+      this.spin.close()
+      return this.userInfo;
+    } catch (error) {
+      console.log(error);
+      this.spin.close();
+    }
+  }
+
+  /**
+   * POST /resetTokenAndSecretKey （新）
+   * 重置用户的token和秘钥
+   */
+  public async resetTokenAndSecretKey(password: string) {
+    try {
+      this.spin.open('重置密钥中');
+      this.userInfo.key = await this.http.post<string>('resetTokenAndSecretKey', { password })
+      this.spin.close()
+    } catch (error) {
+      console.log(error);
+      this.spin.close();
+    }
+  }
+
 
   /**
   * userInfo GET /userInfo

@@ -6,7 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { Component, OnInit, Input } from '@angular/core';
 import { ByValueService } from 'src/app/services/by-value.service';
 import { Config } from 'src/app/Config';
-import { GetActionById, AddAction, InputParas, OutputParas } from 'src/app/services/entity';
+import { GetActionByKey, AddAction, InputParas, OutputParas } from 'src/app/services/entity';
 
 @Component({
   selector: 'app-edit',
@@ -20,16 +20,16 @@ export class EditComponent implements OnInit {
   visible = false;
   /**弹框类型*/
   modalKey = '';
-  @Input() data: GetActionById;
+  @Input() data: GetActionByKey;
   formGroup: FormGroup;
   ActionTpe = Config.Actiontpe;
   sub: Subscription;
   constructor(private fb: FormBuilder, private byVal: ByValueService, private hintMsg: NzMessageService) { }
   ngOnInit() {
     this.formGroup = this.fb.group({
-      id: [null, [Validators.required]],
       name: [null, [Validators.required]],
-      key: [null, [Validators.required]],
+      key: [null, [Validators.required, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
+      newKey: [null, [Validators.required]],
       inputParas: this.fb.array([this.getInputParas]),
       outputParas: this.fb.array([this.getOutputParas])
     })
@@ -38,6 +38,7 @@ export class EditComponent implements OnInit {
         this.onCancel();
       }
     })
+    if (this.data) this.data.newKey = this.data?.key;
     this.patchValue();
   }
   /**填充form value*/
@@ -71,9 +72,8 @@ export class EditComponent implements OnInit {
   /**获取输入参数子控件配置*/
   private get getInputParas() {
     return this.fb.group({
-      id: [null],
       name: [null, Validators.required],
-      key: [null, Validators.required],
+      key: [null, [Validators.required, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
       tpe: [null, Validators.required],
       values: [{ value: null, disabled: true }, [Validators.required]],
       constraint: [null],
@@ -82,12 +82,12 @@ export class EditComponent implements OnInit {
       errTip: [null]
     })
   }
+
   /**获取输出参数子控件配置*/
   private get getOutputParas() {
     return this.fb.group({
-      id: [null],
       name: [null, Validators.required],
-      key: [null, Validators.required],
+      key: [null, [Validators.required, Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]{0,}$/)]],
       tpe: [null, Validators.required]
     })
   }
@@ -116,24 +116,18 @@ export class EditComponent implements OnInit {
 
   submitForm() {
     const data = this.formGroup.value;
-    data.outputParas.forEach(v => {
-      if (v.id === null || v.id === undefined) {
-        delete v.id;
+    if (this.formGroup.valid) {
+      if (data.key === data.newKey) {
+        delete data.newKey;
       }
-    });
-    data.inputParas.forEach(v => {
-      if (v.id === null || v.id === undefined) {
-        delete v.id;
-      }
-    });
-    this.byVal.sendMeg({ key: 'edit_start', data })
+      this.byVal.sendMeg({ key: 'edit_start', data })
+    }
   }
   /**检查数据是否有改动*/
   query() {
     const v = this.formGroup.value;
+    console.log(this.formGroup);
     if (this.formGroup.valid) {
-      console.log(JSON.stringify(v));
-      console.log(JSON.stringify(this.data));
       if (JSON.stringify(v) === JSON.stringify(this.data)) {
         this.byVal.sendMeg({ key: 'close_modal' })
       } else {
@@ -176,5 +170,9 @@ export class EditComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.sub && this.sub.unsubscribe()
+  }
+  /**键值命名不符合规则错误提示*/
+  handleGetErrorTip(abs: AbstractControl) {
+    return abs && abs.hasError('pattern') ? '键值命名规则不正确，应以字母或者下划线开头,由字母数字下划线组成' : '请输入名称';
   }
 }

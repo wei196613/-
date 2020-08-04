@@ -11,8 +11,12 @@ import { ByValueService } from 'src/app/services/by-value.service';
 })
 export class AddComponent implements OnInit {
   @Input() data: PermissionsList;
+  /**对话框状态*/
+  visible = false;
+  /**保存任务可见性配置*/
+  taskTypeVisible = [];
   formGroup: FormGroup;
- 
+
   params = {
     perPage: 30,
     curPage: 1,
@@ -44,12 +48,25 @@ export class AddComponent implements OnInit {
     console.log(this.permissions);
     if (this.formGroup.valid) {
       const data = this.formGroup.value;
-      this.byVal.sendMeg({ key: 'add_start', data: { name: data.name, permissions: this.permissions } })
+      this.byVal.sendMeg({ key: 'add_start', data: { name: data.name, permissions: this.permissions, taskTypeVisible: this.taskTypeVisible } })
     } else {
       for (const i in this.formGroup.controls) {
         this.formGroup.controls[i].markAsDirty();
         this.formGroup.controls[i].updateValueAndValidity();
       }
     }
+  }
+  /**打开对话框*/
+  handleOpenModal() {
+    this.visible = true;
+  }
+  /**关闭对话框*/
+  onCancel() {
+    this.visible = false;
+  }
+  /**任务可见配置变化事件*/
+  handleTaskSelectChange(e) {
+    this.taskTypeVisible = e;
+    this.onCancel();
   }
 }

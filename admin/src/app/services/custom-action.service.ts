@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
-import { GetActionById, ActionTypeNames, AddAction, CommonResp } from './entity';
+import { GetActionByKey, ActionTypeNames, AddAction, CommonResp } from './entity';
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +9,18 @@ export class CustomActionService {
 
   constructor(private http: HttpService) { }
   /**
-   * getActionById
-   * Get /getActionById?id=number
-   * 获取自定义任务类型参数
+   * getActionByKey
+   * Get /getActionByKey?id=number
+   * 获取自定义action参数
    */
-  public getActionById(id: number) {
-    return this.http.get<GetActionById>(`getActionById?id=${id}`).toPromise();
+  public getActionByKey(key: string) {
+    return this.http.get<GetActionByKey>(`getActionByKey?key=${key}`).toPromise();
   }
 
   /**
    * getActionNames
    * GET /getActionNames?perPage?=Int&curPage?=Int&keyword?=string
-   * 获取自定义任务类型名称
+   * 获取自定义action名称
    */
   public getActionNames(params: { perPage: number, curPage: number, keyword: string }) {
     const url = this.http.getUrl('getActionNames?', params);
@@ -39,8 +39,9 @@ export class CustomActionService {
   /**
    * editAction
    */
-  public editAction(params: GetActionById) {
+  public editAction(params: GetActionByKey) {
     return this.http.post<CommonResp>('editAction', params).toPromise();
   }
+
 }
 

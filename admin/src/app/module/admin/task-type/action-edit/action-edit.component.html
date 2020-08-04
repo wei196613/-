@@ -1,42 +1,53 @@
 <h2>参数配置</h2>
 <form nz-form [formGroup]="formGroup">
   <nz-form-item>
-    <nz-form-label [nzSpan]="8">旧名称</nz-form-label>
-    <nz-form-control [nzSpan]="8" nzErrorTip="请输入任务名称">
+    <nz-form-label [nzSpan]="6">参数类型</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <nz-form-text>{{data.tpe | inputTpe}}</nz-form-text>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6">旧名称</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="请输入任务名称">
       <input type="text" nz-input formControlName="oldName" placeholder="请输入任务名称">
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSpan]="8">新名称</nz-form-label>
-    <nz-form-control [nzSpan]="8" nzErrorTip="请输入新名称">
-      <input type="text" nz-input formControlName="newName" placeholder="请输入新名称">
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="8">旧键值</nz-form-label>
-    <nz-form-control [nzSpan]="8" nzErrorTip="请输入任务名称">
+    <nz-form-label [nzSpan]="6">旧键值</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="请输入任务名称">
       <input type="text" nz-input formControlName="oldKey" placeholder="请输入任务名称">
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSpan]="8">新键值</nz-form-label>
-    <nz-form-control [nzSpan]="8" nzErrorTip="请输入新键值名">
-      <input type="text" nz-input formControlName="newKey" placeholder="请输入新键值名">
+    <nz-form-label [nzSpan]="6">新名称</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="请输入新名称">
+      <input type="text" nz-input formControlName="newName" placeholder="请输入新名称"
+        (ngModelChange)="handleInputChange($event, 'newKey')">
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSpan]="8">绑定其他action</nz-form-label>
-    <nz-form-control [nzSpan]="8" nzErrorTip="请选择需要绑定的action参数">
+    <nz-form-label [nzSpan]="6">新键值</nz-form-label>
+    <nz-form-control [nzSpan]="14" [nzErrorTip]="handleGetErrorTip(formGroup.get('newKey'))">
+      <input type="text" nz-input formControlName="newKey" placeholder="请输入新键值名"
+        (ngModelChange)="handleInputChange($event, 'newName')">
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6">绑定其他action</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="请选择需要绑定的action参数">
       <nz-select nzPlaceHolder="请选择需要绑定的action参数" formControlName="refOrder" nzAllowClear>
-        <nz-option *ngFor="let item of selectArr" [nzLabel]="item.name" [nzValue]="item.value">
+        <div></div>
+        <nz-option *ngFor="let item of selectArr" nzCustomContent [nzValue]="item.value" [nzLabel]="item.name">
+          <div nz-tooltip [nzTooltipTitle]="item.name">{{item.name}}</div>
         </nz-option>
       </nz-select>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSpan]="8">默认值</nz-form-label>
-    <nz-form-control [nzSpan]="8" nzErrorTip="请输入默认值">
-      <input type="text" nz-input formControlName="defaultValue" placeholder="请输入新键值名">
+    <nz-form-label [nzSpan]="6">默认值</nz-form-label>
+    <nz-form-control [nzSpan]="14" nzErrorTip="请输入默认值">
+      <input type="text" nz-input formControlName="defaultValue" placeholder="请输入新键值名" nz-tooltip
+        [nzTooltipTitle]="tioltipTitle">
     </nz-form-control>
   </nz-form-item>
 

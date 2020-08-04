@@ -24,18 +24,20 @@ h2,
     transform: scale(2);
   }
 }
-.check-paras{
+
+/deep/ .check-paras {
   margin-top: 20px;
-  .queue {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    line-height: 13px;
-    text-align: center;
-    border-radius: 50%;
-    border: 1px solid;
+
+  .ant-badge-count,
+  .ant-badge-dot,
+  .ant-badge .ant-scroll-number-custom-component {
+    left: 0px;
+    color: #333;
+    right: unset;
+    transform: translate(-50%, -50%);
   }
-  .ant-tag{
+
+  .ant-tag {
     background: #333;
   }
 }

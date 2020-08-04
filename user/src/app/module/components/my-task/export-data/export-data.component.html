@@ -22,7 +22,7 @@
     </div>
   </div>
 </nz-checkbox-wrapper> -->
-<nz-table #nzTable [nzData]="exportKeyAll" [nzSize]="'small'" [nzShowPagination]="false">
+<nz-table #nzTable [nzData]="exportKeyAll" [nzSize]="'small'" [nzShowPagination]="false" [nzPageSize]="100">
   <thead>
     <tr>
       <th nzWidth="20%" nzShowCheckbox="true" [nzChecked]="getAllChecked" (nzCheckedChange)="handleAllChange($event)">

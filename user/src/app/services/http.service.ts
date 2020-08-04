@@ -53,9 +53,12 @@ export class HttpService {
 
   private _errorHandler(error: any, obs: Subscriber<any>) {
     if (error.status === 0) {
-      this.hintMsg.error("服务器连接失败")
+      this.hintMsg.error("服务器连接失败");
     } else if (error.status >= 400) {
-      this.hintMsg.error(error.error.msg)
+      const msgArr = error?.error?.msg.split('\n') as string[];
+      let msg = '';
+      msgArr.forEach((v, index) => msg += (index > 0 ? `<div class="text-align-left">${v}</div>` : v))
+      this.hintMsg.error(msg);
     }
     return obs.error(error)
   }

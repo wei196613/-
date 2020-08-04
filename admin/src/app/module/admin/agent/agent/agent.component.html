@@ -5,7 +5,7 @@
     <nz-tab [nzTitle]="'用户'" (nzClick)="setAgentType('USER')"></nz-tab>
   </nz-tabset>
   <!-- <span>历史获得米币：</span> -->
-  <button nz-button nzType="success" *ngIf="isBigAgent" class="add" (click)="handleAdd()">添加</button>
+  <button nz-button *ngIf=" isBigAgent" class="ant-btn-success add" (click)="handleAdd()">添加</button>
 </div>
 <nz-table #basicTable [nzData]="data?.arr" [(nzPageIndex)]="curPage" [nzTotal]="data?.total" [nzFrontPagination]="false"
   (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
@@ -33,11 +33,15 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="addCode" [nzOkText]='null' (nzOnCancel)="onCancel()"
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
   [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
-  <app-agent-add></app-agent-add>
-</nz-modal>
-<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="detailsCode" [nzOkText]='null'
-  (nzOnCancel)="onCancel()" [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
-  <app-agent-details [roleGroupList]="roleGroupList"></app-agent-details>
+  <div [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_agent'">
+      <app-agent-add></app-agent-add>
+    </div>
+    <div *ngSwitchCase="'open_details'">
+      <app-agent-details [roleGroupList]="roleGroupList"></app-agent-details>
+    </div>
+    <div *ngSwitchDefault></div>
+  </div>
 </nz-modal>

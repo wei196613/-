@@ -4,7 +4,7 @@ import { AppSpinService } from 'src/app/components/spin-mask/app-spin.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { DeviceService, DeviceList } from '../device.service';
+import { DeviceService, DeviceList, DeviceItem } from '../device.service';
 
 @Component({
   selector: 'app-index',
@@ -15,7 +15,7 @@ export class IndexComponent implements OnInit {
   modalKey = ''
   visible = false;
   data: DeviceList;
-  checkData
+  checkData: DeviceItem;
   params = {
     perPage: 10,
     curPage: 1,
@@ -60,7 +60,18 @@ export class IndexComponent implements OnInit {
       this.handleError(error)
     }
   }
-
+  /**激活设备*/
+  private async useActivationCode(code: string) {
+    this.spin.open('激活中。。。')
+    try {
+      const res = await this.device.useActivationCode({ deviceId: this.checkData.id, code })
+      await this.getData();
+      this.onCancel();
+      this.hintMsg.success(res.msg)
+    } catch (error) {
+      this.handleError(error)
+    }
+  }
   ngOnInit() {
     this.getData();
     this.sub = this.byVal.getMeg().subscribe(res => {
@@ -70,6 +81,9 @@ export class IndexComponent implements OnInit {
           break;
         case 'transfer_start':
           this.distributeDevice(res.data)
+          break;
+        case 'active_start':
+          this.useActivationCode(res.data)
           break;
       }
     })
@@ -121,5 +135,35 @@ export class IndexComponent implements OnInit {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
     this.sub && this.sub.unsubscribe();
+  }
+  /**获取有效期*/
+  getTimeRemaining(time: number): string {
+    if (time > 0) {
+      let s = '';
+      let n = Math.floor(time / 60 / 60 / 24);
+      if (n > 0) {
+        s += (n + '天')
+      } else {
+        s += '0天'
+      }
+      time = time % (60 * 60 * 24);
+      let h = Math.floor(time / 60 / 60);
+      if (h > 0) {
+        s += (h + '时')
+      } else {
+        s += '0时'
+      }
+      time = time % (60 * 60);
+      let m = Math.floor(time / 60);
+      if (m > 0) {
+        s += (m + '分')
+      } else {
+        s += '0分'
+      }
+      time = time % 60;
+      s += (time + '秒')
+      return s;
+    }
+    return '';
   }
 }

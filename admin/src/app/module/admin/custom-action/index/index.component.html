@@ -1,13 +1,13 @@
 <div class="custom-title">
   <app-title placeholder="输入关键字搜索"></app-title>
-  <button class="right-btn" nz-button [nzType]="'success'" (click)="handleOpenModal('open_add')">新建action类型</button>
+  <button class="right-btn ant-btn-success" nz-button (click)="handleOpenModal('open_add')">新建action类型</button>
 </div>
 
 <nz-table #basicTable [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false"
-  (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)">
+  (nzPageIndexChange)="pageIndexChange($event)" [(nzPageIndex)]="params.curPage" [(nzPageSize)]="params.perPage"
+  (nzPageSizeChange)="pageSizeChange($event)">
   <thead>
     <tr>
-      <th>id</th>
       <th>名称</th>
       <th>键值</th>
       <th>输入参数数量</th>
@@ -17,7 +17,6 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of basicTable.data">
-      <td>{{data?.id}}</td>
       <td>{{data?.name}}</td>
       <td>{{data?.key}}</td>
       <td>{{data?.inputParasTotal}}</td>

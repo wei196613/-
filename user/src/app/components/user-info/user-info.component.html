@@ -28,16 +28,46 @@
           {{userInfo?.freeList[0]?.endTime *1000 |  date:'yyyy年MM月dd日 HH:mm:ss'}}</nz-form-text>
       </nz-form-control>
     </nz-form-item>
-    <nz-form-item *ngIf="userInfo?.token">
-      <nz-form-label nzSpan="8">token</nz-form-label>
+    <nz-form-item *ngIf="userInfo?.cloudEntranceAddress">
+      <nz-form-label nzSpan="8">云控地址</nz-form-label>
       <nz-form-control nzSpan="14">
         <nz-form-text>
-          {{userInfo?.token}}
-        </nz-form-text>
+          {{userInfo?.cloudEntranceAddress}}</nz-form-text>
       </nz-form-control>
     </nz-form-item>
+    <div *ngIf="userInfo?.token">
+      <nz-form-item>
+        <nz-form-label nzSpan="8">token</nz-form-label>
+        <nz-form-control nzSpan="14">
+          {{userInfo?.token}}
+          <!-- <button nz-button nzType="primary" (click)="handleOpenModal()">查看密匙</button> -->
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="userInfo?.key">
+        <nz-form-label nzSpan="8">密钥</nz-form-label>
+        <nz-form-control nzSpan="14">
+          <nz-form-text>
+            <app-password-text [text]="userInfo?.key"></app-password-text>
+          </nz-form-text>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
   </div>
   <div>
     <button nz-button class="ant-btn-warning" (click)="logout()">退出登录</button>
   </div>
 </div>
+<!-- <nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <h2>填写账号密码</h2>
+  <form nz-form [formGroup]="formGroup"></form>
+  <nz-form-item>
+    <nz-form-label nzSpan="8">密码</nz-form-label>
+    <nz-form-control nzSpan="14" nzErrorTip="请输入密码">
+      <app-password-input formControl="password" placeholder="请输入密码"></app-password-input>
+    </nz-form-control>
+  </nz-form-item>
+  <div class="footer">
+    <button nz-button nzType="primary" (click)="submit()">确定</button>
+  </div>
+</nz-modal> -->

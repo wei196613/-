@@ -16,11 +16,17 @@ export class TagService {
   }
   /**随机取色*/
   private randomColor() {
-    // var colorValue = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
-    const colorValue = [8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
+    // var colorValue = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
+    const colorValue = [
+      [8, 9, 'a', 'b', 'c', 'd'],
+      [3, 'a', 'b', 'c', 'd'],
+      ['a', 'b', 'c'],
+      [8, 9, 'a', 'b', 'c', 'd', 'e', 'f'],
+      [8, 9, 'a', 'b', 'c', 'd', 'e', 'f'],
+      [8, 9, 'a', 'b', 'c', 'd', 'e', 'f']];
     let s = "#";
     for (var i = 0; i < 6; i++) {
-      s += colorValue[Math.floor(Math.random() * 8)];
+      s += colorValue[i][Math.floor(Math.random() * colorValue[i].length)];
     }
     return s;
   }
@@ -28,6 +34,10 @@ export class TagService {
    * 添加按钮
    */
   public pushTag(tag: Tags) {
+    const data = this.findTagData(tag);
+    if (data) {
+      return data;
+    }
     tag.color = this.color[this.tagData.length];
     tag.queue = (this.tagData.length + 1);
     this.tagData.push(tag);
@@ -36,7 +46,7 @@ export class TagService {
 
   /**查询数据*/
   public findTagData(tag: Tags): Tags {
-    const { newKey, newName, defaultValue, refOrder, oldName, oldKey, tpe, type } = tag;
+    const { newKey, newName, refOrder, oldName, oldKey, tpe, type } = tag;
     let v: Tags = null;
     if (type === 'outputTags') {
       return this.tagData.find(i => i.refOrder === tag.refOrder)
@@ -45,8 +55,6 @@ export class TagService {
       v = this.tagData.find(i => i.refOrder === tag.refOrder && i.oldKey === oldKey && i.tpe === tpe);
     } else if (newKey && newName) {
       v = this.tagData.find(i => i.newKey === newKey && i.tpe === tpe && !i.refOrder);
-    } else if (defaultValue) {
-      v = this.tagData.find(i => i.defaultValue === defaultValue && i.oldKey === oldKey && i.tpe === tpe && !i.refOrder);
     } else {
       v = this.tagData.find(i => !(i.newKey) && i.oldKey === oldKey && i.tpe === tpe && !i.refOrder);
     }
@@ -54,14 +62,13 @@ export class TagService {
   }
   /**查询*/
   public findTagIndex(tag: Tags) {
-    const { newKey, newName, defaultValue, refOrder, oldName, oldKey, tpe } = tag;
+    const { newKey, newName, refOrder, oldName, oldKey, tpe, type } = tag;
+    if (type === 'outputTags') return this.tagData.findIndex(i => i.refOrder === refOrder);
     let v: number = null;
     if (newKey && newName) {
       v = this.tagData.findIndex(i => i.newKey === newKey && i.tpe === tpe && !i.refOrder);
-    } else if (defaultValue) {
-      v = this.tagData.findIndex(i => i.defaultValue === defaultValue && i.oldKey === oldKey && i.tpe === tpe && !i.refOrder);
     } else if (refOrder) {
-      v = this.tagData.findIndex(i => i.refOrder === tag.refOrder && i.oldKey === oldKey && i.tpe === tpe);
+      v = this.tagData.findIndex(i => i.refOrder === refOrder && i.oldKey === oldKey && i.tpe === tpe);
     } else {
       v = this.tagData.findIndex(i => !(i.newKey) && i.oldKey === oldKey && i.tpe === tpe && !i.refOrder);
     }
@@ -70,14 +77,14 @@ export class TagService {
   /**移除*/
   public removeTag(tag: Tags) {
     const v = this.findTagIndex(tag);
+    console.log(v);
     if (v != -1) {
-      this.tagData.forEach((item, i) => {
-        if (i > v) {
+      this.tagData.forEach((item) => {
+        if (item.queue > v) {
           item.queue -= 1;
         }
       })
       this.tagData.splice(v, 1);
     }
   }
-
 }

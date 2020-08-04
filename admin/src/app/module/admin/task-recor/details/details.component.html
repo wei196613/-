@@ -1,0 +1,99 @@
+<h2>任务详情</h2>
+<div class="task-details">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">任务id</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data.id}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">任务名称</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.name}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">用户</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.userAccount}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">任务类型</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.tpe?.name}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">运行设备</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.runningDevice?.name}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">创建时间</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div *ngIf="data?.createTime">{{data?.createTime  * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">执行方式</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.executeMethod | TaskExecute}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="data?.executeMethod === 3">
+    <nz-form-label [nzSpan]="10">计划执行时间</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.scheduledTime * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">状态</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data.status | TaskStatus}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">开始运行时间</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div *ngIf="data?.startTime">{{data?.startTime * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">推送时间</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div *ngIf="data?.sendTime">{{data?.sendTime * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSpan]="10">结束时间</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div *ngIf="data?.endTime">{{data?.endTime * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="data?.closeTime">
+    <nz-form-label [nzSpan]="10">取消时间</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <div>{{data?.closeTime * 1000 | date: 'yyyy-MM-dd HH:mm:ss'}}</div>
+    </nz-form-control>
+  </nz-form-item>
+
+  <ng-container *ngFor="let i of formConfig.paras">
+    <nz-form-item *ngIf="parasValue && parasValue[i.key]">
+      <nz-form-label [nzSpan]="10">{{i.name}}</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <span [ngSwitch]="i.tpe">
+          <span *ngSwitchCase="6">{{ parasValue[i.key]?.value}}</span>
+          <span *ngSwitchCase="4">{{  parasValue[i.key] | slice: 11:19}}</span>
+          <span *ngSwitchCase="7">{{ parasValue[i.key]?.value}}</span>
+          <span *ngSwitchCase="8">{{ getSelectValue(parasValue[i.key], i.values) }}</span>
+          <span *ngSwitchCase="10">{{ getMultiselectValue(i.key, i.values) }}</span>
+          <span *ngSwitchDefault>
+            <div>{{ parasValue[i.key]}}</div>
+          </span>
+        </span>
+      </nz-form-control>
+    </nz-form-item>
+  </ng-container>
+</div>
