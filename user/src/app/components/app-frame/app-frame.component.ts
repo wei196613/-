@@ -56,6 +56,11 @@ export class AppFrameComponent {
       name: "我的任务",
       path: `/my-task`,
       icon: 'shake'
+    }, {
+      title: '归档的任务',
+      name: '归档的任务',
+      path: '/delete-task',
+      icon: 'delete'
     }
   ]
 

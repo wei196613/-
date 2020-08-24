@@ -81,8 +81,9 @@ export class IndexComponent implements OnInit {
     this.modalCode = true;
     this.visible = true;
   }
-  handleError(error) {
-    this.spin.close();
+    private handleError(error) {
+      this.spin.close();
+      this.hintMsg.error(error.message);
   }
   onCancel() {
     this.visible = !this.visible;

@@ -128,8 +128,9 @@ export class IndexComponent implements OnInit {
     this.params.curPage = e;
     this.getData();
   }
-  handleError(error) {
+  private handleError(error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.

@@ -22,3 +22,21 @@
     </nz-form-control>
   </form>
 </nz-card>
+
+
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+    <h2>输入验证码</h2>
+    <nz-form-item>
+      <nz-form-label nzSpan="7">验证码</nz-form-label>
+      <nz-form-control nzSpan="15" [nzErrorTip]="totpEorrorTip">
+        <app-auth-code formControlName="totp" ngDefaultControl></app-auth-code>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div class="modal-footer">
+    <button nz-button nzType="primary" (click)="submitForm()">确定</button>
+  </div>
+</nz-modal>

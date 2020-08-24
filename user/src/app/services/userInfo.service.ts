@@ -1,3 +1,4 @@
+import { NzMessageService } from 'ng-zorro-antd';
 import { Router, Routes } from '@angular/router';
 import { ByValueService } from './by-value.service';
 import { Config } from 'src/app/Config';
@@ -19,7 +20,8 @@ export class UserInfoService {
   constructor(private spin: AppSpinService,
     private http: HttpService,
     private byVal: ByValueService,
-    private router: Router
+    private router: Router,
+    private hinMsg: NzMessageService
   ) { }
   get userInfo() {
     return this._userInfo;
@@ -45,31 +47,21 @@ export class UserInfoService {
   /**获取用户的秘钥
    * POST /getSecretKey
    */
-  public async getSecretKey(password: string) {
-    try {
-      this.spin.open('获取密钥中');
-      this.userInfo.key = await this.http.post<string>('getSecretKey', { password })
-      this.spin.close()
-      return this.userInfo;
-    } catch (error) {
-      console.log(error);
-      this.spin.close();
-    }
+  public async getSecretKey(params: { password: string, totp?: number }) {
+    this.spin.open('获取密钥中');
+    this.userInfo.key = await this.http.post<string>('getSecretKey', params)
+    this.spin.close()
+    return this.userInfo;
   }
 
   /**
    * POST /resetTokenAndSecretKey （新）
    * 重置用户的token和秘钥
    */
-  public async resetTokenAndSecretKey(password: string) {
-    try {
-      this.spin.open('重置密钥中');
-      this.userInfo.key = await this.http.post<string>('resetTokenAndSecretKey', { password })
-      this.spin.close()
-    } catch (error) {
-      console.log(error);
-      this.spin.close();
-    }
+  public async resetTokenAndSecretKey(params: { password: string, totp?: number }) {
+    this.spin.open('重置密钥中');
+    this.userInfo.key = await this.http.post<string>('resetTokenAndSecretKey', params)
+    this.spin.close();
   }
 
 
@@ -94,5 +86,9 @@ export class UserInfoService {
       this.spin.close();
       ;
     }
+  }
+  private handleError(error: Error) {
+    this.spin.close();
+    this.hinMsg.error(error.message);
   }
 }

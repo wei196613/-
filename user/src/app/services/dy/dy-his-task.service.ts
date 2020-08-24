@@ -20,8 +20,8 @@ class DyHisTaskService {
    * 获取历史捧场任务列表
    */
   public getClaqueTaskHis(params: ClaqueParams): Promise<HisClaqueTask> {
-    const url = this.http.getUrl('getClaqueTaskHis?', params);
-    return this.http.dy_get<HisClaqueTask>(url);
+    const url = this.http.getUrl('dy/getClaqueTaskHis?', params);
+    return this.http.get<HisClaqueTask>(url);
   }
 
   /**
@@ -32,8 +32,8 @@ class DyHisTaskService {
    * 获取历史登录任务列表
  */
   public getLoginTaskHis(params: LoginParams): Promise<HisLoginTask> {
-    const url = this.http.getUrl('getLoginTaskHis?', params);
-    return this.http.dy_get<HisLoginTask>(url);
+    const url = this.http.getUrl('dy/getLoginTaskHis?', params);
+    return this.http.get<HisLoginTask>(url);
   }
 
   /**
@@ -43,8 +43,8 @@ class DyHisTaskService {
    * 获取一个登录任务的详情列表
    */
   public getLoginTaskHisDetail(params: TaskHisDetailPrams) {
-    const url = this.http.getUrl('getLoginTaskHisDetail?', params)
-    return this.http.dy_get<LoginTaskHisDetail>(url);
+    const url = this.http.getUrl('dy/getLoginTaskHisDetail?', params)
+    return this.http.get<LoginTaskHisDetail>(url);
   }
 }
 

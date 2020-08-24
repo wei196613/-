@@ -147,8 +147,9 @@ export class IndexComponent implements OnInit {
       this.checkData = data;
     }
   }
-  handleError(error) {
+  private handleError(error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
   onCancel() {
     this.visible = false;

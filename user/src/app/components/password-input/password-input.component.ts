@@ -32,7 +32,7 @@ export class PasswordInputComponent implements OnInit {
     }
 
   }
-
+  
   passwordVisible = false;
   change() {
     // this.control.patchValue()

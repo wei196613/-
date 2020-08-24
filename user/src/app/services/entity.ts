@@ -28,7 +28,11 @@ export interface UserInfo {
     endTime: number //过期时间
   }];
   /**云控地址*/
-  cloudEntranceAddress?: string
+  cloudEntranceAddress?: string;
+  auths: {
+    totp: boolean;
+    loginTotp: boolean;
+  }
 }
 
 export interface SelfRoute extends Route {

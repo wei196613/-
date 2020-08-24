@@ -98,6 +98,23 @@ export class MyTaskService {
     return this.http.post<CommonResp>('exportAllTasks', params);
   }
 
+  /**
+   * deleteTask
+   * POST /deleteTask
+   * 删除/归档任务
+   */
+  public deleteTask(ids: number[]) {
+    return this.http.post<CommonResp>('deleteTask', { ids });
+  }
+
+  /**
+   * restoreTask
+   * POST /restoreTask
+   * 恢复/还原任务
+   */
+  public restoreTask(ids: number[]) {
+    return this.http.post<CommonResp>('restoreTask', { ids });
+  }
 }
 
 export interface ExportAllTasks {
@@ -108,6 +125,7 @@ export interface ExportAllTasks {
   startTime1?: string,
   startTime2?: string,
   status?: number;
+  deleted?: boolean;
 }
 
 export interface TaskAddsParams {
@@ -203,13 +221,18 @@ export interface TaskItem {
   paras: string,
   bindDevices: { id: number, name: string }[],
   runningDevice?: { id: number, name: string },//不一定有
-  status: number //0-等待手动执行(只有手动执行的任务有该状态)；1-待推送(三种都显示待推送)，2-已推送，3-正在运行，4-成功，5-失败，6-已取消
+  /**0-等待手动执行(只有手动执行的任务有该状态)；1-待推送(三种都显示待推送)，2-已推送，3-正在运行，4-成功，5-失败，6-已取消*/
+  status: number //
   result?: string,// 成功或失败(有结果的任务)才可能有结果
   executeMethod: number,//1-立即执行，2-手动执行，3-计划执行
   scheduledTime: number,//选了计划执行才要填计划执行时间
   startTime?: number,
   endTime?: number,
   checked?: boolean; // 标记数据是否选中
+  createTime?: number;
+  sendTime?: number;
+  closeTime?: number;
+  userAccount?: string;
 }
 
 export interface ExportCheckedTasks {

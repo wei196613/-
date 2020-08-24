@@ -1,0 +1,11 @@
+<form nz-form [formGroup]="formGroup">
+  <div #myInput>
+    <ng-container formArrayName="totp">
+      <ng-container *ngFor="let item of totp.controls;let i=index">
+        <div class="totp">
+          <input nz-input type="number" max="9" min="0" [formControlName]="i" (keydown)="handleKeydown($event, i)">
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</form>

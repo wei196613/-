@@ -1,3 +1,4 @@
+import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { AppSpinService } from 'src/app/components/spin-mask/app-spin.service';
 import { Subscription } from 'rxjs';
@@ -19,6 +20,7 @@ export class HisTaskComponent implements OnInit {
   sub: Subscription
   constructor(
     private spin: AppSpinService,
+    private hintMsg: NzMessageService,
     private hisTask: DyHisTaskService) { }
   params = {
     perPage: 10,
@@ -120,8 +122,9 @@ export class HisTaskComponent implements OnInit {
     this.tabIndex === 1 && this.getHisLoginDetail(1)
     this.visible = true;
   }
-  handleError(error) {
+  private handleError(error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
   onCancel() {
     this.visible = !this.visible;

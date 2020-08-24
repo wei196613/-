@@ -1,0 +1,172 @@
+<!-- title -->
+<div class="task-title">
+  <div class="input">
+    <app-title placeholder="输入关键字搜索" (clearClick)="handleReset()" (queryClick)="handleQuery($event)"
+      [titleTemRef]="titleTem"></app-title>
+    <ng-template #titleTem>
+      <div>
+        <nz-form-item>
+          <nz-form-control [nzValidateStatus]="validateStatus.status" nzErrorTip="只有成功、失败可导出">
+            <nz-select [(ngModel)]="params.status" nzPlaceHolder="任务状态" nzAllowClear
+              (ngModelChange)="handleSelectChange('status')">
+              <nz-option *ngFor="let item of taskStatus" [nzLabel]="item.value" [nzValue]="item.key">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-form-item>
+          <nz-form-control [nzValidateStatus]="validateStatus.taskTypeId" nzErrorTip="请选择任务类型">
+            <nz-select [(ngModel)]="params.taskTypeId" nzPlaceHolder="任务类型" nzAllowClear
+              (ngModelChange)="handleSelectChange('taskTypeId')">
+              <nz-option *ngFor="let item of taskTypeArr?.arr" [nzLabel]="item.name" [nzValue]="item.id">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-date-picker [nzShowTime]="nzDefaultOpenValue" [(ngModel)]="params.startTime1" nzPlaceHolder="请选择要查询开始时间"
+          (ngModelChange)="handleTitleTimeChange()">
+        </nz-date-picker>
+      </div>
+      <div>
+        <nz-date-picker [nzShowTime]="nzDefaultOpenValue" [(ngModel)]="params.startTime2" nzPlaceHolder="请选择要查询结束时间"
+          (ngModelChange)="handleTitleTimeChange()">
+        </nz-date-picker>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div class="task-table">
+  <nz-table [nzData]="data?.arr" [nzTotal]="data?.total" [nzFrontPagination]="false" [(nzPageIndex)]="params.curPage"
+    [(nzPageIndex)]="params.curPage" (nzPageIndexChange)="pageIndexChange($event)"
+    (nzPageSizeChange)="pageSizeChange($event)" [nzFooter]="tableFooter">
+    <thead>
+      <tr>
+        <th nzWidth="4%">
+          <div class="td-checked" (click)="handleCheckAll(onCheckedAll)">
+            <div class="label-task">
+              <label nz-checkbox [ngModel]="onCheckedAll"></label>
+            </div>
+            <div class="td-mask"></div>
+          </div>
+        </th>
+        <th nzWidth="5%">任务ID</th>
+        <th nzWidth="9%">任务名称</th>
+        <th nzWidth="10%">创建时间</th>
+        <th nzWidth="9%">任务类型</th>
+        <th nzWidth="9%">运行设备</th>
+        <th nzWidth="9%">执行方式</th>
+        <th nzWidth="10%">执行时间</th>
+        <th nzWidth="10%">状态</th>
+        <th nzWidth="10%">结束时间</th>
+        <th nzWidth="19%"><button nz-button class="ant-btn-success" nzSize="small" (click)="restoreTask()">批量恢复</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data?.arr;let index=index" (click)="handleCheckItem(index)">
+        <td>
+          <div class="td-checked">
+            <div class="label-task">
+              <label nz-checkbox [ngModel]="item.checked"></label>
+            </div>
+            <div class="td-mask"></div>
+          </div>
+        </td>
+        <td>{{item?.id}}</td>
+        <td>{{item?.name}}</td>
+        <td>
+          <span *ngIf="item?.createTime">
+            {{item?.createTime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}
+          </span>
+        </td>
+        <td>{{item?.tpe?.name}}</td>
+        <td>{{item?.runningDevice?.name}}</td>
+        <td>
+          <div>{{ item?.executeMethod | loginExecute}}</div>
+          <div *ngIf="item?.executeMethod === 3">
+            {{item?.scheduledTime * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}
+          </div>
+        </td>
+        <td>
+          <div *ngIf="item?.startTime">
+            {{item?.startTime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}
+          </div>
+        </td>
+        <td>
+          <span [ngSwitch]="item?.status">
+            <span *ngSwitchCase="4">
+              <nz-tag nzColor="green">{{item?.status | LoginStatus}}</nz-tag>
+            </span>
+            <span *ngSwitchCase="5">
+              <nz-tag nzColor="red">{{item?.status | LoginStatus}}</nz-tag>
+            </span>
+            <span *ngSwitchCase="6">
+              <nz-tag nzColor="orange">{{item?.status | LoginStatus}}</nz-tag>
+            </span>
+            <span *ngSwitchDefault> {{item?.status | LoginStatus}}</span>
+          </span>
+          <button appClickStop *ngIf="item.status === 4 || item.status === 5" nz-button nzType="link" nzSize="small"
+            (click)="handleOpenModal('open_result',item)">查看</button></td>
+        <!-- <td>
+        <span *ngIf="item?.sendTime">
+          {{item?.sendTime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}
+        </span>
+      </td> -->
+        <td>
+          <div *ngIf="item?.endTime">
+            {{item?.endTime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}
+          </div>
+        </td>
+        <td class="operation-btn">
+          <button appClickStop nz-button nzType="primary" (click)="handleOpenModal('open_details',item)"
+            nzSize="small">查看详情</button>
+          <button appClickStop nz-button class="ant-btn-success" nzSize="small"
+            (click)="restoreTask(item.id)">恢复</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<ng-template #tableFooter>
+  <span class="table-footer">
+    <span class="td-checked" (click)="handleAllChange()">
+      <span class="label-task"><label nz-checkbox [(ngModel)]="exportAll">选择全部</label></span>
+      <span class="td-mask">
+      </span>
+    </span>
+    <span>(总共{{data?data?.total: 0}}条)</span><button nz-button nzType="link"
+      (click)="handleExportTask()">导出选中任务</button>(已选中{{checkData.length}}条)
+  </span>
+</ng-template>
+
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+
+  <div [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_details'">
+      <app-details [data]="eidtData" [formConfig]="formConfig"></app-details>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
+    </div>
+    <div *ngSwitchCase="'open_export'">
+      <app-export [formConfig]="formConfig"></app-export>
+    </div>
+    <ng-container *ngSwitchCase="'open_result'">
+      <h2>查看任务运行详情</h2>
+      <pre>{{ getResult }}</pre>
+      <div class="footer">
+        <button nz-button nzType="primary" (click)="onCancel()">确定</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngSwitchDefault>
+      <div></div>
+    </ng-container>
+  </div>
+</nz-modal>

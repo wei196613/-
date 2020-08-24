@@ -1,3 +1,4 @@
+import { NzMessageService } from 'ng-zorro-antd';
 import { ByValueService } from 'src/app/services/by-value.service';
 import { AppSpinService } from 'src/app/components/spin-mask/app-spin.service';
 import { Subscription } from 'rxjs';
@@ -23,6 +24,7 @@ export class AddComponent implements OnInit {
     private spin: AppSpinService,
     private byVal: ByValueService,
     private device: DeviceService,
+    private hintMsg: NzMessageService,
     private account: DyAccountService) { }
 
   ngOnInit() {
@@ -95,8 +97,9 @@ export class AddComponent implements OnInit {
       this.accountCheckData = this.accountCheckData.filter(({ id }) => id !== i);
   }
   // 错误处理
-  handleError(error) {
+  private handleError(error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
   onCancel() {
     this.visible = false;

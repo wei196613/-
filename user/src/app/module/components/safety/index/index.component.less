@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+
+  .user-info {
+    min-width: 400px;
+    max-width: 600px;
+    width: 80%;
+  }
+}
+
+.safety {
+  .safety-item {
+    width: 100%;
+  }
+}
+
+.is-auth {
+  color: #52c41a;
+}
+
+.not-auth {
+  color: #f5222d;
+}
+
+/deep/.user-info,
+/deep/.safety {
+  .ant-table-placeholder {
+    display: none;
+  }
+}
+
+.safety {
+  padding-top: 32px;
+}
+
+h3 {
+  background: #e8e8e8;
+  padding: 8px;
+}

@@ -16,8 +16,8 @@ class DyLoginManService {
    * 获取登录任务列表
    */
   public getLoginTask(params: { perPage: number, curPage: number, keyword?: string }): Promise<LoginTask> {
-    const url = this.http.getUrl('getLoginTasks?', params);
-    return this.http.dy_get<LoginTask>(url);
+    const url = this.http.getUrl('dy/getLoginTasks?', params);
+    return this.http.get<LoginTask>(url);
   }
 
   /**
@@ -26,7 +26,7 @@ class DyLoginManService {
    * 添加登录任务
    */
   public addLoginTask(params: AddLoginTaskParams) {
-    return this.http.dy_post<CommonResp>('addLoginTask', params);
+    return this.http.post<CommonResp>('dy/addLoginTask', params);
   }
 }
 

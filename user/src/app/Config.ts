@@ -8,9 +8,13 @@ interface configChildren {
   key: number;
   value: string;
 }
+
+export interface ConfigUrl {
+  prefixUrl: string;
+}
+
 export interface ConfigData {
   prefixUrl: string;
-  dyUrl: string;
   authority: configChildren[];
   loginType: configChildren[];
   loginResult: configChildren[];
@@ -31,9 +35,6 @@ export class Config {
 
   public static prefixUrl() {
     return Config.data.prefixUrl;
-  }
-  public static dyUrl() {
-    return Config.data.dyUrl;
   }
   public static get inputTpe() {
     return Config.data.inputTpe;

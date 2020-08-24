@@ -179,8 +179,9 @@ export class RunTaskComponent implements OnInit {
     }
   }
   // 错误处理
-  handleError(error) {
+  private handleError(error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
   onCancel() {
     this.visible = false;

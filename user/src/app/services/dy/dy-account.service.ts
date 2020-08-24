@@ -16,8 +16,8 @@ class DyAccountService {
    * 获取账号列表
    */
   public getAccounts(params: { perPage: number, curPage: number, keyword?: string }): Promise<Account> {
-    const url = this.http.getUrl('getAccounts?', params);
-    return this.http.dy_get<Account>(url);
+    const url = this.http.getUrl('dy/getAccounts?', params);
+    return this.http.get<Account>(url);
   }
 
   /**
@@ -26,7 +26,7 @@ class DyAccountService {
    * 添加帐号
    */
   public addAccount(params: AddParams): Promise<CommonResp> {
-    return this.http.dy_post<CommonResp>('addAccount', params);
+    return this.http.post<CommonResp>('dy/addAccount', params);
   }
 
   /**
@@ -35,7 +35,7 @@ class DyAccountService {
    * 修改账号
    */
   public editAccount(params: EditParams) {
-    return this.http.dy_post<CommonResp>('editAccount', params);
+    return this.http.post<CommonResp>('dy/editAccount', params);
   }
 
   /**
@@ -44,7 +44,7 @@ class DyAccountService {
    * 导入账号
    */
   public importAccounts(excelKey: string) {
-    return this.http.dy_post<CommonResp>('importAccounts', { excelKey });
+    return this.http.post<CommonResp>('dy/importAccounts', { excelKey });
   }
   /**
    * parseAccountExcel
@@ -52,7 +52,7 @@ class DyAccountService {
    * 解析账号excel文件
    */
   public parseAccountExcel(excel: string) {
-    return this.http.dy_post<AccountExcel>('parseAccountExcel', { excel });
+    return this.http.post<AccountExcel>('dy/parseAccountExcel', { excel });
   }
 }
 

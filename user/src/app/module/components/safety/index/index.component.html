@@ -1,0 +1,121 @@
+<h3><strong>用户信息</strong></h3>
+<div class="container">
+  <div class="user-info">
+    <nz-table [nzFrontPagination]="false" nzSize="small" [nzShowPagination]="false" [nzTotal]="6" [nzNoResult]="null">
+      <tbody>
+        <tr>
+          <td> <strong>用户名</strong> </td>
+          <td>{{userInfo?.account}} </td>
+          <td> <a nz-button nzSize="small" nzType="primary" [routerLink]="[ '/change-password' ]">修改密码</a></td>
+        </tr>
+        <tr>
+          <td><strong>余额</strong></td>
+          <td colSpan="2">{{(userInfo?.total / 100) | currency: 'CNY':'symbol-narrow'}}</td>
+        </tr>
+        <tr>
+          <td><strong>限时余额</strong></td>
+          <td colSpan="2">{{(freeMibi / 100) | currency: 'CNY':'symbol-narrow'}} </td>
+        </tr>
+        <tr *ngIf="userInfo?.freeList[0]">
+          <td><strong>过期时间</strong></td>
+          <td colSpan="2"> {{userInfo?.freeList[0]?.endTime *1000 |  date:'yyyy年MM月dd日 HH:mm:ss'}} </td>
+        </tr>
+        <tr *ngIf="userInfo?.cloudEntranceAddress">
+          <td><strong>云控地址</strong></td>
+          <td colSpan="2"> {{userInfo?.cloudEntranceAddress}}</td>
+        </tr>
+        <tr>
+          <td><strong>限时余额</strong></td>
+          <td colSpan="2">{{(freeMibi / 100) | currency: 'CNY':'symbol-narrow'}} </td>
+        </tr>
+        <tr *ngIf="userInfo?.token">
+          <td><strong>token</strong></td>
+          <td>{{userInfo?.token}} </td>
+          <td>
+            <button *ngIf="!userInfo?.key" nz-button nzType="primary" nzSize="small"
+              (click)="handleOpenModal('open_select_key')">查看密匙</button>
+          </td>
+        </tr>
+        <tr *ngIf="userInfo?.key">
+          <td><strong>密钥</strong></td>
+          <td>
+            <app-password-text [text]="userInfo?.key"></app-password-text>
+          </td>
+          <td>
+            <button nz-button nzType="primary" nzSize="small" (click)="handleOpenModal('open_select_key')">重置密匙</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div>
+    <button nz-button class="ant-btn-warning" nzSize="small" (click)="logout()">退出登录</button>
+  </div>
+</div>
+<div class="safety">
+  <h3><strong>安全设置</strong></h3>
+  <nz-table [nzFrontPagination]="false" nzSize="small" [nzShowPagination]="false" [nzTotal]="6" [nzNoResult]="null">
+    <tbody>
+      <tr>
+        <td><strong>安全验证</strong></td>
+        <td>使用《谷歌认证器》进行安全认证开启后，在进行安全等级要求高的操作之前需要使用认证器进一步安全认证，有效提高账号安全</td>
+        <td>
+          <ng-template
+            *ngTemplateOutlet="userInfo?.auths?.totp?isAuth:notAuth;context:{text: userInfo?.auths?.totp?'已认证': '未认证'}">
+          </ng-template>
+        </td>
+        <td>
+          <nz-switch [ngModel]="userInfo?.auths?.totp" [nzControl]="true" nzCheckedChildren="已认证"
+            nzUnCheckedChildren="未认证" (click)="handleTotpChange(userInfo?.auths?.totp)">
+          </nz-switch>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>登录验证</strong></td>
+        <td>此功能需要依托上一个【安全验证】功能。开启后，在登录界面使用认证器进行进一步安全认证，有效提高账号安全</td>
+        <td>
+          <ng-template
+            *ngTemplateOutlet="userInfo?.auths?.loginTotp?isAuth:notAuth;context:{text: userInfo?.auths?.totp?'已开启': '未开启'}">
+          </ng-template>
+        </td>
+        <td>
+          <nz-switch [ngModel]="userInfo?.auths?.loginTotp" [nzControl]="true" nzCheckedChildren="开"
+            nzUnCheckedChildren="关" (click)="handleLoginTotpChange(userInfo?.auths?.loginTotp)">
+          </nz-switch>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+<nz-modal nzWrapClassName="vertical-center-modal" [(nzVisible)]="visible" [nzOkText]='null' (nzOnCancel)="onCancel()"
+  [nzCancelText]="null" [nzFooter]="null" nzWidth="605px">
+  <div [ngSwitch]="modalKey">
+    <div *ngSwitchCase="'open_select_key'">
+      <app-input-password (formSubmit)="submit($event)"></app-input-password>
+    </div>
+    <div *ngSwitchCase="'open_validation'">
+      <app-input-password (formSubmit)="getSafetyAuthInfo($event)"></app-input-password>
+    </div>
+    <div *ngSwitchCase="'open_close_safety'">
+      <app-close-validation (formSubmit)="turnOffSafetyCertification($event)"></app-close-validation>
+    </div>
+    <div *ngSwitchCase="'open_close_login'">
+      <app-close-validation (formSubmit)="turnOffLoginProtect($event)"></app-close-validation>
+    </div>
+    <div *ngSwitchCase="'open_input_totp'">
+      <app-open-validation [safetyInfo]="safetyInfo" (formSubmit)="turnOnSafetyCertification($event)">
+      </app-open-validation>
+    </div>
+    <div *ngSwitchDefault></div>
+  </div>
+</nz-modal>
+<ng-template #isAuth let-text="text">
+  <div class="is-auth">
+    <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"></i>{{text}}
+  </div>
+</ng-template>
+<ng-template #notAuth let-text="text">
+  <div class="not-auth">
+    <i nz-icon nzType="close-circle" nzTheme="twotone" [nzTwotoneColor]="'#f5222d'"></i>{{text}}
+  </div>
+</ng-template>

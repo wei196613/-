@@ -16,8 +16,8 @@ export class DyPlayService {
    * 获取剧本列表
    */
   public getScripts(params: { perPage: number, curPage: number, keyword?: string }) {
-    const url = this.http.getUrl('getScripts?', params);
-    return this.http.dy_get<Scripts>(url);
+    const url = this.http.getUrl('dy/getScripts?', params);
+    return this.http.get<Scripts>(url);
   }
 
   /**
@@ -26,8 +26,8 @@ export class DyPlayService {
    * 获取某剧本中的发言列表
    */
   public getComments(params: { perPage: number, curPage: number, scriptId: number }) {
-    const url = this.http.getUrl('getComments?', params);
-    return this.http.dy_get<Comments>(url)
+    const url = this.http.getUrl('dy/getComments?', params);
+    return this.http.get<Comments>(url)
   }
 
   /**
@@ -37,7 +37,7 @@ export class DyPlayService {
    * 
    */
   public addScript(params: AddScriptParams) {
-    return this.http.dy_post<CommonResp>('addScript', params);
+    return this.http.post<CommonResp>('dy/addScript', params);
   }
 
   /**
@@ -46,7 +46,7 @@ export class DyPlayService {
    * 解析剧本excel文件
    */
   public parseScriptExcel(excel: string) {
-    return this.http.dy_post<ScriptExcel>('parseScriptExcel', { excel });
+    return this.http.post<ScriptExcel>('dy/parseScriptExcel', { excel });
   }
 
   /**
@@ -55,7 +55,7 @@ export class DyPlayService {
    * 修改剧本
    */
   public editScript(params: EditScriptParams) {
-    return this.http.dy_post<CommonResp>('editScript', params);
+    return this.http.post<CommonResp>('dy/editScript', params);
   }
 
 }

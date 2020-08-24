@@ -17,16 +17,11 @@ export class LoginService {
   /**
    * login 登录
    */
-  public async login(params: { account: string, password: string }) {
+  public async login(params: { account: string, password: string, totp?: number }) {
     this.spin.open('正在登录')
-    try {
-      const res = await this.http.post<CommonResp>('login', params)
-      this.loginType = true;
-      this.userInfo.getUserInfo(this.routerUrl);
-    } catch (error) {
-      this.spin.close();
-      
-    }
+    const res = await this.http.post<CommonResp>('login', params)
+    this.loginType = true;
+    this.userInfo.getUserInfo(this.routerUrl);
   }
 
   /**
@@ -39,8 +34,7 @@ export class LoginService {
       this.router.navigate(['/main/user-info']);
       this.spin.close();
     } catch (error) {
-      this.spin.close();
-      
+      this.handleEorr(error)
     }
   }
 
@@ -57,8 +51,7 @@ export class LoginService {
       this.spin.close()
     } catch (error) {
       this.router.navigate(['/login']);
-      this.spin.close();
-      ;
+      this.handleEorr(error)
     }
   }
   /**
@@ -73,8 +66,7 @@ export class LoginService {
       this.spin.close();
       this.hintMsg.success(res.msg)
     } catch (error) {
-      this.spin.close();
-      
+      this.handleEorr(error)
     }
   }
 
@@ -89,8 +81,12 @@ export class LoginService {
       this.userInfo.getUserInfo(this.routerUrl)
     } catch (error) {
       this.router.navigate(['/login']);
-      this.spin.close();
-      ;
+      this.handleEorr(error)
     }
   }
+  private handleEorr(error: Error) {
+    this.spin.close();
+    this.hintMsg.error(error.message)
+  }
 }
+

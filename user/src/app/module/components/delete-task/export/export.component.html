@@ -1,0 +1,25 @@
+<h2>请选择要导出数据名称</h2>
+<nz-table #nzTable [nzData]="exportKeyAll" [nzSize]="'small'" [nzPageSize]="100" [nzShowPagination]="false">
+  <thead>
+    <tr>
+      <th nzWidth="20%" nzShowCheckbox="true" [nzChecked]="getAllChecked" (nzCheckedChange)="handleAllChange($event)">
+      </th>
+      <th nzWidth="80%"><strong>数据名称</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let i of nzTable.data" (click)="checkboxChange(i.key)">
+      <td nzShowCheckbox [(nzChecked)]="i.checked">
+      </td>
+      <td>{{ i.value }}</td>
+    </tr>
+    <tr *ngFor="let i of formConfig.paras" (click)="checkboxChange(i.name)">
+      <td nzShowCheckbox [(nzChecked)]="i.checked"></td>
+      <td>{{i.name}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submitForm()">确定</button>
+</div>

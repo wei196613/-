@@ -1,9 +1,9 @@
+import { Route, Router } from '@angular/router';
 import { format } from 'date-fns';
 import { NzMessageService } from 'ng-zorro-antd';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, Subscriber } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { CommonResp } from './entity';
 import { Config } from 'codelyzer';
 import { Config as c1 } from '../Config';
@@ -22,14 +22,14 @@ const httpOptions = {
 })
 export class HttpService {
 
-  constructor(private http: HttpClient, private hintMsg: NzMessageService) {
+  constructor(private http: HttpClient) {
   }
 
   private _get<T>(prefixUrl: string, path: string): Observable<T> {
     return new Observable(obs => {
       const sub = this.http.get(`${prefixUrl}/${path}`, httpOptions).subscribe(
         (resp: T) => obs.next(resp),
-        error => this._errorHandler(error, obs),
+        error => obs.error(error),
         () => obs.complete()
       );
       return () => {
@@ -42,7 +42,7 @@ export class HttpService {
     return new Observable(obs => {
       const sub = this.http.post(`${prefixUrl}/${path}`, params, httpOptions).subscribe(
         (resp: T) => obs.next(resp),
-        error => this._errorHandler(error, obs),
+        error => obs.error(error),
         () => obs.complete()
       );
       return () => {
@@ -51,17 +51,6 @@ export class HttpService {
     });
   }
 
-  private _errorHandler(error: any, obs: Subscriber<any>) {
-    if (error.status === 0) {
-      this.hintMsg.error("服务器连接失败");
-    } else if (error.status >= 400) {
-      const msgArr = error?.error?.msg.split('\n') as string[];
-      let msg = '';
-      msgArr.forEach((v, index) => msg += (index > 0 ? `<div class="text-align-left">${v}</div>` : v))
-      this.hintMsg.error(msg);
-    }
-    return obs.error(error)
-  }
 
   public get<T>(path: string): Promise<T> {
     return this._get<T>(c1.prefixUrl(), path).toPromise();
@@ -71,13 +60,6 @@ export class HttpService {
     return this._post<T>(c1.prefixUrl(), path, params).toPromise();
   }
 
-  public dy_get<T>(path: string): Promise<T> {
-    return this._get<T>(c1.dyUrl(), path).toPromise();
-  }
-
-  public dy_post<T>(path: string, params?: any): Promise<T> {
-    return this._post<T>(c1.dyUrl(), path, params).toPromise();
-  }
 
   public getUrl(url: string, params) {
     for (const key in params) {

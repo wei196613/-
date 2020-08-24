@@ -7,8 +7,6 @@ import { LoginComponent } from 'src/app/login/login.component';
 import { ChangePasswordComponent } from 'src/app/components/change-password/change-password.component';
 import { AppFrameComponent } from 'src/app/components/app-frame/app-frame.component';
 import { MainComponent } from 'src/app/components/main.component';
-import { UserInfoComponent } from 'src/app/components/user-info/user-info.component';
-
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -33,7 +31,11 @@ const routes: Routes = [
         },
         {
           path: 'user-info',
-          component: UserInfoComponent
+          loadChildren: () => import('src/app/module/components/safety/safety.module').then(m => m.SafetyModule)
+        },
+        {
+          path: 'delete-task',
+          loadChildren: () => import('src/app/module/components/delete-task/delete-task.module').then(m => m.DeleteTaskModule)
         },
         {
           path: 'my-task',

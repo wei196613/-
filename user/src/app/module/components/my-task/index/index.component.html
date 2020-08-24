@@ -74,6 +74,8 @@
               nzSize="small">批量暂停</button>
             <button *ngIf="handleIsShowbatchBtn([5,3])" appClickStop nz-button class="ant-btn-warning"
               (click)="handleRunTask()" nzSize="small">批量重新运行</button>
+            <button appClickStop *ngIf="handleIsShowbatchBtn([4,5,6])" nz-button nzType="danger" 
+           (click)="deleteTask()" nzSize="small">批量归档</button>
           </div>
         </th>
       </tr>
@@ -137,6 +139,8 @@
           </div>
         </td>
         <td class="operation-btn">
+          <button appClickStop *ngIf="handleIsShowDelete(data)" nz-button nzType="danger" nz-popconfirm
+            nzPopconfirmTitle="是否归档该任务" (nzOnConfirm)="deleteTask(data.id)" nzSize="small">归档</button>
           <button appClickStop *ngIf="handleIsEdit(data)" nz-button nzType="primary"
             (click)="handleOpenModal('open_edit',data)" nzSize="small">修改</button>
           <button appClickStop nz-button nzType="primary" (click)="handleOpenModal('open_copy',data)"

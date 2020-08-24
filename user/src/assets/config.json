@@ -1,6 +1,4 @@
 ﻿{
-  "prefixUrl": "http://192.168.1.226:9999/bhs",
-  "dyUrl": "http://192.168.1.226:9999/bhs/dy",
   "authority": [{
       "key": 1,
       "value": "抖音账号管理"
@@ -26,7 +24,6 @@
       "value": "我的任务"
     }
   ],
-
   "loginResult": [{
       "key": 0,
       "value": "未使用"

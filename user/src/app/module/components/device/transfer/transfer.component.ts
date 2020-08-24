@@ -99,10 +99,10 @@ export class TransferComponent implements OnInit {
   }
 
   constructor(private user: UserInfoService, private device: DeviceService, private spin: AppSpinService, private byVal: ByValueService, private hintMsg: NzMessageService) { }
-  handleError(error) {
+  private handleError(error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
-
   add() {
     if (this.userId === null || this.userId === undefined || this.userId === '') {
       this.hintMsg.error("请输入分配账号")

@@ -1,0 +1,18 @@
+<h2>关闭认证</h2>
+<form [formGroup]="formGroup" (ngSubmit)="submit()">
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired>密码</nz-form-label>
+    <nz-form-control nzSpan="18" [nzErrorTip]="passwordErrorTip">
+      <app-password-input formControlName="password" ngDefaultControl placeholder="请输入密码"></app-password-input>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label nzSpan="4" nzRequired="true">验证码</nz-form-label>
+    <nz-form-control nzSpan="18" [nzErrorTip]="totpEorrorTip">
+      <app-auth-code formControlName="totp" ngDefaultControl></app-auth-code>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div class="footer">
+  <button nz-button nzType="primary" (click)="submit()">确定</button>
+</div>

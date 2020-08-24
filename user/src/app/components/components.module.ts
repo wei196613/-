@@ -8,17 +8,16 @@ import { AppFrameComponent } from './app-frame/app-frame.component';
 import { TitleComponent } from './title/title.component';
 import { PasswordInputComponent } from './password-input/password-input.component';
 import { DyFormattingTimePipe } from 'src/app/pipe/dy-formatting-time.pipe';
-// import { DeviceModule } from './device/device.module';
 import { LoginTypePipe } from '../pipe/loginType.pipe';
 import { PasswordTextComponent } from './password-text/password-text.component';
 import { DyIconComponent } from './dyIcon.component';
-import { JdIconComponent } from './jdIcon.component';
 import { LoginResultPipe } from '../pipe/loginResult.pipe';
 import { TaskEndStatusPipe } from '../pipe/taskEndStatus.pipe';
 import { LoginStatusPipe } from 'src/app/pipe/jd/loginStatus.pipe';
 import { loginMethodPipe } from 'src/app/pipe/jd/loginMethod.pipe';
 import { LoginExecutePipe } from 'src/app/pipe/jd/loginExecute.pipe';
-import { ClickStopDirective } from './clickStop.directive';
+import { ClickStopDirective } from './directive/clickStop.directive';
+import { AuthCodeComponent } from './auth-code/auth-code.component';
 
 @NgModule({
    declarations: [
@@ -30,21 +29,20 @@ import { ClickStopDirective } from './clickStop.directive';
       PasswordTextComponent,
       TitleComponent,
       DyIconComponent,
-      JdIconComponent,
       LoginResultPipe,
       TaskEndStatusPipe,
       LoginStatusPipe,
       loginMethodPipe,
       LoginExecutePipe,
       ClickStopDirective,
-      
+      AuthCodeComponent
    ],
    imports: [
       CommonModule,
       NgZorroAntdModule,
       RouterModule,
       FormsModule,
-      ReactiveFormsModule 
+      ReactiveFormsModule
    ],
    exports: [
       NgZorroAntdModule,
@@ -62,7 +60,8 @@ import { ClickStopDirective } from './clickStop.directive';
       LoginStatusPipe,
       loginMethodPipe,
       LoginExecutePipe,
-      ClickStopDirective
+      ClickStopDirective,
+      AuthCodeComponent
    ]
 })
 export class ComponentsModule { }

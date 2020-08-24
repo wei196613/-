@@ -16,8 +16,8 @@ class DyRunTaskService {
    * 获取运行捧场任务列表
    */
   public getRunningClaqueTasks(params: { perPage?: number, curPage?: number }) {
-    const url = this.http.getUrl('getRunningClaqueTasks?', params)
-    return this.http.dy_get<RunTask>(url);
+    const url = this.http.getUrl('dy/getRunningClaqueTasks?', params)
+    return this.http.get<RunTask>(url);
   }
 
   /**
@@ -26,7 +26,7 @@ class DyRunTaskService {
    * 添加新捧场任务
    */
   public addClaqueTask(params: AddRunTaskParams) {
-    return this.http.dy_post<CommonResp>('addClaqueTask', params);
+    return this.http.post<CommonResp>('dy/addClaqueTask', params);
   }
 
   /**
@@ -35,7 +35,7 @@ class DyRunTaskService {
    * 终止捧场任务
    */
   public terminateClaqueTask(id: number) {
-    return this.http.dy_post<CommonResp>('terminateClaqueTask', { id });
+    return this.http.post<CommonResp>('dy/terminateClaqueTask', { id });
   }
 
   /**
@@ -44,7 +44,7 @@ class DyRunTaskService {
    * （暂停后）恢复捧场任务
    */
   public resumeClaqueTask(id: number) {
-    return this.http.dy_post<CommonResp>('resumeClaqueTask', { id });
+    return this.http.post<CommonResp>('dy/resumeClaqueTask', { id });
   }
 
   /**
@@ -53,7 +53,7 @@ class DyRunTaskService {
    * 暂停捧场任务
    */
   public pauseClaqueTask(id: number) {
-    return this.http.dy_post<CommonResp>('pauseClaqueTask', { id });
+    return this.http.post<CommonResp>('dy/pauseClaqueTask', { id });
   }
 
   /**
@@ -62,7 +62,7 @@ class DyRunTaskService {
    * 修改捧场任务
    */
   public editClaqueTask(params: EditRunTaskParams) {
-    return this.http.dy_post<CommonResp>('editClaqueTask', params);
+    return this.http.post<CommonResp>('dy/editClaqueTask', params);
   }
 }
 

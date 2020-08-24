@@ -3,7 +3,6 @@ import { Injectable, Component } from '@angular/core';
 import { RouterService as dyRouter } from "./../module/dou-yin/router.service";
 import { RegComponent } from 'src/app/components/reg/reg.component';
 import { ChangePasswordComponent } from 'src/app/components/change-password/change-password.component';
-import { UserInfoComponent } from 'src/app/components/user-info/user-info.component';
 import { AuthGuardService } from './guard/auth-guard.service';
 import { Config } from 'src/app/Config';
 import { LoginComponent } from './../login/login.component';
@@ -34,7 +33,11 @@ export class RouterService {
             },
             {
               path: 'user-info',
-              component: UserInfoComponent
+              loadChildren: () => import('src/app/module/components/safety/safety.module').then(m => m.SafetyModule)
+            },
+            {
+              path: 'delete-task',
+              loadChildren: () => import('src/app/module/components/delete-task/delete-task.module').then(m => m.DeleteTaskModule)
             },
             {
               path: 'device',

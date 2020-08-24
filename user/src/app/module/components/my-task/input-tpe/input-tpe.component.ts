@@ -26,7 +26,6 @@ export class InputTpeComponent implements OnInit {
   /**控制 stringList 和 numberList 输入方式*/
   inputMethod: { key: string, tpe: number, way: 'string' | 'list' }[] = [];
   parameterArr: { key: string, name: string, checked: boolean, tpe: number, bindKey?: string[] }[] = []; // 记录该任务的所有参数
-  control: AbstractControl;
   SubFromGroup: FormGroup;
   passwordVisible = false;
   sub: Subscription;

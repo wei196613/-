@@ -193,16 +193,13 @@ export class IndexComponent implements OnInit {
   handleExportTask() {
     let typeId = null;
     if (this.data && this.data.arr && this.exportAll) {
-      const filterData = this.data.arr.filter(f => f.status == 4 || f.status == 5);
-      if ((!this.handleIsCheckTpe(filterData.map(v => v.tpe.id))) || (!this.handleIsCheckStatus(filterData.map(v => v.status)))) {
-        return false;
-      }
       typeId = this.data.arr.find(v => v.status === 4 || v.status === 5).tpe.id;
     } else if (this.checkData.length > 0) {
-      typeId = this.checkData[0].tpe;
-      if (!this.handleIsCheckTpe(this.checkData.map(v => v.tpe))) {
-        return
+      if (!this.checkData.every(v => v.tpe === this.checkData[0].tpe)) {
+        this.hintMsg.error('任务类型不一致不可以批量导出');
+        return false;
       }
+      typeId = this.checkData[0].tpe;
     }
     if (typeId) {
       this.getFormConfig(typeId).then(() => {
@@ -213,42 +210,7 @@ export class IndexComponent implements OnInit {
     }
     this.hintMsg.error('没有可导出数据');
   }
-  /**判断全选是否可全部选中*/
-  private handleIsCheckStatus(arr: number[]) {
-    if (arr) {
-      const len = [... new Set(arr)].length
-      console.log(len)
-      switch (len) {
-        case 0:
-          this.hintMsg.error('没有可导出数据')
-          return false;
-        case 1:
-          return true;
-        default:
-          this.hintMsg.error('状态不一致，不可进行批量导出');
-          return false;
-      }
-    }
-    return false;
-  }
-  /**判断全选数据任务类型是否一直*/
-  private handleIsCheckTpe(arr: number[]) {
-    if (arr) {
-      const len = [... new Set(arr)].length
-      console.log(len)
-      switch (len) {
-        case 0:
-          this.hintMsg.error('没有可导出数据');
-          return false;
-        case 1:
-          return true;
-        default:
-          this.hintMsg.error('任务类型不一致，不可进行批量导出');
-          return false;
-      }
-    }
-    return false;
-  }
+
   /**
    * 全选按钮选中状态改变事件  
    * */
@@ -591,9 +553,11 @@ export class IndexComponent implements OnInit {
   /**
    * 错误处理
   */
-  private handleError(error) {
+  private handleError(error: Error) {
     this.spin.close();
+    this.hintMsg.error(error.message);
   }
+
   /**
    * 打开弹框前发生事件
    */
@@ -689,6 +653,34 @@ export class IndexComponent implements OnInit {
     }, this.refreshTime * 1000)
     this.visible = false;
     this.modalKey = null;
+  }
+  /**
+   * deleteTask删除/归档任务
+   */
+  public async deleteTask(id?: number) {
+    this.spin.open('正在归档任务中');
+    try {
+      let ids: number[];
+      if (id) {
+        ids = [id];
+      } else {
+        if (this.checkData.length === 0) {
+          this.hintMsg.error('请选择要归档的任务')
+          resolve();
+        }
+        ids = this.checkData.map(v => v.id)
+      }
+      const res = await this.myTask.deleteTask(ids);
+      this.checkData = [];
+      await this.getData()
+      this.hintMsg.success(res.msg)
+    } catch (error) {
+      this.handleError(error)
+    }
+  }
+  /**是否显示归档按钮*/
+  handleIsShowDelete(data: TaskItem) {
+    return data && (data.status === 6 || data.status === 5 || data.status === 4);
   }
 }
 

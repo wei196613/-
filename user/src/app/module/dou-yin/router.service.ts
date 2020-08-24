@@ -1,7 +1,6 @@
 import { SelfRoute } from 'src/app/services/entity';
 import { Injectable } from '@angular/core';
 import { UserInfoService } from 'src/app/services/userInfo.service';
-import { UserInfoComponent } from 'src/app/components/user-info/user-info.component';
 import { Routes } from '@angular/router';
 @Injectable({
   providedIn: 'root'

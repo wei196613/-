@@ -5,7 +5,7 @@ import { LoginService } from './services/login.service';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { AppSpinService } from './components/spin-mask/app-spin.service';
-import { Config, ConfigData } from "./Config";
+import { Config, ConfigData, ConfigUrl } from "./Config";
 import { PlatformLocation } from '@angular/common'
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent {
-  locationUrl: string;
   sub: Subscription
   constructor(private http: HttpClient,
     private spin: AppSpinService,
@@ -33,12 +32,23 @@ export class AppComponent {
         this.router.resetConfig(this.routerService.rootroute)
       }
     })
-    this.http.get("assets/config.json").subscribe((resp: ConfigData) => {
-      Config.data = resp;
-      this.login.isLogin();
-    });
+    this.getConfigData();
   }
   ngOnDestroy(): void {
     this.sub && this.sub.unsubscribe();
+  }
+
+  private getConfigData() {
+    this.http.get("assets/config.json").subscribe((resp: ConfigData) => {
+      Config.data = resp;
+      this.getHttpUrl(); 
+    });
+  }
+
+  private getHttpUrl() {
+    this.http.get<ConfigUrl>('assets/httpUrl.json').subscribe(res => {
+      Config.data.prefixUrl = res.prefixUrl;
+      this.login.isLogin();
+    })
   }
 }
